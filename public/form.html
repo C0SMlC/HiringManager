@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Applicant Tracking Form</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="navbar">
+      <a href="index.html" id="homeLink">Home</a>
+      <a href="login.html" id="loginLink">Login</a>
+
+      <a href="form.html" id="formLink">Candidate Form</a>
+      <a href="candidates.html" id="detailsLink">Candidate Details</a>
+      <a href="updatePositions.html" id="updatePositionsLink"
+        >Update Positions</a
+      >
+      <a href="positions.html" id="positionsLink">Open Positions</a>
+      <a href="masterCandidates.html" id="masterCandidatesLink">Master Candidate Details</a>
+      <a href="#" id="logoutLink" style="display: none">Logout</a>
+    </div>
+    <div class="form-container">
+      <div id="usernameDisplay"></div>
+      <h2>Applicant Tracking Form</h2>
+      <form id="applicantForm" enctype="multipart/form-data">
+        <label for="profileOwner">Profile Owner:</label>
+        <input
+          type="text"
+          id="profileOwner"
+          name="profileOwner"
+          readonly
+        /><br />
+
+        <label for="applicantName">Applicant Name:</label>
+        <input
+          type="text"
+          id="applicantName"
+          name="applicantName"
+          required
+        /><br />
+
+        <label for="applicantPhone">Applicant Phone:</label>
+        <input
+          type="text"
+          id="applicantPhone"
+          name="applicantPhone"
+          required
+        /><br />
+
+        <label for="applicantEmail">Applicant Email:</label>
+        <input
+          type="email"
+          id="applicantEmail"
+          name="applicantEmail"
+          required
+        /><br />
+
+        <label for="currentCompany">Current Company:</label>
+        <input
+          type="text"
+          id="currentCompany"
+          name="currentCompany"
+          required
+        /><br />
+
+        <label for="candidateWorkLocation">Candidate Work Location:</label>
+        <input
+          type="text"
+          id="candidateWorkLocation"
+          name="candidateWorkLocation"
+          required
+        /><br />
+
+        <label for="nativeLocation">Native Location:</label>
+        <input
+          type="text"
+          id="nativeLocation"
+          name="nativeLocation"
+          required
+        /><br />
+
+        <label for="qualification">Qualification:</label>
+        <input
+          type="text"
+          id="qualification"
+          name="qualification"
+          required
+        /><br />
+
+        <label for="experience">Experience:</label>
+        <input type="text" id="experience" name="experience" required /><br />
+
+        <label for="skills">Skills:</label>
+        <input type="text" id="skills" name="skills" required /><br />
+
+        <label for="noticePeriod">Notice Period:</label>
+        <input
+          type="text"
+          id="noticePeriod"
+          name="noticePeriod"
+          required
+        /><br />
+
+        <label for="band">Band:</label>
+        <select id="band" name="band" required>
+          <option value="L0">L0</option>
+          <option value="L1">L1</option>
+          <option value="L2">L2</option>
+          <option value="L3">L3</option>
+          <option value="L4">L4</option>
+          <option value="CostPlus">CostPlus</option>
+          <option value="Non-Billable">Non-Billable</option>
+          <option value="Bench">Bench</option></select
+        ><br />
+
+        <label for="applicantResume">Applicant Resume:</label>
+        <input
+          type="file"
+          id="applicantResume"
+          name="applicantResume"
+          required
+        /><br />
+
+        <label for="dateApplied">Date Applied:</label>
+        <input type="date" id="dateApplied" name="dateApplied" required /><br />
+
+        <label for="positionTitle">Position Title:</label>
+        <select id="positionTitle" name="positionTitle" required>
+          <option value="">Select Position Title</option></select
+        ><br />
+
+        <label for="positionId">Position ID:</label>
+        <select id="positionId" name="positionId" required>
+          <option value="">Select Position ID</option></select
+        ><br />
+
+        <label for="status">Status:</label>
+        <select id="status" name="status" required>
+          <option value="OPEN">OPEN</option>
+          <option value="CLOSED">CLOSED</option></select
+        ><br />
+
+        <label for="stage">Stage:</label>
+        <select id="stage" name="stage">
+          <option value="App. Recd.">App. Recd.</option>
+          <option value="Phone Screen">Phone Screen</option>
+          <option value="Interview 1">Interview 1</option>
+          <option value="Interview 2">Interview 2</option>
+          <option value="Offer Made">Offer Made</option>
+          <option value="Hired">Hired</option>
+          <option value="Rejected">Rejected</option></select
+        ><br />
+
+        <label for="dateOfPhoneScreen">Date of Phone Screen:</label>
+        <input
+          type="date"
+          id="dateOfPhoneScreen"
+          name="dateOfPhoneScreen"
+        /><br />
+
+        <label for="interviewDate">Interview Date:</label>
+        <input type="date" id="interviewDate" name="interviewDate" /><br />
+
+        <label for="dateOfOffer">Date of Offer:</label>
+        <input type="date" id="dateOfOffer" name="dateOfOffer" /><br />
+
+        <label for="reasonNotExtending">Reason for Not Extending Offer:</label>
+        <select id="reasonNotExtending" name="reasonNotExtending">
+          <option value="">Select Value</option>
+          <option value="Salary Negotiation">Salary Negotiation</option>
+          <option value="Relocation Issues">Relocation Issues</option></select
+        ><br />
+
+        <label for="notes">Notes:</label>
+        <input type="text" id="notes" name="notes" /><br />
+
+        <button type="submit">Submit</button>
+      </form>
+    </div>
+    <script src="userInfo.js"></script>
+    <script src="dashboard.js"></script>
+    
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const today = new Date().toISOString().split("T")[0];
+        document.getElementById("dateApplied").value = today;
+     
+        let positionMap = {};
+     
+        // Fetch positions and populate the dropdowns
+        fetch("/api/positions", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        })
+          .then((response) => response.json())
+          .then((positions) => {
+            const positionTitleSelect = document.getElementById("positionTitle");
+            const positionIdSelect = document.getElementById("positionId");
+     
+            positions.forEach((position) => {
+              // Populate the position title dropdown
+              const titleOption = document.createElement("option");
+              titleOption.value = position.positionTitle;
+              titleOption.text = position.positionTitle;
+              positionTitleSelect.add(titleOption);
+     
+              // Store positionId based on positionTitle in positionMap
+              positionMap[position.positionTitle] = position.positionId;
+            });
+     
+            // Add event listener for position title change
+            positionTitleSelect.addEventListener("change", (event) => {
+              const selectedTitle = event.target.value;
+              const correspondingId = positionMap[selectedTitle];
+             
+              // Clear previous options in positionId dropdown
+              positionIdSelect.innerHTML = "";
+     
+              // Add the corresponding position ID as the only option in positionId dropdown
+              const idOption = document.createElement("option");
+              idOption.value = correspondingId;
+              idOption.text = correspondingId;
+              positionIdSelect.add(idOption);
+            });
+          })
+          .catch((error) => {
+            console.error("Error fetching positions:", error);
+            alert("Error fetching positions");
+          });
+      });
+     
+      document
+        .getElementById("applicantForm")
+        .addEventListener("submit", async (event) => {
+          event.preventDefault();
+     
+          const formData = new FormData(
+            document.getElementById("applicantForm")
+          );
+     
+          try {
+            const response = await fetch("/submit", {
+              method: "POST",
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+              },
+              body: formData,
+            });
+     
+            if (!response.ok) {
+              throw new Error("Failed to submit form");
+            }
+     
+            const result = await response.json();
+            alert(result.message);
+            document.getElementById("applicantForm").reset();
+          } catch (error) {
+            alert(error.message);
+          }
+        });
+    </script>
+    </body>
+    </html>
+     
