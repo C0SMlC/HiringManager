@@ -184,3 +184,12 @@ body {
 #statusFilter {
     width: 150px; /* Adjust width as needed */
 }
+
+.header-stats{
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+}
+
+/* #inactiveStagesChart{
+    margin: 14rem 0;
+} */

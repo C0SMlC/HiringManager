@@ -3,8 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Master Candidate Details</title>
+    <title>Master Details</title>
     <link rel="stylesheet" href="style.css">
+
+    <style>
+        .container{
+            max-width: 1480px;
+            margin: 0 auto;
+            overflow: scroll;
+
+        }
+
+        #candidateTable{
+            overflow: scroll;
+
+        }
+    </style>
+
 </head>
 <body>
     <div class="navbar">
@@ -20,14 +35,11 @@
       </div>
     <div class="container">
     <div class="forms-container">
-        <div id="usernameDisplay"></div>
-        <h2>Master Candidate Details</h2>
+        <h2>Master Details</h2>
         <div class="filter-container">
-            <label for="statusFilter">Filter by Status:</label>
-            <select id="statusFilter">
+            <label for="profileOwnerFilter">Filter by Profile Owner:</label>
+            <select id="profileOwnerFilter">
                 <option value="all">All</option>
-                <option value="OPEN">Open</option>
-                <option value="CLOSED">Closed</option>
             </select>
         </div>
         <table id="candidateTable">
@@ -57,13 +69,10 @@
                 </tr>
             </thead>
             <tbody id="candidateList">
-                <!-- Candidates will be populated here -->
             </tbody>
         </table>
     </div>
     </div>
-    <script src="userInfo.js"></script>
-    <script src="dashboard.js"></script>
-    <script src="masterCandidates.js"></script>
+    <script src="masterDetails.js"></script>
 </body>
 </html>

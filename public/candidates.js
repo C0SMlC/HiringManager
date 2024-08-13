@@ -1,4 +1,34 @@
+let candidates = []; 
 
+function viewResume(applicantId) {
+    const candidate = candidates.find(c => c.applicantId === applicantId);
+    if (!candidate || !candidate.applicantResume) {
+        alert('Resume not available');
+        return;
+    }
+
+    const blob = new Blob([new Uint8Array(candidate.applicantResume.data)], { type: 'application/pdf' });
+    const url = URL.createObjectURL(blob);
+    window.open(url, '_blank');
+}
+
+function downloadResume(applicantId) {
+    const candidate = candidates.find(c => c.applicantId === applicantId);
+    if (!candidate || !candidate.applicantResume) {
+        alert('Resume not available');
+        return;
+    }
+
+    const blob = new Blob([new Uint8Array(candidate.applicantResume.data)], { type: 'application/pdf' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.style.display = 'none';
+    a.href = url;
+    a.download = `resume_${candidate.applicantName}.pdf`;
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+}
 
 
 
@@ -45,15 +75,23 @@ document.addEventListener('DOMContentLoaded', () => {
             const candidateList = document.getElementById('candidateList');
             const statusFilter = document.getElementById('statusFilter');
 
+            candidates = data;
+
             function renderCandidates(candidates) {
                 candidateList.innerHTML = '';
-
+            
+                function formatDate(dateString) {
+                    if (!dateString) return '';
+                    const date = new Date(dateString);
+                    return date.toISOString().split('T')[0];
+                }
+            
                 candidates.forEach(candidate => {
                     // Hide candidates with status 'CLOSED' for regular users
                     if (!isAdmin && candidate.status === 'CLOSED') return;
-
+            
                     const row = document.createElement('tr');
-
+            
                     row.innerHTML = `
                         <td>${candidate.profileOwner}</td>
                         <td>${candidate.applicantName}</td>
@@ -67,7 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <td>${candidate.skills}</td>
                         <td>${candidate.noticePeriod}</td>
                         <td>${candidate.band}</td>
-                        <td>${candidate.dateApplied}</td>
+                        <td>${formatDate(candidate.dateApplied)}</td>
                         <td>${candidate.positionTitle}</td>
                         <td>${candidate.positionId}</td>
                         <td>
@@ -87,8 +125,8 @@ document.addEventListener('DOMContentLoaded', () => {
                                 <option value="Rejected" ${candidate.stage === 'Rejected' ? 'selected' : ''}>Rejected</option>
                             </select>
                         </td>
-                        <td><input type="date" id="interviewDate-${candidate.applicantId}" value="${candidate.interviewDate || ''}"></td>
-                        <td><input type="date" id="dateOfOffer-${candidate.applicantId}" value="${candidate.dateOfOffer || ''}"></td>
+                        <td><input type="date" id="interviewDate-${candidate.applicantId}" value="${formatDate(candidate.interviewDate)}"></td>
+                        <td><input type="date" id="dateOfOffer-${candidate.applicantId}" value="${formatDate(candidate.dateOfOffer)}"></td>
                         <td>
                             <select id="reasonNotExtending-${candidate.applicantId}" name="reasonNotExtending">
                                 <option value="">Select Value</option>
@@ -97,13 +135,19 @@ document.addEventListener('DOMContentLoaded', () => {
                             </select>
                         </td>
                         <td><input type="text" id="notes-${candidate.applicantId}" value="${candidate.notes || ''}"></td>
-                        <td><button onclick="updateCandidate(${candidate.applicantId})">Update</button></td>
+                        <td><button class="action-button" onclick="updateCandidate(${candidate.applicantId})">Update</button></td>
+                        <td>
+                            <button class="action-button" onclick="viewResume(${candidate.applicantId})">View</button>
+                        </td>
+                        <td>
+                            <button class="action-button" onclick="downloadResume(${candidate.applicantId})">Download</button>
+                        </td>
                     `;
-
+            
                     candidateList.appendChild(row);
                 });
             }
-
+            
             // Initial rendering
             renderCandidates(data);
 
@@ -138,12 +182,18 @@ function updateCandidate(applicantId) {
         window.location.href = '/login.html';
     }
 
-    const status = document.getElementById(`status-${applicantId}`).value;
+    let status = document.getElementById(`status-${applicantId}`).value;
     const stage = document.getElementById(`stage-${applicantId}`).value;
     const interviewDate = document.getElementById(`interviewDate-${applicantId}`).value || null;
     const dateOfOffer = document.getElementById(`dateOfOffer-${applicantId}`).value || null;
     const reasonNotExtending = document.getElementById(`reasonNotExtending-${applicantId}`).value;
     const notes = document.getElementById(`notes-${applicantId}`).value;
+
+    if(stage === "Rejected") status="CLOSED";
+
+    console.log(stage);
+    console.log(status);
+
 
     fetch(`/candidates/${applicantId}`, {
         method: 'PUT',
