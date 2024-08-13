@@ -27,6 +27,8 @@
                     <th>Position ID</th>
                     <th>Position Title</th>
                     <th>Job Description</th>
+                    <th>Active Applicants</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody id="positionsList">
@@ -62,7 +64,7 @@
                     roleElem.innerText = userData.role === 'admin' ? 'Admin' : 'User';
                 }
 
-                return fetch('/candidates/positions', {
+                return fetch('/positionWithActiveApplicants', {
                     method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${token}`
@@ -76,14 +78,34 @@
 
                 data.forEach(position => {
                     const row = document.createElement('tr');
-
+                    
+                    const activeApplicantsHtml = position.activeApplicants.length > 0 
+                        ? position.activeApplicants.join(', ')
+                        : 'No active applicants';
+                    
                     row.innerHTML = `
                         <td>${position.positionId}</td>
                         <td>${position.positionTitle}</td>
                         <td>${position.jobdescription}</td>
+                        <td>${activeApplicantsHtml}</td>
+                        <td><button class="share-btn" data-position-id="${position.positionId}">Share</button></td>
                     `;
-
+                    
                     positionsList.appendChild(row);
+                });
+
+                // Add event listeners to share buttons
+                document.querySelectorAll('.share-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const positionId = this.getAttribute('data-position-id');
+                        const link = `${window.location.origin}/apply.html?positionId=${positionId}`;
+                        
+                        navigator.clipboard.writeText(link).then(() => {
+                            alert('Link copied to clipboard!');
+                        }).catch(err => {
+                            console.error('Failed to copy link: ', err);
+                        });
+                    });
                 });
             })
             .catch(err => {

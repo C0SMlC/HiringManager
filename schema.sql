@@ -1,6 +1,5 @@
-CREATE DATABASE ApplicantTracking;
-USE ApplicantTracking;
 
+USE ApplicantTracking;
 CREATE TABLE IF NOT EXISTS ApplicantTracking (
     applicantId INT AUTO_INCREMENT PRIMARY KEY,
     profileOwner VARCHAR(255) NOT NULL,
@@ -14,6 +13,8 @@ CREATE TABLE IF NOT EXISTS ApplicantTracking (
     experience VARCHAR(255) NOT NULL,
     skills VARCHAR(255) NOT NULL,
     noticePeriod VARCHAR(50) NOT NULL,
+    currentctc integer not null,
+    expectedctc integer not null,
     band VARCHAR(50) NOT NULL,
     applicantResume LONGBLOB NOT NULL,
     dateApplied DATE NOT NULL,

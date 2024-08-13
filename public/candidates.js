@@ -104,6 +104,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         <td>${candidate.experience}</td>
                         <td>${candidate.skills}</td>
                         <td>${candidate.noticePeriod}</td>
+                        <td>${candidate.currentctc}</td>
+                        <td>${candidate.expectedctc}</td>
                         <td>${candidate.band}</td>
                         <td>${formatDate(candidate.dateApplied)}</td>
                         <td>${candidate.positionTitle}</td>
