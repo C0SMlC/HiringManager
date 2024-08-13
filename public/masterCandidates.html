@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Master Candidate Details</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="navbar">
+        <a href="index.html" id="homeLink">Home</a>
+        <a href="login.html" id="loginLink">Login</a>
+        <a href="form.html" id="formLink">Candidate Form</a>
+        <a href="candidates.html" id="detailsLink">Candidate Details</a>
+        <a href="updatePositions.html" id="updatePositionsLink">Update Positions</a>
+        <a href="positions.html" id="positionsLink">Open Positions</a>
+        <a href="masterCandidates.html" id="masterCandidatesLink">Master Candidate Details</a>
+        <a href="assignapplicants.html" id="assignApplicantLink">Assign Applicant</a>
+        <a href="#" id="logoutLink" style="display:none;">Logout</a>
+    </div>
+    <div class="forms-container">
+        <div id="usernameDisplay"></div>
+        <h2>Master Candidate Details</h2>
+        <div class="filter-container">
+            <label for="statusFilter">Filter by Status:</label>
+            <select id="statusFilter">
+                <option value="all">All</option>
+                <option value="OPEN">Open</option>
+                <option value="CLOSED">Closed</option>
+            </select>
+        </div>
+        <table id="candidateTable">
+            <thead>
+                <tr>
+                    <th>Profile Owner</th>
+                    <th>Name</th>
+                    <th>Phone</th>
+                    <th>Email</th>
+                    <th>Current Company</th>
+                    <th>Work Location</th>
+                    <th>Native Location</th>
+                    <th>Qualification</th>
+                    <th>Experience</th>
+                    <th>Skills</th>
+                    <th>Notice Period</th>
+                    <th>Band</th>
+                    <th>Date Applied</th>
+                    <th>Position Title</th>
+                    <th>Position ID</th>
+                    <th>Status</th>
+                    <th>Stage</th>
+                    <th>Interview Date</th>
+                    <th>Date of Offer</th>
+                    <th>Reason for Not Extending Offer</th>
+                    <th>Notes</th>
+                </tr>
+            </thead>
+            <tbody id="candidateList">
+                <!-- Candidates will be populated here -->
+            </tbody>
+        </table>
+    </div>
+    <script src="userInfo.js"></script>
+    <script src="dashboard.js"></script>
+    <script src="masterCandidates.js"></script>
+</body>
+</html>
