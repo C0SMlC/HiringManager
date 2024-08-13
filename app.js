@@ -148,6 +148,117 @@ app.get("/updatePositions", authenticateToken, (req, res) => {
 //     });
 // });
 
+app.post("/submit/public", upload.single("applicantResume"), (req, res) => {
+  const {
+    applicantName,
+    applicantPhone,
+    applicantEmail,
+    currentCompany,
+    candidateWorkLocation,
+    nativeLocation,
+    qualification,
+    experience,
+    skills,
+    noticePeriod,
+    band = "L0",
+    positionTitle,
+    positionId,
+    status,
+    stage,
+    dateOfPhoneScreen,
+    interviewDate,
+    dateOfOffer,
+    reasonNotExtending,
+    notes,
+  } = req.body;
+
+  const profileOwner = "admin";
+  const applicantResume = req.file.buffer;
+  let dateApplied = new Date();
+
+  // Check for existing records
+  const checkSql = `
+        SELECT COUNT(*) AS count FROM ApplicantTracking 
+        WHERE applicantPhone = ? OR applicantEmail = ?
+    `;
+
+  db.query(checkSql, [applicantPhone, applicantEmail], (err, results) => {
+    if (err) {
+      console.error("Error: " + err.message);
+      return res.status(500).json({ message: "Error checking for duplicates" });
+    }
+
+    if (results[0].count > 0) {
+      return res.status(400).json({ message: "duplicates not allowed" });
+    }
+
+    // If no duplicates found, insert new record
+    const insertSql = `
+            INSERT INTO ApplicantTracking (
+                profileOwner,
+                applicantName,
+                applicantPhone,
+                applicantEmail,
+                currentCompany,
+                candidateWorkLocation,
+                nativeLocation,
+                qualification,
+                experience,
+                skills,
+                noticePeriod,
+                band,
+                applicantResume,
+                dateApplied,
+                positionTitle,
+                positionId,
+                status,
+                stage,
+                dateOfPhoneScreen,
+                interviewDate,
+                dateOfOffer,
+                reasonNotExtending,
+                notes
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        `;
+
+    db.query(
+      insertSql,
+      [
+        profileOwner,
+        applicantName,
+        applicantPhone,
+        applicantEmail,
+        currentCompany,
+        candidateWorkLocation,
+        nativeLocation,
+        qualification,
+        experience,
+        skills,
+        noticePeriod,
+        band,
+        applicantResume,
+        dateApplied,
+        positionTitle,
+        positionId,
+        status,
+        stage || null,
+        dateOfPhoneScreen || null,
+        interviewDate || null,
+        dateOfOffer || null,
+        reasonNotExtending || null,
+        notes || null,
+      ],
+      (err, result) => {
+        if (err) {
+          console.error("Error: " + err.message);
+          return res.status(500).json({ message: "Error submitting form" });
+        }
+
+        res.status(200).json({ message: "Form submitted successfully" });
+      }
+    );
+  });
+});
 
 app.get(
   "/positionWithActiveApplicants",
@@ -196,29 +307,33 @@ app.get(
   }
 );
 
-app.post('/submit', authenticateToken, upload.single('applicantResume'), (req, res) => {
+app.post(
+  "/submit",
+  authenticateToken,
+  upload.single("applicantResume"),
+  (req, res) => {
     const {
-        applicantName,
-        applicantPhone,
-        applicantEmail,
-        currentCompany,
-        candidateWorkLocation,
-        nativeLocation,
-        qualification,
-        experience,
-        skills,
-        noticePeriod,
-        band,
-        dateApplied,
-        positionTitle,
-        positionId,
-        status,
-        stage,
-        dateOfPhoneScreen,
-        interviewDate,
-        dateOfOffer,
-        reasonNotExtending,
-        notes
+      applicantName,
+      applicantPhone,
+      applicantEmail,
+      currentCompany,
+      candidateWorkLocation,
+      nativeLocation,
+      qualification,
+      experience,
+      skills,
+      noticePeriod,
+      band,
+      dateApplied,
+      positionTitle,
+      positionId,
+      status,
+      stage,
+      dateOfPhoneScreen,
+      interviewDate,
+      dateOfOffer,
+      reasonNotExtending,
+      notes,
     } = req.body;
 
     const profileOwner = req.user.username;
@@ -273,35 +388,38 @@ app.post('/submit', authenticateToken, upload.single('applicantResume'), (req, r
             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)
         `;
 
-        db.query(insertSql, [
-            profileOwner,
-            applicantName,
-            applicantPhone,
-            applicantEmail,
-            currentCompany,
-            candidateWorkLocation,
-            nativeLocation,
-            qualification,
-            experience,
-            skills,
-            noticePeriod,
-            band,
-            applicantResume,
-            dateApplied,
-            positionTitle,
-            positionId,
-            status,
-            stage || null,
-            dateOfPhoneScreen || null,
-            interviewDate || null,
-            dateOfOffer || null,
-            reasonNotExtending || null,
-            notes || null
-        ], (err, result) => {
-            if (err) {
-                console.error('Error: ' + err.message);
-                return res.status(500).json({ message: 'Error submitting form' });
-            }
+      db.query(
+        insertSql,
+        [
+          profileOwner,
+          applicantName,
+          applicantPhone,
+          applicantEmail,
+          currentCompany,
+          candidateWorkLocation,
+          nativeLocation,
+          qualification,
+          experience,
+          skills,
+          noticePeriod,
+          band,
+          applicantResume,
+          dateApplied,
+          positionTitle,
+          positionId,
+          status,
+          stage || null,
+          dateOfPhoneScreen || null,
+          interviewDate || null,
+          dateOfOffer || null,
+          reasonNotExtending || null,
+          notes || null,
+        ],
+        (err, result) => {
+          if (err) {
+            console.error("Error: " + err.message);
+            return res.status(500).json({ message: "Error submitting form" });
+          }
 
           res.status(200).json({ message: "Form submitted successfully" });
         }
@@ -310,10 +428,8 @@ app.post('/submit', authenticateToken, upload.single('applicantResume'), (req, r
   }
 );
 
-
-
-app.post('/updatePosition', authenticateToken, (req, res) => {
-    const { positionTitle, positionId, description } = req.body;
+app.post("/updatePosition", authenticateToken, (req, res) => {
+  const { positionTitle, positionId, description } = req.body;
 
   const checkSql = "SELECT * FROM OpenPositions WHERE positionId = ?";
   db.query(checkSql, [positionId], (err, results) => {
@@ -366,13 +482,13 @@ app.post('/updatePosition', authenticateToken, (req, res) => {
   });
 });
 
-app.get('/api/positions', authenticateToken, (req, res) => {
-    const sql = 'SELECT positionId, positionTitle FROM OpenPositions';
-    db.query(sql, (err, results) => {
-        if (err) {
-            console.error('Error fetching positions: ' + err.message);
-            return res.status(500).json({ message: 'Error fetching positions' });
-        }
+app.get("/api/positions", authenticateToken, (req, res) => {
+  const sql = "SELECT positionId, positionTitle FROM OpenPositions";
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error("Error fetching positions: " + err.message);
+      return res.status(500).json({ message: "Error fetching positions" });
+    }
 
     res.status(200).json(results);
   });
