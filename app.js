@@ -149,6 +149,53 @@ app.get("/updatePositions", authenticateToken, (req, res) => {
 // });
 
 
+app.get(
+  "/positionWithActiveApplicants",
+  authenticateToken,
+  async (req, res) => {
+    try {
+      const query = `
+        SELECT 
+          op.positionId, 
+          op.positionTitle, 
+          op.jobdescription, 
+          GROUP_CONCAT(CASE WHEN at.status = 'OPEN' THEN at.applicantName END) as activeApplicants
+        FROM 
+          OpenPositions op
+        LEFT JOIN 
+          ApplicantTracking at ON op.positionId = at.positionId
+        GROUP BY 
+          op.positionId, op.positionTitle, op.jobdescription
+      `;
+
+      let results;
+
+      await db.query(query, (err, result) => {
+        if (err) {
+          console.error("Error fetching positions: " + err.message);
+          return res.status(500).json({ message: "Error fetching positions" });
+        }
+
+        results = result;
+
+        const processedResults = results.map((row) => ({
+          ...row,
+          activeApplicants: row.activeApplicants
+            ? row.activeApplicants.split(",")
+            : [],
+        }));
+
+        res.json(processedResults);
+      });
+
+      // Process the results to split the concatenated names
+    } catch (error) {
+      console.error("Error fetching positions with active applicants:", error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  }
+);
+
 app.post('/submit', authenticateToken, upload.single('applicantResume'), (req, res) => {
     const {
         applicantName,
