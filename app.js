@@ -20,31 +20,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/auth', authRoutes);
 app.use('/candidates', candidateRoutes);
 
-const util = require('util');
-
-// const util = require('util');
-
-app.get('/users', async (req, res) => {
-    try {
-      const sql = 'SELECT userId, username, role FROM users WHERE role = "user"';
-
-      let params = [];
-  
-      db.query(sql, params, (err, results) => {
-          if (err) {
-              console.error('Error: ' + err.message);
-              return res.status(500).json({ message: 'Error fetching candidates' });
-          }
-  
-          res.json(results);
-      });
-    } catch (err) {
-        // Log the full error object for debugging
-        console.error('Error fetching users:', util.inspect(err, { showHidden: false, depth: null }));
-        res.status(500).json({ error: 'Internal server error', details: err.message });
-    }
-});
-
 app.get('/form', authenticateToken, (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'form.html'));
 });
@@ -158,8 +133,6 @@ app.post('/submit', authenticateToken, upload.single('applicantResume'), (req, r
         experience,
         skills,
         noticePeriod,
-        currentctc,
-        expectedctc,
         band,
         dateApplied,
         positionTitle,
@@ -206,8 +179,6 @@ app.post('/submit', authenticateToken, upload.single('applicantResume'), (req, r
                 experience,
                 skills,
                 noticePeriod,
-                currentctc,
-                expectedctc,
                 band,
                 applicantResume,
                 dateApplied,
@@ -235,8 +206,6 @@ app.post('/submit', authenticateToken, upload.single('applicantResume'), (req, r
             experience,
             skills,
             noticePeriod,
-            currentctc,
-            expectedctc,
             band,
             applicantResume,
             dateApplied,
