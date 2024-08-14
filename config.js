@@ -3,7 +3,7 @@ module.exports = {
     database: {
         host: 'localhost',
         user: 'root',
-        password: '1234',
+        password: 'Pratik@10',
         database: 'ApplicantTracking'
     }
 };
