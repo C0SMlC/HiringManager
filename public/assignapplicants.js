@@ -15,12 +15,10 @@ document.addEventListener('DOMContentLoaded', function() {
     })
     .then(response => response.json())
     .then(users => {
-        console.log("ewhfj")
-        console.log(users)
         users.forEach(user => {
             if (user.role === 'user') {
                 const option = document.createElement('option');
-                option.value = user.userId;
+                option.value = user.username;  // Changed from userId to username
                 option.textContent = user.username;
                 assignToSelect.appendChild(option);
             }
@@ -31,38 +29,38 @@ document.addEventListener('DOMContentLoaded', function() {
     form.addEventListener('submit', function(event) {
         event.preventDefault();
 
-        // Validate name (only alphabets and spaces)
-        const nameRegex = /^[a-zA-Z\s]+$/;
-        if (!nameRegex.test(nameInput.value)) {
-            alert('Name must contain only alphabets and spaces.');
-            return;
-        }
+                // Validate name (only alphabets and spaces)
+                const nameRegex = /^[a-zA-Z\s]+$/;
+                if (!nameRegex.test(nameInput.value)) {
+                    alert('Name must contain only alphabets and spaces.');
+                    return;
+                }
+        
+                // Validate email
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(emailInput.value)) {
+                    alert('Please enter a valid email address.');
+                    return;
+                }
+        
+                // Validate phone (10 digits)
+                const phoneRegex = /^\d{10}$/;
+                if (!phoneRegex.test(phoneInput.value)) {
+                    alert('Phone number must be 10 digits.');
+                    return;
+                }
+        
+                // Validate resume file type
+                const allowedExtensions = ['pdf'];
+                const fileExtension = resumeInput.value.split('.').pop().toLowerCase();
+                if (!allowedExtensions.includes(fileExtension)) {
+                    alert('Please upload a PDF file for the resume.');
+                    return;
+                }
 
-        // Validate email
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(emailInput.value)) {
-            alert('Please enter a valid email address.');
-            return;
-        }
-
-        // Validate phone (10 digits)
-        const phoneRegex = /^\d{10}$/;
-        if (!phoneRegex.test(phoneInput.value)) {
-            alert('Phone number must be 10 digits.');
-            return;
-        }
-
-        // Validate resume file type
-        const allowedExtensions = ['pdf'];
-        const fileExtension = resumeInput.value.split('.').pop().toLowerCase();
-        if (!allowedExtensions.includes(fileExtension)) {
-            alert('Please upload a PDF file for the resume.');
-            return;
-        }
-
-        // If all validations pass, you can submit the form
+        // If all validations pass, submit the form
         const formData = new FormData(form);
-        fetch('/api/submit-application', {
+        fetch('/candidates/submit-application', {
             method: 'POST',
             body: formData,
             headers: {
@@ -75,7 +73,7 @@ document.addEventListener('DOMContentLoaded', function() {
             form.reset();
         })
         .catch(error => {
-            console.error('Error:', error);
+            // console.error('Error:', error);
             alert('An error occurred while submitting the form.');
         });
     });

@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const listContainers = document.querySelectorAll('.list-container');
+    const listContainers = document.querySelectorAll('.analytic-item');
     
     listContainers.forEach(container => {
         container.addEventListener('click', () => {

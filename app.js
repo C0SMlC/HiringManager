@@ -160,6 +160,8 @@ app.post("/submit/public", upload.single("applicantResume"), (req, res) => {
     experience,
     skills,
     noticePeriod,
+    currentctc,
+    expectedctc,
     band = "L0",
     positionTitle,
     positionId,
@@ -206,6 +208,8 @@ app.post("/submit/public", upload.single("applicantResume"), (req, res) => {
                 experience,
                 skills,
                 noticePeriod,
+                currentctc,
+                expectedctc,
                 band,
                 applicantResume,
                 dateApplied,
@@ -218,7 +222,7 @@ app.post("/submit/public", upload.single("applicantResume"), (req, res) => {
                 dateOfOffer,
                 reasonNotExtending,
                 notes
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `;
 
     db.query(
@@ -238,7 +242,8 @@ app.post("/submit/public", upload.single("applicantResume"), (req, res) => {
         currentctc,
         expectedctc,
         band,
-        // dateApplied,
+        applicantResume,
+        dateApplied,
         positionTitle,
         positionId,
         status,
@@ -324,8 +329,10 @@ app.post(
       experience,
       skills,
       noticePeriod,
+      currentctc,
+      expectedctc,
       band,
-      dateApplied,
+      // dateApplied,
       positionTitle,
       positionId,
       status,
@@ -336,7 +343,8 @@ app.post(
       reasonNotExtending,
       notes,
     } = req.body;
-  const profileOwner = "admin";
+    const profileOwner = req.user.username;
+
   const applicantResume = req.file.buffer;
   let dateApplied = new Date();
 
@@ -353,76 +361,80 @@ app.post(
     }
 
     if (results[0].count > 0) {
-      return res.status(400).json({ message: "duplicates not allowed" });
+      return res.status(400).json({ message: "User with this Email Or Phone already exists!" });
     }
 
     // If no duplicates found, insert new record
     const insertSql = `
-            INSERT INTO ApplicantTracking (
-                profileOwner,
-                applicantName,
-                applicantPhone,
-                applicantEmail,
-                currentCompany,
-                candidateWorkLocation,
-                nativeLocation,
-                qualification,
-                experience,
-                skills,
-                noticePeriod,
-                expectedctc,
-                currentctc,
-                band,
-                applicantResume,
-                dateApplied,
-                positionTitle,
-                positionId,
-                status,
-                stage,
-                dateOfPhoneScreen,
-                interviewDate,
-                dateOfOffer,
-                reasonNotExtending,
-                notes
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)
-        `;
+    INSERT INTO ApplicantTracking (
+        profileOwner,
+        applicantName,
+        applicantPhone,
+        applicantEmail,
+        currentCompany,
+        candidateWorkLocation,
+        nativeLocation,
+        qualification,
+        experience,
+        skills,
+        noticePeriod,
+        currentctc,
+        expectedctc,
+        band,
+        applicantResume,
+        dateApplied,
+        positionTitle,
+        positionId,
+        status,
+        stage,
+        dateOfPhoneScreen,
+        interviewDate,
+        dateOfOffer,
+        reasonNotExtending,
+        notes
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `;
 
-        db.query(insertSql, [
-            profileOwner,
-            applicantName,
-            applicantPhone,
-            applicantEmail,
-            currentCompany,
-            candidateWorkLocation,
-            nativeLocation,
-            qualification,
-            experience,
-            skills,
-            noticePeriod,
-            expectedctc,
-            currentctc,
-            band,
-            applicantResume,
-            dateApplied,
-            positionTitle,
-            positionId,
-            status,
-            stage || null,
-            dateOfPhoneScreen || null,
-            interviewDate || null,
-            dateOfOffer || null,
-            reasonNotExtending || null,
-            notes || null
-        ], (err, result) => {
-            if (err) {
-                console.error('Error: ' + err.message);
-                return res.status(500).json({ message: 'Error submitting form' });
-            }
+  db.query(
+    insertSql,
+    [
+      profileOwner,
+      applicantName,
+      applicantPhone,
+      applicantEmail,
+      currentCompany,
+      candidateWorkLocation,
+      nativeLocation,
+      qualification,
+      experience,
+      skills,
+      noticePeriod,
+      currentctc,
+      expectedctc,
+      band,
+      applicantResume, 
+      dateApplied,
+      positionTitle,
+      positionId,
+      status,
+      stage || null,
+      dateOfPhoneScreen || null,
+      interviewDate || null,
+      dateOfOffer || null,
+      reasonNotExtending || null,
+      notes || null,
+    ],
+    (err, result) => {
+      if (err) {
+        console.error("Error: " + err.message);
+        return res.status(500).json({ message: "Error submitting form" });
+      }
 
-            res.status(200).json({ message: 'Form submitted successfully' });
-        });
-    });
+      res.status(200).json({ message: "Form submitted successfully" });
+    }
+  );
 });
+  });
 
 app.get('/positionWithActiveApplicants', authenticateToken, async (req, res) => {
     try {
@@ -467,225 +479,235 @@ app.get('/positionWithActiveApplicants', authenticateToken, async (req, res) => 
     }
   });
 
-app.post('/updatePosition', authenticateToken, (req, res) => {
+  app.post("/updatePosition", authenticateToken, (req, res) => {
     const { positionTitle, positionId, description } = req.body;
-
-    const checkSql = 'SELECT * FROM OpenPositions WHERE positionId = ?';
+  
+    const checkSql = "SELECT * FROM OpenPositions WHERE positionId = ?";
     db.query(checkSql, [positionId], (err, results) => {
-    db.query(
-      insertSql,
-      [
-        profileOwner,
-        applicantName,
-        applicantPhone,
-        applicantEmail,
-        currentCompany,
-        candidateWorkLocation,
-        nativeLocation,
-        qualification,
-        experience,
-        skills,
-        noticePeriod,
-        band,
-        applicantResume,
-        dateApplied,
-        positionTitle,
-        positionId,
-        status,
-        stage || null,
-        dateOfPhoneScreen || null,
-        interviewDate || null,
-        dateOfOffer || null,
-        reasonNotExtending || null,
-        notes || null,
-      ],
-      (err, result) => {
-        if (err) {
-          console.error("Error: " + err.message);
-          return res.status(500).json({ message: "Error submitting form" });
-        }
-
-        res.status(200).json({ message: "Form submitted successfully" });
-      }
-    );
-  });
-});
-
-app.post(
-  "/submit",
-  authenticateToken,
-  upload.single("applicantResume"),
-  (req, res) => {
-    const {
-      applicantName,
-      applicantPhone,
-      applicantEmail,
-      currentCompany,
-      candidateWorkLocation,
-      nativeLocation,
-      qualification,
-      experience,
-      skills,
-      noticePeriod,
-      band,
-      dateApplied,
-      positionTitle,
-      positionId,
-      status,
-      stage,
-      dateOfPhoneScreen,
-      interviewDate,
-      dateOfOffer,
-      reasonNotExtending,
-      notes,
-    } = req.body;
-
-    const profileOwner = req.user.username;
-    const applicantResume = req.file.buffer;
-
-    // Check for existing records
-    const checkSql = `
-        SELECT COUNT(*) AS count FROM ApplicantTracking 
-        WHERE applicantPhone = ? OR applicantEmail = ?
-    `;
-
-    db.query(checkSql, [applicantPhone, applicantEmail], (err, results) => {
       if (err) {
-        console.error("Error: " + err.message);
-        return res
-          .status(500)
-          .json({ message: "Error checking for duplicates" });
+        console.error("Error checking position: " + err.message);
+        return res.status(500).json({ message: "Error checking position" });
       }
-
-      if (results[0].count > 0) {
-        return res.status(400).json({ message: "duplicates not allowed" });
-      }
-
-      // If no duplicates found, insert new record
-      const insertSql = `
-            INSERT INTO ApplicantTracking (
-                profileOwner,
-                applicantName,
-                applicantPhone,
-                applicantEmail,
-                currentCompany,
-                candidateWorkLocation,
-                nativeLocation,
-                qualification,
-                experience,
-                skills,
-                noticePeriod,
-                band,
-                applicantResume,
-                dateApplied,
-                positionTitle,
-                positionId,
-                status,
-                stage,
-                dateOfPhoneScreen,
-                interviewDate,
-                dateOfOffer,
-                reasonNotExtending,
-                notes
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        `;
-
-      db.query(
-        insertSql,
-        [
-          profileOwner,
-          applicantName,
-          applicantPhone,
-          applicantEmail,
-          currentCompany,
-          candidateWorkLocation,
-          nativeLocation,
-          qualification,
-          experience,
-          skills,
-          noticePeriod,
-          band,
-          applicantResume,
-          dateApplied,
-          positionTitle,
-          positionId,
-          status,
-          stage || null,
-          dateOfPhoneScreen || null,
-          interviewDate || null,
-          dateOfOffer || null,
-          reasonNotExtending || null,
-          notes || null,
-        ],
-        (err, result) => {
-          if (err) {
-            console.error("Error: " + err.message);
-            return res.status(500).json({ message: "Error submitting form" });
+  
+      if (results.length > 0) {
+        // Position exists, update it
+        const updateSql = `
+                  UPDATE OpenPositions 
+                  SET positionTitle = ?,
+                      jobdescription = ?
+                  WHERE positionId = ?
+              `;
+        db.query(
+          updateSql,
+          [positionTitle, positionId, description],
+          (err, result) => {
+            if (err) {
+              console.error("Error updating position: " + err.message);
+              return res.status(500).json({ message: "Error updating position" });
+            }
+  
+            res.status(200).json({ message: "Position updated successfully" });
           }
-
-          res.status(200).json({ message: "Form submitted successfully" });
-        }
-      );
+        );
+      } else {
+        // Position does not exist, insert new position
+        const insertSql = `
+                  INSERT INTO OpenPositions (positionId, positionTitle,jobdescription) 
+                  VALUES (?, ?, ?)
+              `;
+        db.query(
+          insertSql,
+          [positionId, positionTitle, description],
+          (err, result) => {
+            if (err) {
+              console.error("Error inserting position: " + err.message);
+              return res
+                .status(500)
+                .json({ message: "Error inserting position" });
+            }
+  
+            res.status(200).json({ message: "Position added successfully" });
+          }
+        );
+      }
     });
-  }
-);
-
-app.post("/updatePosition", authenticateToken, (req, res) => {
-  const { positionTitle, positionId, description } = req.body;
-
-  const checkSql = "SELECT * FROM OpenPositions WHERE positionId = ?";
-  db.query(checkSql, [positionId], (err, results) => {
-    if (err) {
-      console.error("Error checking position: " + err.message);
-      return res.status(500).json({ message: "Error checking position" });
-    }
-
-    if (results.length > 0) {
-      // Position exists, update it
-      const updateSql = `
-                UPDATE OpenPositions 
-                SET positionTitle = ?,
-                    jobdescription = ?
-                WHERE positionId = ?
-            `;
-      db.query(
-        updateSql,
-        [positionTitle, positionId, description],
-        (err, result) => {
-          if (err) {
-            console.error("Error updating position: " + err.message);
-            return res.status(500).json({ message: "Error updating position" });
-          }
-
-          res.status(200).json({ message: "Position updated successfully" });
-        }
-      );
-    } else {
-      // Position does not exist, insert new position
-      const insertSql = `
-                INSERT INTO OpenPositions (positionId, positionTitle,jobdescription) 
-                VALUES (?, ?, ?)
-            `;
-      db.query(
-        insertSql,
-        [positionId, positionTitle, description],
-        (err, result) => {
-          if (err) {
-            console.error("Error inserting position: " + err.message);
-            return res
-              .status(500)
-              .json({ message: "Error inserting position" });
-          }
-
-          res.status(200).json({ message: "Position added successfully" });
-        }
-      );
-    }
   });
-});
+
+// app.post(
+//   "/submit",
+//   authenticateToken,
+//   upload.single("applicantResume"),
+//   (req, res) => {
+//     const {
+//       applicantName,
+//       applicantPhone,
+//       applicantEmail,
+//       currentCompany,
+//       candidateWorkLocation,
+//       nativeLocation,
+//       qualification,
+//       experience,
+//       skills,
+//       noticePeriod,
+//       band,
+//       dateApplied,
+//       positionTitle,
+//       positionId,
+//       status,
+//       stage,
+//       dateOfPhoneScreen,
+//       interviewDate,
+//       dateOfOffer,
+//       reasonNotExtending,
+//       notes,
+//     } = req.body;
+
+//     const profileOwner = req.user.username;
+//     const applicantResume = req.file.buffer;
+
+//     // Check for existing records
+//     const checkSql = `
+//         SELECT COUNT(*) AS count FROM ApplicantTracking 
+//         WHERE applicantPhone = ? OR applicantEmail = ?
+//     `;
+
+//     db.query(checkSql, [applicantPhone, applicantEmail], (err, results) => {
+//       if (err) {
+//         console.error("Error: " + err.message);
+//         return res
+//           .status(500)
+//           .json({ message: "Error checking for duplicates" });
+//       }
+
+//       if (results[0].count > 0) {
+//         return res.status(400).json({ message: "User with this Email Or Phone already exists!" });
+//       }
+
+//       // If no duplicates found, insert new record
+//       const insertSql = `
+//             INSERT INTO ApplicantTracking (
+//                 profileOwner,
+//                 applicantName,
+//                 applicantPhone,
+//                 applicantEmail,
+//                 currentCompany,
+//                 candidateWorkLocation,
+//                 nativeLocation,
+//                 qualification,
+//                 experience,
+//                 skills,
+//                 noticePeriod,
+//                 band,
+//                 applicantResume,
+//                 dateApplied,
+//                 positionTitle,
+//                 positionId,
+//                 status,
+//                 stage,
+//                 dateOfPhoneScreen,
+//                 interviewDate,
+//                 dateOfOffer,
+//                 reasonNotExtending,
+//                 notes
+//             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+//         `;
+
+//       db.query(
+//         insertSql,
+//         [
+//           profileOwner,
+//           applicantName,
+//           applicantPhone,
+//           applicantEmail,
+//           currentCompany,
+//           candidateWorkLocation,
+//           nativeLocation,
+//           qualification,
+//           experience,
+//           skills,
+//           noticePeriod,
+//           band,
+//           applicantResume,
+//           dateApplied,
+//           positionTitle,
+//           positionId,
+//           status,
+//           stage || null,
+//           dateOfPhoneScreen || null,
+//           interviewDate || null,
+//           dateOfOffer || null,
+//           reasonNotExtending || null,
+//           notes || null,
+//         ],
+//         (err, result) => {
+//           if (err) {
+//             console.error("Error: " + err.message);
+//             return res.status(500).json({ errMessage: err.message ,message: "Error submitting form" });
+//           }
+
+//           res.status(200).json({ message: "Form submitted successfully" });
+//         }
+//       );
+//     });
+//   }
+// );
+
+// app.post("/updatePosition", authenticateToken, (req, res) => {
+//   const { positionTitle, positionId, description } = req.body;
+
+//   const checkSql = "SELECT * FROM OpenPositions WHERE positionId = ?";
+//   db.query(checkSql, [positionId], (err, results) => {
+//     if (err) {
+//       console.error("Error checking position: " + err.message);
+//       return res.status(500).json({ message: "Error checking position" });
+//     }
+
+//     if (results.length > 0) {
+//       // Position exists, update it
+//       const updateSql = `
+//                 UPDATE OpenPositions 
+//                 SET positionTitle = ?,
+//                     jobdescription = ?
+//                 WHERE positionId = ?
+//             `;
+//       db.query(
+//         updateSql,
+//         [positionTitle, positionId, description],
+//         (err, result) => {
+//           if (err) {
+//             console.error("Error updating position: " + err.message);
+//             return res.status(500).json({ message: "Error updating position" });
+//           }
+
+//           res.status(200).json({ message: "Position updated successfully" });
+//         }
+//       );
+//     } else {
+//       // Position does not exist, insert new position
+//       const insertSql = `
+//                 INSERT INTO OpenPositions (positionId, positionTitle,jobdescription) 
+//                 VALUES (?, ?, ?)
+//             `;
+//       db.query(
+//         insertSql,
+//         [positionId, positionTitle, description],
+//         (err, result) => {
+//           if (err) {
+//             console.error("Error inserting position: " + err.message);
+//             return res
+//               .status(500)
+//               .json({ message: "Error inserting position" });
+//           }
+
+//           res.status(200).json({ message: "Position added successfully" });
+//         }
+//       );
+//     }
+//   });
+// });
 
 app.get("/api/positions", authenticateToken, (req, res) => {
-  const sql = "SELECT positionId, positionTitle FROM OpenPositions";
+  const sql = "SELECT positionId, positionTitle, jobdescription FROM OpenPositions";
   db.query(sql, (err, results) => {
     if (err) {
       console.error("Error fetching positions: " + err.message);

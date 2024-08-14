@@ -70,6 +70,11 @@
         ul {
             padding-left: 20px;
         }
+
+        .marginContianer{
+            margin-top: 3.6rem;
+        }
+
         #masterDetails {
             width: 100%;
             border-collapse: collapse;
@@ -86,33 +91,36 @@
 </head>
 <body>
     <div class="navbar">
-        <a href="index.html" id="homeLink">Home</a>
+        <!-- <a href="index.html" id="homeLink">Home</a> -->
         <a href="form.html" id="formLink">Candidate Form</a>
         <a href="candidates.html" id="detailsLink">Candidate Details</a>
+        <a href="stats.html" id="statsLink">Statistics</a>
         <a href="updatePositions.html" id="updatePositionsLink"
           >Update Positions</a
         >
         <a href="positions.html" id="positionsLink">Open Positions</a>
         <a href="masterCandidates.html" id="masterCandidatesLink">Master Candidate Details</a>
+        <a href="assignapplicants.html" id="assignApplicantLink"
+        >Assign Applicant</a>
         <a href="#" id="logoutLink" >Logout</a>
       </div>
     <div class="dashboard-container">
         <h1>Applicant Tracking Dashboard</h1>
 
         <div class="analytics-container">
-            <div class="analytic-item">
+            <div class="analytic-item list-container-master" data-stage="active" id ="masterDetailsContainer">
                 <h3>Total Applicants</h3>
                 <p id="totalApplicants">0</p>
             </div>
-            <div class="analytic-item">
+            <div class="analytic-item" data-stage="active">
                 <h3>Active Applicants</h3>
                 <p id="activeApplicants">0</p>
             </div>
-            <div class="analytic-item">
+            <div class="analytic-item" data-stage="rejected">
                 <h3>Rejected Applicants</h3>
                 <p id="rejectedApplicants">0</p>
             </div>
-            <div class="analytic-item">
+            <div class="analytic-item" data-stage="joined">
                 <h3>Joined Applicants</h3>
                 <p id="joinedApplicants">0</p>
             </div>
@@ -127,32 +135,30 @@
             </div>
         </div>
 
-        <div class="list-container" data-stage="active">
-            <h2>Active/Open List</h2>
-            <ul id="activeList"></ul>
+        <div class="analytics-container marginContianer">
+            <!-- <div class="analytic-item" data-stage="active">
+                <h3>Active/Open</h3>
+                <p id="activeCount">0</p>
+            </div>
+            <div class="analytic-item" data-stage="rejected">
+                <h3>Rejected</h3>
+                <p id="rejectedCount">0</p>
+            </div> -->
+            <div class="analytic-item" data-stage="buffer">
+                <h3>Buffer</h3>
+                <p id="bufferCount">0</p>
+            </div>
+            <div class="analytic-item" data-stage="closed">
+                <h3>Closed</h3>
+                <p id="closedCount">0</p>
+            </div>
+            <div class="analytic-item" data-stage="joined">
+                <h3>Joined</h3>
+                <p id="joinedCount">0</p>
+            </div>
         </div>
 
-        <div class="list-container" data-stage="rejected">
-            <h2>Rejected List</h2>
-            <ul id="rejectedList"></ul>
-        </div>
-
-        <div class="list-container" data-stage="buffer">
-            <h2>Buffer List</h2>
-            <ul id="bufferList"></ul>
-        </div>
-
-        <div class="list-container" data-stage="closed">
-            <h2>Closed List</h2>
-            <ul id="closedList"></ul>
-        </div>
-
-        <div class="list-container" data-stage="joined">
-            <h2>Joined List</h2>
-            <ul id="joinedList"></ul>
-        </div>
-
-        <div class="list-container-master" id="masterDetailsContainer" data-view="masterDetails">
+        <!-- <div class="list-container-master" id="masterDetailsContainer" data-view="masterDetails">
             <h2>Master Details</h2>
             <table id="masterDetails">
                 <thead>
@@ -163,10 +169,12 @@
                 </thead>
                 <tbody></tbody>
             </table>
-        </div>
+        </div> -->
     </div>
 
     <script src="stats.js"></script>
     <script src="list-view.js"></script>
+    <script src="dashboard.js"></script>
+    <script src="hideNav.js"></script>
 </body>
 </html>

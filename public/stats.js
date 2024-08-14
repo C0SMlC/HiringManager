@@ -18,7 +18,7 @@ function fetchDashboardData() {
         const processedData = processData(data);
         updateCharts(processedData);
         updateLists(processedData.lists);
-        updateMasterDetails(processedData);
+        // updateMasterDetails(processedData);
         updateAnalytics(processedData.analytics);
     })
     .catch(error => {
@@ -49,40 +49,40 @@ function processData(data) {
     };
 
     const lists = {
-        active: [],
-        rejected: [],
-        buffer: [],
-        closed: [],
-        joined: []
+        active: 0,
+        rejected: 0,
+        buffer: 0,
+        closed: 0,
+        joined: 0
     };
 
     data.forEach(candidate => {
         if (activeStages.hasOwnProperty(candidate.stage)) {
             activeStages[candidate.stage]++;
-            lists.active.push(candidate.applicantName);
+            lists.active++;
         } else if (inactiveStages.hasOwnProperty(candidate.stage)) {
             inactiveStages[candidate.stage]++;
             if (candidate.stage === 'Rejected') {
-                lists.rejected.push(candidate.applicantName);
+                lists.rejected++;
             } else if (candidate.stage === 'Buffer List') {
-                lists.buffer.push(candidate.applicantName);
+                lists.buffer++;
             }
         }
 
         if (candidate.status === 'CLOSED') {
-            lists.closed.push(candidate.applicantName);
+            lists.closed++;
         }
 
         if (candidate.status === 'CLOSED' && candidate.stage === 'Final Discussion') {
-            lists.joined.push(candidate.applicantName);
+            lists.joined++;
         }
     });
 
     const analytics = {
         totalApplicants: data.length,
-        activeApplicants: lists.active.length,
-        rejectedApplicants: lists.rejected.length,
-        joinedApplicants: lists.joined.length
+        activeApplicants: lists.active,
+        rejectedApplicants: lists.rejected,
+        joinedApplicants: lists.joined
     };
 
     return {
@@ -91,6 +91,14 @@ function processData(data) {
         lists,
         analytics
     };
+}
+
+function updateLists(lists) {
+    // document.getElementById('activeCount').textContent = lists.active;
+    // document.getElementById('rejectedCount').textContent = lists.rejected;
+    document.getElementById('bufferCount').textContent = lists.buffer;
+    document.getElementById('closedCount').textContent = lists.closed;
+    document.getElementById('joinedCount').textContent = lists.joined;
 }
 
 function updateCharts(data) {
@@ -121,6 +129,13 @@ function updateCharts(data) {
                             }
                             return label;
                         }
+                    }
+                },
+                title: {
+                    display: true,
+                    text: 'Active Profile Stats',
+                    font: {
+                        size: 16
                     }
                 }
             }
@@ -153,6 +168,13 @@ function updateCharts(data) {
                             return label;
                         }
                     }
+                },
+                title: {
+                    display: true,
+                    text: 'Closed Profile Stats',
+                    font: {
+                        size: 16
+                    }
                 }
             },
             scales: {
@@ -164,24 +186,24 @@ function updateCharts(data) {
     });
 }
 
-function updateLists(lists) {
-    for (const [listName, items] of Object.entries(lists)) {
-        const listElement = document.getElementById(`${listName}List`);
-        listElement.innerHTML = items.map(item => `<li>${item}</li>`).join('');
-    }
-}
+// function updateLists(lists) {
+//     for (const [listName, items] of Object.entries(lists)) {
+//         const listElement = document.getElementById(`${listName}List`);
+//         listElement.innerHTML = items.map(item => `<li>${item}</li>`).join('');
+//     }
+// }
 
-function updateMasterDetails(data) {
-    const tableBody = document.querySelector('#masterDetails tbody');
-    tableBody.innerHTML = '';
+// function updateMasterDetails(data) {
+//     const tableBody = document.querySelector('#masterDetails tbody');
+//     tableBody.innerHTML = '';
 
-    const allStages = { ...data.activeStages, ...data.inactiveStages };
-    for (const [stage, count] of Object.entries(allStages)) {
-        const row = tableBody.insertRow();
-        row.insertCell(0).textContent = stage;
-        row.insertCell(1).textContent = count;
-    }
-}
+//     const allStages = { ...data.activeStages, ...data.inactiveStages };
+//     for (const [stage, count] of Object.entries(allStages)) {
+//         const row = tableBody.insertRow();
+//         row.insertCell(0).textContent = stage;
+//         row.insertCell(1).textContent = count;
+//     }
+// }
 
 function updateAnalytics(analytics) {
     document.getElementById('totalApplicants').textContent = analytics.totalApplicants;

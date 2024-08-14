@@ -8,14 +8,15 @@
 </head>
 <body>
   <div class="navbar">
-    <a href="index.html" id="homeLink">Home</a>
+    <!-- <a href="index.html" id="homeLink">Home</a> -->
     <a href="login.html" id="loginLink">Login</a>
     <a href="form.html" id="formLink">Candidate Form</a>
     <a href="candidates.html" id="detailsLink">Candidate Details</a>
+    <a href="stats.html" id="statsLink">Statistics</a>
     <a href="updatePositions.html" id="updatePositionsLink">Update Positions</a>
     <a href="positions.html" id="positionsLink">Open Positions</a>
-    <a href="masterCandidates.html" id="masterCandidatesLink">Master Candidate Details</a>
-    <a href="assignapplicants.html" id="assignApplicantLink">Assign Applicant</a>
+    <a href="masterCandidates.html" id="masterCandidatesLink" style="display: none;">Master Candidate Details</a>
+    <a href="assignapplicants.html" id="assignApplicantLink" style="display: none;">Assign Applicant</a>
     <a href="#" id="logoutLink" style="display: none">Logout</a>
   </div>
   <div class="form-container">
@@ -24,73 +25,73 @@
     <form id="applicantForm" enctype="multipart/form-data">
       <div class="form-row">
         <div class="form-field">
-          <label for="profileOwner">Profile Owner:</label>
+          <label for="profileOwner" >Profile Owner:</label>
           <input type="text" id="profileOwner" name="profileOwner" readonly />
         </div>
         <div class="form-field">
-          <label for="applicantName">Applicant Name:</label>
+          <label for="applicantName" class="required">Candidate Name:</label>
           <input type="text" id="applicantName" name="applicantName" required />
         </div>
       </div>
 
       <div class="form-row">
         <div class="form-field">
-          <label for="applicantPhone">Applicant Phone:</label>
+          <label for="applicantPhone" class="required">Candidate Phone:</label>
           <input type="text" id="applicantPhone" name="applicantPhone" required />
         </div>
         <div class="form-field">
-          <label for="applicantEmail">Applicant Email:</label>
+          <label for="applicantEmail" class="required">Candidate Email:</label>
           <input type="email" id="applicantEmail" name="applicantEmail" required />
         </div>
       </div>
 
       <div class="form-row">
         <div class="form-field">
-          <label for="currentCompany">Current Company:</label>
+          <label for="currentCompany" class="required">Current Company:</label>
           <input type="text" id="currentCompany" name="currentCompany" required />
         </div>
         <div class="form-field">
-          <label for="candidateWorkLocation">Candidate Work Location:</label>
+          <label for="candidateWorkLocation" class="required">Candidate Work Location:</label>
           <input type="text" id="candidateWorkLocation" name="candidateWorkLocation" required />
         </div>
       </div>
 
       <div class="form-row">
         <div class="form-field">
-          <label for="nativeLocation">Native Location:</label>
+          <label for="nativeLocation" class="required">Native Location:</label>
           <input type="text" id="nativeLocation" name="nativeLocation" required />
         </div>
         <div class="form-field">
-          <label for="qualification">Qualification:</label>
+          <label for="qualification" class="required">Qualification:</label>
           <input type="text" id="qualification" name="qualification" required />
         </div>
       </div>
 
       <div class="form-row">
         <div class="form-field">
-          <label for="experience">Experience:</label>
+          <label for="experience" class="required">Experience:</label>
           <input type="text" id="experience" name="experience" required />
         </div>
         <div class="form-field">
-          <label for="skills">Skills:</label>
+          <label for="skills" class="required">Skills:</label>
           <input type="text" id="skills" name="skills" required />
         </div>
       </div>
 
       <div class="form-row">
         <div class="form-field">
-          <label for="noticePeriod">Notice Period:</label>
+          <label for="noticePeriod" class="required">Notice Period:</label>
           <input type="text" id="noticePeriod" name="noticePeriod" required />
         </div>
         <div class="form-field">
-          <label for="currentctc">Current CTC:</label>
+          <label for="currentctc" class="required">Current CTC:</label>
           <input type="number" id="currentctc" name="currentctc" required />
         </div>
       </div>
 
       <div class="form-row">
         <div class="form-field">
-          <label for="expectedctc">Expected CTC:</label>
+          <label for="expectedctc" class="required">Expected CTC:</label>
           <input type="number" id="expectedctc" name="expectedctc" required />
         </div>
         <div class="form-field">
@@ -110,24 +111,24 @@
 
       <div class="form-row">
         <div class="form-field">
-          <label for="applicantResume">Applicant Resume:</label>
+          <label for="applicantResume" class="required">Applicant Resume:</label>
           <input type="file" id="applicantResume" name="applicantResume" required />
         </div>
         <div class="form-field">
-          <label for="dateApplied">Date Applied:</label>
+          <label for="dateApplied" class="required" >Date Applied:</label>
           <input type="date" id="dateApplied" name="dateApplied" required />
         </div>
       </div>
 
       <div class="form-row">
         <div class="form-field">
-          <label for="positionTitle">Position Title:</label>
+          <label for="positionTitle" class="required">Position Title:</label>
           <select id="positionTitle" name="positionTitle" required>
             <option value="">Select Position Title</option>
           </select>
         </div>
         <div class="form-field">
-          <label for="positionId">Position ID:</label>
+          <label for="positionId" class="required">Position ID:</label>
           <select id="positionId" name="positionId" required>
             <option value="">Select Position ID</option>
           </select>
@@ -147,11 +148,17 @@
           <select id="stage" name="stage">
             <option value="App. Recd.">App. Recd.</option>
             <option value="Phone Screen">Phone Screen</option>
-            <option value="Interview 1">Interview 1</option>
-            <option value="Interview 2">Interview 2</option>
-            <option value="Offer Made">Offer Made</option>
-            <option value="Hired">Hired</option>
+            <option value="L1">L1</option>
+            <option value="L2_Internal">L2_Internal</option>
+            <option value="Yet to share">Yet to share</option>
+            <option value="Shared with client">Shared with client</option>
+            <option value="L1_Client">L1_Client</option>
+            <option value="L2_Client">L2_Client</option>
+            <option value="Final Discussion">Final Discussion</option>
+            <option value="HOLD">HOLD</option>
+            <option value="Buffer List">Buffer List</option>
             <option value="Rejected">Rejected</option>
+            <option value="Declined">Declined</option>
           </select>
         </div>
       </div>
@@ -205,6 +212,20 @@
       if (!(form instanceof HTMLFormElement)) {
         console.error("Applicant form not found");
         return;
+      }
+
+      // Check user role and show/hide admin-only links
+      const role = localStorage.getItem('role');
+      // console.log(role);
+      const masterCandidatesLink = document.getElementById('masterCandidatesLink');
+      const assignApplicantLink = document.getElementById('assignApplicantLink');
+
+      if (role === 'admin') {
+        if (masterCandidatesLink) masterCandidatesLink.style.display = 'inline';
+        if (assignApplicantLink) assignApplicantLink.style.display = 'inline';
+      } else{
+        if (masterCandidatesLink) masterCandidatesLink.style.display = 'none';
+        if (assignApplicantLink) assignApplicantLink.style.display = 'none';
       }
 
       const inputs = {
@@ -368,18 +389,21 @@
             body: formData,
           });
 
-          if (!response.ok) {
-            throw new Error("Failed to submit form");
-          }
+          // if (!response.ok) {
+          //   throw new Error("Failed to submit form");
+          // }
 
           const result = await response.json();
           alert(result.message);
-          form.reset();
+          // form.reset();
         } catch (error) {
           alert(error.message);
         }
       });
     });
   </script>
+    <script src="hideNav.js"></script>
+    <script src="dashboard.js"></script>
+
 </body>
 </html>

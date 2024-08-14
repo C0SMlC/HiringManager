@@ -55,7 +55,7 @@ router.post('/login', (req, res) => {
         }
 
         const token = jwt.sign({ username: user.username, role: user.role }, config.secret, { expiresIn: '1h' });
-        res.status(200).json({ token });
+        res.status(200).json({ token, role: user.role  });
     });
 });
 

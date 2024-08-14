@@ -12,7 +12,7 @@
       <form id="applicantForm" enctype="multipart/form-data">
         <div class="form-row">
           <div class="form-field">
-            <label for="applicantName">Applicant Name:</label>
+            <label for="applicantName" class="required">Name:</label>
             <input
               type="text"
               id="applicantName"
@@ -24,7 +24,7 @@
 
         <div class="form-row">
           <div class="form-field">
-            <label for="applicantPhone">Applicant Phone:</label>
+            <label for="applicantPhone" class="required">Phone:</label>
             <input
               type="text"
               id="applicantPhone"
@@ -33,7 +33,7 @@
             />
           </div>
           <div class="form-field">
-            <label for="applicantEmail">Applicant Email:</label>
+            <label for="applicantEmail" class="required">Email:</label>
             <input
               type="email"
               id="applicantEmail"
@@ -45,7 +45,7 @@
 
         <div class="form-row">
           <div class="form-field">
-            <label for="currentCompany">Current Company:</label>
+            <label for="currentCompany" class="required">Current Company:</label>
             <input
               type="text"
               id="currentCompany"
@@ -54,7 +54,7 @@
             />
           </div>
           <div class="form-field">
-            <label for="candidateWorkLocation">Candidate Work Location:</label>
+            <label for="candidateWorkLocation" class="required">Work Location:</label>
             <input
               type="text"
               id="candidateWorkLocation"
@@ -75,7 +75,7 @@
             />
           </div>
           <div class="form-field">
-            <label for="qualification">Qualification:</label>
+            <label for="qualification" class="required">Qualification:</label>
             <input
               type="text"
               id="qualification"
@@ -87,7 +87,7 @@
 
         <div class="form-row">
           <div class="form-field">
-            <label for="experience">Experience:</label>
+            <label for="experience" class="required">Experience:</label>
             <input type="text" id="experience" name="experience" required />
           </div>
           <div class="form-field">
@@ -98,18 +98,18 @@
 
         <div class="form-row">
           <div class="form-field">
-            <label for="noticePeriod">Notice Period:</label>
+            <label for="noticePeriod" class="required">Notice Period:</label>
             <input type="text" id="noticePeriod" name="noticePeriod" required />
           </div>
           <div class="form-field">
-            <label for="currentctc">Current CTC:</label>
+            <label for="currentctc" class="required">Current CTC:</label>
             <input type="number" id="currentctc" name="currentctc" required />
           </div>
         </div>
 
         <div class="form-row">
           <div class="form-field">
-            <label for="expectedctc">Expected CTC:</label>
+            <label for="expectedctc" class="required">Expected CTC:</label>
             <input type="number" id="expectedctc" name="expectedctc" required />
           </div>
           <!-- <div class="form-field">
@@ -129,7 +129,7 @@
 
         <div class="form-row">
           <div class="form-field">
-            <label for="applicantResume">Applicant Resume:</label>
+            <label for="applicantResume" class="required">Resume:</label>
             <input
               type="file"
               id="applicantResume"
@@ -144,15 +144,15 @@
         <input type="hidden" id="status" name="status" value="OPEN" />
         <input type="hidden" id="stage" name="stage" value="App. Recd." />
 
-        <div class="form-row">
+        <!-- <div class="form-row">
           <div class="form-field full-width">
             <label for="notes">Notes:</label>
             <input type="text" id="notes" name="notes" />
           </div>
-        </div>
+        </div> -->
         <div class="form-row">
           <div class="form-field full-width">
-            <button type="submit">Submit Application</button>
+            <button type="submit">Submit </button>
           </div>
         </div>
       </form>

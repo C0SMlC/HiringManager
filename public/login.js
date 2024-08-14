@@ -24,6 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const data = await response.json();
       if (data.token) {
         localStorage.setItem("token", data.token);
+        localStorage.setItem("role", data.role);
         localStorage.setItem("username", username); // Store username
         window.location.href = "stats.html";
       } else {

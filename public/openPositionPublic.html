@@ -30,6 +30,9 @@
         margin-bottom: 20px;
       }
       .position-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
         background: #fafafa;
         border: 1px solid #ddd;
         border-radius: 4px;
@@ -38,12 +41,24 @@
         text-align: left;
       }
       .position-item h2 {
-        margin-top: 0;
+        margin: 0 15px 0 0;
         color: #2c3e50;
+        font-size: 18px;
+        flex-basis: 20%;
       }
       .position-item p {
-        margin: 10px 0;
+        margin: 0 15px;
         color: #555;
+        flex-basis: 20%;
+      }
+      .position-description {
+        margin: 0 15px;
+        color: #555;
+        flex-basis: 40%;
+        max-height: 200px;
+        overflow-y: auto;
+        border-left: 1px solid #ddd;
+        padding-left: 15px;
       }
       .position-item button {
         background-color: #3498db;
@@ -54,7 +69,7 @@
         text-decoration: none;
         display: inline-block;
         font-size: 16px;
-        margin-top: 10px;
+        margin-left: auto;
         border-radius: 4px;
         cursor: pointer;
         transition: background-color 0.3s ease;
@@ -87,6 +102,7 @@
               positionDiv.innerHTML = `
                         <h2>${position.positionTitle}</h2>
                         <p>Position ID: ${position.positionId}</p>
+                        <div class="position-description">${position.jobdescription}</div>
                         <button onclick="applyForPosition('${position.positionId}', '${position.positionTitle}')">Apply</button>
                     `;
               positionsList.appendChild(positionDiv);
