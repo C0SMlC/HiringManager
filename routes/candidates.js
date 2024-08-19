@@ -38,11 +38,7 @@ router.post('/submit-application', authenticateToken, upload.single('resume'), (
 // Fetch all candidates for the profile owner or all candidates if the user is an admin
 router.get("/", authenticateToken, (req, res) => {
   const profileOwner = req.user.username;
-  const { isgetAll } = req.query;
-
-  console.log(req.query);
-
-  console.log(profileOwner);
+  const { isgetAll, profileOwnerFilter } = req.query;
 
   const userRole = req.user.role;
 
@@ -52,6 +48,27 @@ router.get("/", authenticateToken, (req, res) => {
   if (userRole !== "admin" && isgetAll !== "true") {
     sql += " WHERE profileOwner = ?";
     params.push(profileOwner);
+  }
+
+  db.query(sql, params, (err, results) => {
+    if (err) {
+      console.error("Error: " + err.message);
+      return res.status(500).json({ message: "Error fetching candidates" });
+    }
+
+    res.json(results);
+  });
+});
+
+router.get("/stats/filter", authenticateToken, (req, res) => {
+  const { profileOwnerFilter } = req.query;
+  
+  let sql = "SELECT * FROM ApplicantTracking";
+  let params = [];
+
+  if (profileOwnerFilter && profileOwnerFilter != "all") {
+    sql += " WHERE profileOwner = ?";
+    params.push(profileOwnerFilter);
   }
 
   db.query(sql, params, (err, results) => {

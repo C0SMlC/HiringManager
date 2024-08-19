@@ -45,6 +45,7 @@
             const positionTitle = document.getElementById('positionTitle').value;
             const positionId = document.getElementById('positionId').value;
             const description = document.getElementById('description').value;
+            const status = 'active';
             
             try {
                 const response = await fetch('/updatePosition', {
@@ -53,7 +54,7 @@
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${localStorage.getItem('token')}`
                     },
-                    body: JSON.stringify({ positionTitle, positionId,description })
+                    body: JSON.stringify({ positionTitle, positionId,description, status })
                 });
 
                 if (!response.ok) {

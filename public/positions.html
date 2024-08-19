@@ -13,16 +13,10 @@
       <a href="form.html" id="formLink">Candidate Form</a>
       <a href="candidates.html" id="detailsLink">Candidate Details</a>
       <a href="stats.html" id="statsLink">Statistics</a>
-      <a href="updatePositions.html" id="updatePositionsLink"
-        >Update Positions</a
-      >
+      <a href="updatePositions.html" id="updatePositionsLink">Update Positions</a>
       <a href="positions.html" id="positionsLink">Open Positions</a>
-      <a href="masterCandidates.html" id="masterCandidatesLink"
-        >Master Candidate Details</a
-      >
-      <a href="assignapplicants.html" id="assignApplicantLink"
-        >Assign Applicant</a
-      >
+      <a href="masterCandidates.html" id="masterCandidatesLink">Master Candidate Details</a>
+      <a href="assignapplicants.html" id="assignApplicantLink">Assign Applicant</a>
       <a href="#" id="logoutLink" style="display: none">Logout</a>
     </div>
     <div class="form-container openpositions-form">
@@ -34,6 +28,7 @@
             <th>Position ID</th>
             <th>Position Title</th>
             <th>Job Description</th>
+            <th>Status</th>
             <th>Active Applicants</th>
             <th>Action</th>
           </tr>
@@ -84,33 +79,78 @@
             positionsList.innerHTML = "";
 
             data.forEach((position) => {
-                const row = document.createElement("tr");
+              const row = document.createElement("tr");
 
-                const activeApplicantsHtml =
-                  position.activeApplicants.length > 0
-                    ? position.activeApplicants.join(", ")
-                    : "No active applicants";
+              const activeApplicantsHtml =
+                position.activeApplicants.length > 0
+                  ? position.activeApplicants.join(", ")
+                  : "No active applicants";
 
-                row.innerHTML = `
-                  <td>${position.positionId}</td>
-                  <td>${position.positionTitle}</td>
-                  <td>
-                    <div class="job-description-container">
-                      <div class="job-description-content">${position.jobdescription}</div>
-                    </div>
-                  </td>
-                  <td>${activeApplicantsHtml}</td>
-                  <td><button class="share-btn" data-position-id="${position.positionId}">Share</button></td>
-                `;
+              row.innerHTML = `
+                <td contenteditable="true">${position.positionId}</td>
+                <td contenteditable="true">${position.positionTitle}</td>
+                <td contenteditable="true">
+                  <div class="job-description-container">
+                    <div class="job-description-content">${position.jobdescription}</div>
+                  </div>
+                </td>
+                <td>
+                  <select class="status-dropdown">
+                    <option value="active" ${position.status === "active" ? "selected" : ""}>Active</option>
+                    <option value="closed" ${position.status === "closed" ? "selected" : ""}>Closed</option>
+                    <option value="hold" ${position.status === "hold" ? "selected" : ""}>Hold</option>
+                  </select>
+                </td>
+                <td>${activeApplicantsHtml}</td>
+                <td>
+                  <button class="update-btn" data-position-id="${position.positionId}">Update</button>
+                  <button class="share-btn" data-position-id="${position.positionId}">Share</button>
+                </td>
+              `;
 
-                positionsList.appendChild(row);
+              positionsList.appendChild(row);
+            });
+
+            // Add event listeners to update buttons
+            document.querySelectorAll(".update-btn").forEach((btn) => {
+              btn.addEventListener("click", function () {
+                const row = this.parentElement.parentElement;
+                const positionId = this.getAttribute("data-position-id");
+                const positionTitle = row.children[1].innerText.trim();
+                const description = row.children[2].innerText.trim();
+                const status = row.querySelector(".status-dropdown").value;
+
+                fetch("/updateposition", {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                  },
+                  body: JSON.stringify({
+                    positionId: positionId,
+                    positionTitle: positionTitle,
+                    description,
+                    status: status,
+                  }),
+                })
+                  .then((response) => {
+                    if (response.ok) {
+                      alert("Position updated successfully");
+                    } else {
+                      alert("Failed to update position");
+                    }
+                  })
+                  .catch((err) => {
+                    console.error(err);
+                    alert("Error updating position");
+                  });
               });
+            });
+
             // Add event listeners to share buttons
             document.querySelectorAll(".share-btn").forEach((btn) => {
               btn.addEventListener("click", function () {
-                const positionId = this.getAttribute("data-position-id");
                 const link = `${window.location.origin}/openPositionPublic.html`;
-
                 navigator.clipboard
                   .writeText(link)
                   .then(() => {

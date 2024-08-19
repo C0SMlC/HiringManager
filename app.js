@@ -480,7 +480,9 @@ app.get('/positionWithActiveApplicants', authenticateToken, async (req, res) => 
   });
 
   app.post("/updatePosition", authenticateToken, (req, res) => {
-    const { positionTitle, positionId, description } = req.body;
+    const { positionTitle, positionId, description, status } = req.body;
+
+    console.log(positionTitle, positionId, description, status );
   
     const checkSql = "SELECT * FROM OpenPositions WHERE positionId = ?";
     db.query(checkSql, [positionId], (err, results) => {
@@ -494,12 +496,13 @@ app.get('/positionWithActiveApplicants', authenticateToken, async (req, res) => 
         const updateSql = `
                   UPDATE OpenPositions 
                   SET positionTitle = ?,
-                      jobdescription = ?
+                      jobdescription = ?,
+                      status = ?
                   WHERE positionId = ?
               `;
         db.query(
           updateSql,
-          [positionTitle, positionId, description],
+          [positionTitle, description, status, positionId],
           (err, result) => {
             if (err) {
               console.error("Error updating position: " + err.message);
@@ -512,12 +515,12 @@ app.get('/positionWithActiveApplicants', authenticateToken, async (req, res) => 
       } else {
         // Position does not exist, insert new position
         const insertSql = `
-                  INSERT INTO OpenPositions (positionId, positionTitle,jobdescription) 
-                  VALUES (?, ?, ?)
+                  INSERT INTO OpenPositions (positionId, positionTitle,jobdescription, status) 
+                  VALUES (?, ?, ?, ?)
               `;
         db.query(
           insertSql,
-          [positionId, positionTitle, description],
+          [positionId, positionTitle, description, status],
           (err, result) => {
             if (err) {
               console.error("Error inserting position: " + err.message);
@@ -707,7 +710,7 @@ app.get('/positionWithActiveApplicants', authenticateToken, async (req, res) => 
 // });
 
 app.get("/api/positions", (req, res) => {
-  const sql = "SELECT positionId, positionTitle, jobdescription FROM OpenPositions";
+  const sql = "SELECT positionId, positionTitle, jobdescription FROM OpenPositions where status = 'active'";
   db.query(sql, (err, results) => {
     if (err) {
       console.error("Error fetching positions: " + err.message);

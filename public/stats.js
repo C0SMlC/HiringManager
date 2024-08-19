@@ -1,4 +1,9 @@
 document.addEventListener('DOMContentLoaded', function() {
+
+    if(localStorage.getItem('role') != "admin"){
+        document.querySelector(".filter-container").style.display = "none";
+    }
+
     fetchDashboardData();
 });
 
@@ -15,17 +20,57 @@ function fetchDashboardData() {
         return response.json();
     })
     .then(data => {
-        const processedData = processData(data);
-        updateCharts(processedData);
-        updateLists(processedData.lists);
-        // updateMasterDetails(processedData);
-        updateAnalytics(processedData.analytics);
+        console.log("Fetched data:", data);
+        if (document.getElementById('profileOwnerFilter').options.length === 1) {
+            populateProfileOwnerDropdown(data);
+        }
+        filterAndUpdateDashboard(data);
     })
     .catch(error => {
         console.error('Error fetching dashboard data:', error);
-        // Optionally, display an error message to the user
         alert('Failed to load dashboard data. Please try again later.');
     });
+}
+
+function populateProfileOwnerDropdown(data) {
+    const dropdown = document.getElementById('profileOwnerFilter');
+    console.log("Candidates", data)
+    const profileOwners = [...new Set(data.map(candidate => candidate.profileOwner))];
+    
+    profileOwners.forEach(owner => {
+        const option = document.createElement('option');
+        option.value = owner;
+        option.textContent = owner;
+        dropdown.appendChild(option);
+    });
+
+    // Remove any existing event listeners
+    dropdown.removeEventListener('change', dropdownChangeHandler);
+    
+    // Add the event listener
+    dropdown.addEventListener('change', dropdownChangeHandler);
+}
+
+function dropdownChangeHandler() {
+    console.log("Dropdown changed");
+    fetchDashboardData();
+}
+
+function filterAndUpdateDashboard(data) {
+    const selectedOwner = document.getElementById('profileOwnerFilter').value;
+    console.log("Selected owner:", selectedOwner);
+
+    localStorage.setItem('userForStats', selectedOwner);
+    
+    const filteredData = selectedOwner === 'all' ? data : data.filter(candidate => candidate.profileOwner === selectedOwner);
+    console.log("Filtered data:", filteredData);
+    
+    const processedData = processData(filteredData);
+    console.log("Processed data:", processedData);
+    
+    updateCharts(processedData);
+    updateLists(processedData.lists);
+    updateAnalytics(processedData.analytics);
 }
 
 function processData(data) {
@@ -101,8 +146,14 @@ function updateLists(lists) {
     document.getElementById('joinedCount').textContent = lists.joined;
 }
 
+
+let activeStagesChart, inactiveStagesChart;
+
 function updateCharts(data) {
-    new Chart(document.getElementById('activeStagesChart'), {
+    if (activeStagesChart) activeStagesChart.destroy();
+    if (inactiveStagesChart) inactiveStagesChart.destroy();
+
+    activeStagesChart = new Chart(document.getElementById('activeStagesChart'), {
         type: 'pie',
         data: {
             labels: Object.keys(data.activeStages),
@@ -142,7 +193,7 @@ function updateCharts(data) {
         }
     });
 
-    new Chart(document.getElementById('inactiveStagesChart'), {
+    inactiveStagesChart = new Chart(document.getElementById('inactiveStagesChart'), {
         type: 'bar',
         data: {
             labels: Object.keys(data.inactiveStages),
@@ -206,6 +257,7 @@ function updateCharts(data) {
 // }
 
 function updateAnalytics(analytics) {
+    console.log("Updating analytics:", analytics);
     document.getElementById('totalApplicants').textContent = analytics.totalApplicants;
     document.getElementById('activeApplicants').textContent = analytics.activeApplicants;
     document.getElementById('rejectedApplicants').textContent = analytics.rejectedApplicants;

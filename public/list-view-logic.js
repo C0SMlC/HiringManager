@@ -9,9 +9,11 @@ document.addEventListener('DOMContentLoaded', () => {
     listTitle.textContent = `${stage.charAt(0).toUpperCase() + stage.slice(1)} Candidates`;
 
     let candidates = [];
+    
+    const profileOwner = localStorage.getItem('userForStats')
 
     // Fetch candidates data
-    fetch('/candidates', {
+    fetch(`/candidates/stats/filter?profileOwnerFilter=${profileOwner}`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`

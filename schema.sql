@@ -40,7 +40,8 @@ CREATE TABLE users (
 CREATE TABLE IF NOT EXISTS OpenPositions (
     positionId VARCHAR(255) PRIMARY KEY,
     positionTitle VARCHAR(255) NOT NULL,
-    jobdescription  TEXT NOT NULL
+    jobdescription  TEXT NOT NULL,
+    status ENUM('active', 'closed', 'hold') NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS AssignedApplicants (
