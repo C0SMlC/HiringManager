@@ -243,7 +243,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 <td><button class="action-button" onclick="downloadResume(${
                   candidate.applicantId
                 })">Download</button></td>
-            `;
+                <td><button class="action-button" onclick="exportCandidate(${
+                  candidate.applicantId
+                })">Export</button></td>`;
 
               candidateList.appendChild(row);
             });
@@ -330,4 +332,26 @@ function updateCandidate(applicantId) {
       console.error(err);
       alert("Failed to update candidate");
     });
+}
+
+function exportCandidate(applicantId) {
+  const candidate = candidates.find((c) => c.applicantId === applicantId);
+  if (!candidate) {
+      alert("Candidate not found");
+      return;
+  }
+
+  const excludeFields = ['applicantResume', 'applicantId'];
+  const exportData = Object.keys(candidate)
+      .filter(key => !excludeFields.includes(key))
+      .reduce((obj, key) => {
+          obj[key] = candidate[key];
+          return obj;
+      }, {});
+
+  const worksheet = XLSX.utils.json_to_sheet([exportData]);
+  const workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook, worksheet, "Candidate");
+
+  XLSX.writeFile(workbook, `candidate_${candidate.applicantName}.xlsx`);
 }

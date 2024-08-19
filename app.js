@@ -706,7 +706,7 @@ app.get('/positionWithActiveApplicants', authenticateToken, async (req, res) => 
 //   });
 // });
 
-app.get("/api/positions", authenticateToken, (req, res) => {
+app.get("/api/positions", (req, res) => {
   const sql = "SELECT positionId, positionTitle, jobdescription FROM OpenPositions";
   db.query(sql, (err, results) => {
     if (err) {
