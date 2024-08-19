@@ -97,6 +97,8 @@
 
 document.addEventListener('DOMContentLoaded', () => {
     const token = localStorage.getItem('token');
+    const searchInput = document.getElementById('searchInput');
+    let allCandidates = []; // Store all candidates
     
     if (!token) {
         window.location.href = '/login.html';
@@ -121,7 +123,7 @@ document.addEventListener('DOMContentLoaded', () => {
             roleElem.innerText = userData.role === 'admin' ? 'Admin' : 'User';
         }
  
-        return fetch('/candidates', {
+        return fetch('/candidates?isgetAll=true', {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`
@@ -130,6 +132,7 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(data => {
             const candidateList = document.getElementById('candidateList');
             const statusFilter = document.getElementById('statusFilter');
+            allCandidates = data; 
  
             function renderCandidates(candidates) {
                 candidateList.innerHTML = '';
@@ -173,11 +176,24 @@ document.addEventListener('DOMContentLoaded', () => {
             // Apply filter
             statusFilter.addEventListener('change', () => {
                 const selectedStatus = statusFilter.value;
-                const filteredCandidates = data.filter(candidate =>
+                const filteredCandidates = allCandidates.filter(candidate =>
                     selectedStatus === 'all' || candidate.status === selectedStatus
                 );
                 renderCandidates(filteredCandidates);
             });
+
+            // Search functionality
+            searchInput.addEventListener('input', () => {
+                const searchTerm = searchInput.value.toLowerCase();
+                const filteredCandidates = allCandidates.filter(candidate =>
+                    candidate.applicantName.toLowerCase().includes(searchTerm) ||
+                    candidate.applicantEmail.toLowerCase().includes(searchTerm) ||
+                    candidate.applicantPhone.toLowerCase().includes(searchTerm)
+                );
+                renderCandidates(filteredCandidates);
+            });
+
+// ... (rest of the existing code)
         })
         .catch(err => {
             console.error(err);

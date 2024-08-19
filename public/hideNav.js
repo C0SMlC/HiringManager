@@ -7,6 +7,6 @@
         if (masterCandidatesLink) masterCandidatesLink.style.display = 'inline';
         if (assignApplicantLink) assignApplicantLink.style.display = 'inline';
       } else{
-        if (masterCandidatesLink) masterCandidatesLink.style.display = 'none';
+        // if (masterCandidatesLink) masterCandidatesLink.style.display = 'none';
         if (assignApplicantLink) assignApplicantLink.style.display = 'none';
       }

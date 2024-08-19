@@ -5,10 +5,49 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Master Candidate Details</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        .forms-container {
+            max-height: 80vh;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        .filter-search-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .filter-container {
+            display: flex;
+            align-items: center;
+        }
+        .filter-container label {
+            margin-right: 10px;
+        }
+        #statusFilter, #searchInput {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        #searchInput {
+            width: 250px;
+        }
+        #candidateTable {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        #candidateTable th, #candidateTable td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        #candidateTable th {
+            background-color: #f2f2f2;
+        }
+    </style>
 </head>
 <body>
     <div class="navbar">
-        <!-- <a href="index.html" id="homeLink">Home</a> -->
         <a href="login.html" id="loginLink">Login</a>
         <a href="form.html" id="formLink">Candidate Form</a>
         <a href="candidates.html" id="detailsLink">Candidate Details</a>
@@ -22,13 +61,18 @@
     <div class="forms-container">
         <div id="usernameDisplay"></div>
         <h2>Master Candidate Details</h2>
-        <div class="filter-container">
-            <label for="statusFilter">Filter by Status:</label>
-            <select id="statusFilter">
-                <option value="all">All</option>
-                <option value="OPEN">Open</option>
-                <option value="CLOSED">Closed</option>
-            </select>
+        <div class="filter-search-container">
+            <div class="filter-container">
+                <label for="statusFilter">Filter by Status:</label>
+                <select id="statusFilter">
+                    <option value="all">All</option>
+                    <option value="OPEN">Open</option>
+                    <option value="CLOSED">Closed</option>
+                </select>
+            </div>
+            <div class="search-container">
+                <input type="text" id="searchInput" placeholder="Search by name, email, or phone">
+            </div>
         </div>
         <table id="candidateTable">
             <thead>
@@ -44,8 +88,8 @@
                     <th>Experience</th>
                     <th>Skills</th>
                     <th>Notice Period</th>
-                    <th>Current CTC </th>
-                    <th>Expected CTC </th>
+                    <th>Current CTC</th>
+                    <th>Expected CTC</th>
                     <th>Band</th>
                     <th>Date Applied</th>
                     <th>Position Title</th>

@@ -38,6 +38,9 @@ router.post('/submit-application', authenticateToken, upload.single('resume'), (
 // Fetch all candidates for the profile owner or all candidates if the user is an admin
 router.get("/", authenticateToken, (req, res) => {
   const profileOwner = req.user.username;
+  const { isgetAll } = req.query;
+
+  console.log(req.query);
 
   console.log(profileOwner);
 
@@ -46,7 +49,7 @@ router.get("/", authenticateToken, (req, res) => {
   let sql = "SELECT * FROM ApplicantTracking";
   let params = [];
 
-  if (userRole !== "admin") {
+  if (userRole !== "admin" && isgetAll !== "true") {
     sql += " WHERE profileOwner = ?";
     params.push(profileOwner);
   }
@@ -60,6 +63,8 @@ router.get("/", authenticateToken, (req, res) => {
     res.json(results);
   });
 });
+
+
 
 // Update a candidate's details
 router.put("/:applicantId", authenticateToken, (req, res) => {
