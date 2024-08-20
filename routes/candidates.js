@@ -4,36 +4,45 @@ const db = require("../db");
 
 const router = express.Router();
 
-const multer = require('multer');
+const multer = require("multer");
 const upload = multer({ storage: multer.memoryStorage() });
 
-router.post('/submit-application', authenticateToken, upload.single('resume'), (req, res) => {
-  const { name, email, phone, assignTo } = req.body;
-  const resume = req.file ? req.file.buffer : null;
+router.post(
+  "/submit-application",
+  authenticateToken,
+  upload.single("resume"),
+  (req, res) => {
+    const { name, email, phone, assignTo, position, positionId } = req.body;
+    console.log(name, email, phone, assignTo, position, positionId);
+    const resume = req.file ? req.file.buffer : null;
 
-  if (req.user.role !== 'admin') {
-    res.status(400).json({ message: 'Not Authorised' });
-  }
+    if (req.user.role !== "admin") {
+      res.status(400).json({ message: "Not Authorised" });
+    }
 
-  const sql = `
+    const sql = `
     INSERT INTO ApplicantTracking 
     (applicantName, applicantEmail, applicantPhone, profileOwner, currentCompany, candidateWorkLocation, nativeLocation, 
     qualification, experience, skills, noticePeriod, currentctc, expectedctc, band, applicantResume, dateApplied, positionTitle, 
     positionId, status, stage, dateOfPhoneScreen, interviewDate, dateOfOffer, reasonNotExtending, notes) 
-    VALUES (?, ?, ?, ?, '', '', '', '', '', '', '', 0, 0, '', ?, NOW(), '', '', 'OPEN', 'App. Recd.', NULL, NULL, NULL, NULL, '')
+    VALUES (?, ?, ?, ?, '', '', '', '', '', '', '', 0, 0, '', ?, NOW(), ?, ?, 'OPEN', 'App. Recd.', NULL, NULL, NULL, NULL, '')
   `;
 
-  db.query(sql, [
-    name, email, phone, assignTo, resume
-  ], (err, result) => {
-    if (err) {
-      console.error('Error inserting applicant:', err);
-      return res.status(500).json({ message: 'Error submitting application' });
-    }
-    res.status(200).json({ message: 'Application submitted successfully' });
-  });
-});
-
+    db.query(
+      sql,
+      [name, email, phone, assignTo, resume, position, positionId],
+      (err, result) => {
+        if (err) {
+          console.error("Error inserting applicant:", err);
+          return res
+            .status(500)
+            .json({ message: "Error submitting application" });
+        }
+        res.status(200).json({ message: "Application submitted successfully" });
+      }
+    );
+  }
+);
 
 // Fetch all candidates for the profile owner or all candidates if the user is an admin
 router.get("/", authenticateToken, (req, res) => {
@@ -62,7 +71,7 @@ router.get("/", authenticateToken, (req, res) => {
 
 router.get("/stats/filter", authenticateToken, (req, res) => {
   const { profileOwnerFilter } = req.query;
-  
+
   let sql = "SELECT * FROM ApplicantTracking";
   let params = [];
 
@@ -80,8 +89,6 @@ router.get("/stats/filter", authenticateToken, (req, res) => {
     res.json(results);
   });
 });
-
-
 
 // Update a candidate's details
 router.put("/:applicantId", authenticateToken, (req, res) => {
@@ -112,6 +119,8 @@ router.put("/:applicantId", authenticateToken, (req, res) => {
     reasonNotExtending,
     notes,
   } = req.body;
+
+  console.log(interviewDate, dateOfOffer);
 
   let updateQuery = `
     UPDATE ApplicantTracking
@@ -170,11 +179,11 @@ router.put("/:applicantId", authenticateToken, (req, res) => {
     applicantId,
   ];
 
-  console.log(profileOwner)
+  // console.log(profileOwner);
 
   // If the user is not an admin, add a condition to only update their own candidates
-  if (req.user.role !== 'admin') {
-    updateQuery += ' AND profileOwner = ?';
+  if (req.user.role !== "admin") {
+    updateQuery += " AND profileOwner = ?";
     queryParams.push(req.user.username);
   }
 
@@ -184,7 +193,10 @@ router.put("/:applicantId", authenticateToken, (req, res) => {
       return res.status(500).json({ message: "Error updating candidate" });
     }
     if (result.affectedRows === 0) {
-      return res.status(404).json({ message: "Candidate not found or you don't have permission to update this candidate" });
+      return res.status(404).json({
+        message:
+          "Candidate not found or you don't have permission to update this candidate",
+      });
     }
     res.json({ message: "Candidate updated successfully" });
   });
