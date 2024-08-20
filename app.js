@@ -276,6 +276,7 @@ app.get(
           op.positionId, 
           op.positionTitle, 
           op.jobdescription, 
+          op.manager,
           GROUP_CONCAT(CASE WHEN at.status = 'OPEN' THEN at.applicantName END) as activeApplicants
         FROM 
           OpenPositions op
@@ -345,27 +346,31 @@ app.post(
     } = req.body;
     const profileOwner = req.user.username;
 
-  const applicantResume = req.file.buffer;
-  let dateApplied = new Date();
+    const applicantResume = req.file.buffer;
+    let dateApplied = new Date();
 
-  // Check for existing records
-  const checkSql = `
+    // Check for existing records
+    const checkSql = `
         SELECT COUNT(*) AS count FROM ApplicantTracking 
         WHERE applicantPhone = ? OR applicantEmail = ?
     `;
 
-  db.query(checkSql, [applicantPhone, applicantEmail], (err, results) => {
-    if (err) {
-      console.error("Error: " + err.message);
-      return res.status(500).json({ message: "Error checking for duplicates" });
-    }
+    db.query(checkSql, [applicantPhone, applicantEmail], (err, results) => {
+      if (err) {
+        console.error("Error: " + err.message);
+        return res
+          .status(500)
+          .json({ message: "Error checking for duplicates" });
+      }
 
-    if (results[0].count > 0) {
-      return res.status(400).json({ message: "User with this Email Or Phone already exists!" });
-    }
+      if (results[0].count > 0) {
+        return res
+          .status(400)
+          .json({ message: "User with this Email Or Phone already exists!" });
+      }
 
-    // If no duplicates found, insert new record
-    const insertSql = `
+      // If no duplicates found, insert new record
+      const insertSql = `
     INSERT INTO ApplicantTracking (
         profileOwner,
         applicantName,
@@ -395,146 +400,152 @@ app.post(
     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `;
 
-  db.query(
-    insertSql,
-    [
-      profileOwner,
-      applicantName,
-      applicantPhone,
-      applicantEmail,
-      currentCompany,
-      candidateWorkLocation,
-      nativeLocation,
-      qualification,
-      experience,
-      skills,
-      noticePeriod,
-      currentctc,
-      expectedctc,
-      band,
-      applicantResume, 
-      dateApplied,
-      positionTitle,
-      positionId,
-      status,
-      stage || null,
-      dateOfPhoneScreen || null,
-      interviewDate || null,
-      dateOfOffer || null,
-      reasonNotExtending || null,
-      notes || null,
-    ],
-    (err, result) => {
-      if (err) {
-        console.error("Error: " + err.message);
-        return res.status(500).json({ message: "Error submitting form" });
-      }
+      db.query(
+        insertSql,
+        [
+          profileOwner,
+          applicantName,
+          applicantPhone,
+          applicantEmail,
+          currentCompany,
+          candidateWorkLocation,
+          nativeLocation,
+          qualification,
+          experience,
+          skills,
+          noticePeriod,
+          currentctc,
+          expectedctc,
+          band,
+          applicantResume,
+          dateApplied,
+          positionTitle,
+          positionId,
+          status,
+          stage || null,
+          dateOfPhoneScreen || null,
+          interviewDate || null,
+          dateOfOffer || null,
+          reasonNotExtending || null,
+          notes || null,
+        ],
+        (err, result) => {
+          if (err) {
+            console.error("Error: " + err.message);
+            return res.status(500).json({ message: "Error submitting form" });
+          }
 
-      res.status(200).json({ message: "Form submitted successfully" });
-    }
-  );
-});
-  });
-
-app.get('/positionWithActiveApplicants', authenticateToken, async (req, res) => {
-    try {
-      const query = `
-        SELECT 
-          op.positionId, 
-          op.positionTitle, 
-          op.jobdescription, 
-          GROUP_CONCAT(CASE WHEN at.status = 'OPEN' THEN at.applicantName END) as activeApplicants
-        FROM 
-          OpenPositions op
-        LEFT JOIN 
-          ApplicantTracking at ON op.positionId = at.positionId
-        GROUP BY 
-          op.positionId, op.positionTitle, op.jobdescription
-      `;
-
-      let results;
-      
-      await db.query(query, (err, result) => {
-        if (err) {
-            console.error('Error fetching positions: ' + err.message);
-            return res.status(500).json({ message: 'Error fetching positions' });
+          res.status(200).json({ message: "Form submitted successfully" });
         }
-
-        results = result;
-
-        const processedResults = results.map(row => ({
-            ...row,
-            activeApplicants: row.activeApplicants ? row.activeApplicants.split(',') : []
-          }));
-      
-          res.json(processedResults);
-
+      );
     });
-      
-      // Process the results to split the concatenated names
+  }
+);
 
-    } catch (error) {
-      console.error('Error fetching positions with active applicants:', error);
-      res.status(500).json({ error: 'Internal server error' });
+// app.get(
+//   "/positionWithActiveApplicants",
+//   authenticateToken,
+//   async (req, res) => {
+//     try {
+//       const query = `
+//         SELECT
+//           op.positionId,
+//           op.positionTitle,
+//           op.jobdescription,
+//           op.manager,
+//           GROUP_CONCAT(CASE WHEN at.status = 'OPEN' THEN at.applicantName END) as activeApplicants
+//         FROM
+//           OpenPositions op
+//         LEFT JOIN
+//           ApplicantTracking at ON op.positionId = at.positionId
+//         GROUP BY
+//           op.positionId, op.positionTitle, op.jobdescription
+//       `;
+
+//       let results;
+
+//       await db.query(query, (err, result) => {
+//         if (err) {
+//           console.error("Error fetching positions: " + err.message);
+//           return res.status(500).json({ message: "Error fetching positions" });
+//         }
+
+//         results = result;
+
+//         const processedResults = results.map((row) => ({
+//           ...row,
+//           activeApplicants: row.activeApplicants
+//             ? row.activeApplicants.split(",")
+//             : [],
+//         }));
+
+//         res.json(processedResults);
+//       });
+
+//       // Process the results to split the concatenated names
+//     } catch (error) {
+//       console.error("Error fetching positions with active applicants:", error);
+//       res.status(500).json({ error: "Internal server error" });
+//     }
+//   }
+// );
+
+app.post("/updatePosition", authenticateToken, (req, res) => {
+  const { positionTitle, positionId, manager, description, status } = req.body;
+
+  console.log(positionTitle, positionId, description, status);
+
+  const checkSql = "SELECT * FROM OpenPositions WHERE positionId = ?";
+  db.query(checkSql, [positionId], (err, results) => {
+    if (err) {
+      console.error("Error checking position: " + err.message);
+      return res.status(500).json({ message: "Error checking position" });
     }
-  });
 
-  app.post("/updatePosition", authenticateToken, (req, res) => {
-    const { positionTitle, positionId, description, status } = req.body;
-
-    console.log(positionTitle, positionId, description, status );
-  
-    const checkSql = "SELECT * FROM OpenPositions WHERE positionId = ?";
-    db.query(checkSql, [positionId], (err, results) => {
-      if (err) {
-        console.error("Error checking position: " + err.message);
-        return res.status(500).json({ message: "Error checking position" });
-      }
-  
-      if (results.length > 0) {
-        // Position exists, update it
-        const updateSql = `
+    if (results.length > 0) {
+      // Position exists, update it
+      const updateSql = `
                   UPDATE OpenPositions 
                   SET positionTitle = ?,
                       jobdescription = ?,
                       status = ?
                   WHERE positionId = ?
               `;
-        db.query(
-          updateSql,
-          [positionTitle, description, status, positionId],
-          (err, result) => {
-            if (err) {
-              console.error("Error updating position: " + err.message);
-              return res.status(500).json({ message: "Error updating position" });
-            }
-  
-            res.status(200).json({ message: "Position updated successfully" });
+      db.query(
+        updateSql,
+        [positionTitle, description, status, positionId],
+        (err, result) => {
+          if (err) {
+            console.error("Error updating position: " + err.message);
+            return res.status(500).json({ message: "Error updating position" });
           }
-        );
-      } else {
-        // Position does not exist, insert new position
-        const insertSql = `
-                  INSERT INTO OpenPositions (positionId, positionTitle,jobdescription, status) 
-                  VALUES (?, ?, ?, ?)
+
+          res.status(200).json({ message: "Position updated successfully" });
+        }
+      );
+    } else {
+      // Position does not exist, insert new position
+      const insertSql = `
+                  INSERT INTO OpenPositions (positionId, positionTitle, manager, jobdescription, status) 
+                  VALUES (?, ?, ?, ?, ?)
               `;
-        db.query(
-          insertSql,
-          [positionId, positionTitle, description, status],
-          (err, result) => {
-            if (err) {
-              console.error("Error inserting position: " + err.message);
-              return res
-                .status(500)
-                .json({ message: "Error inserting position" });
-            }
-  
-            res.status(200).json({ message: "Position added successfully" });
+      db.query(
+        insertSql,
+        [positionId, positionTitle, manager, description, status],
+        (err, result) => {
+          if (err) {
+            console.error("Error inserting position: " + err.message);
+            return res
+              .status(500)
+              .json({ message: "Error inserting position" });
           }
-        );
-      }
-    });
+
+          res.status(200).json({ message: "Position added successfully" });
+        }
+      );
+    }
   });
+});
 
 // app.post(
 //   "/submit",
@@ -570,7 +581,7 @@ app.get('/positionWithActiveApplicants', authenticateToken, async (req, res) => 
 
 //     // Check for existing records
 //     const checkSql = `
-//         SELECT COUNT(*) AS count FROM ApplicantTracking 
+//         SELECT COUNT(*) AS count FROM ApplicantTracking
 //         WHERE applicantPhone = ? OR applicantEmail = ?
 //     `;
 
@@ -668,7 +679,7 @@ app.get('/positionWithActiveApplicants', authenticateToken, async (req, res) => 
 //     if (results.length > 0) {
 //       // Position exists, update it
 //       const updateSql = `
-//                 UPDATE OpenPositions 
+//                 UPDATE OpenPositions
 //                 SET positionTitle = ?,
 //                     jobdescription = ?
 //                 WHERE positionId = ?
@@ -688,7 +699,7 @@ app.get('/positionWithActiveApplicants', authenticateToken, async (req, res) => 
 //     } else {
 //       // Position does not exist, insert new position
 //       const insertSql = `
-//                 INSERT INTO OpenPositions (positionId, positionTitle,jobdescription) 
+//                 INSERT INTO OpenPositions (positionId, positionTitle,jobdescription)
 //                 VALUES (?, ?, ?)
 //             `;
 //       db.query(
@@ -710,7 +721,8 @@ app.get('/positionWithActiveApplicants', authenticateToken, async (req, res) => 
 // });
 
 app.get("/api/positions", (req, res) => {
-  const sql = "SELECT positionId, positionTitle, jobdescription FROM OpenPositions where status = 'active'";
+  const sql =
+    "SELECT positionId, positionTitle, jobdescription FROM OpenPositions where status = 'active'";
   db.query(sql, (err, results) => {
     if (err) {
       console.error("Error fetching positions: " + err.message);
@@ -722,7 +734,7 @@ app.get("/api/positions", (req, res) => {
 });
 
 app.listen(port, () => {
-    console.log(`Server running on port ${port}`);
+  console.log(`Server running on port ${port}`);
 });
 
 // });

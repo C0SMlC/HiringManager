@@ -1,409 +1,497 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Applicant Tracking Form</title>
-  <link rel="stylesheet" href="style.css" />
-</head>
-<body>
-  <div class="navbar">
-    <!-- <a href="index.html" id="homeLink">Home</a> -->
-    <a href="login.html" id="loginLink">Login</a>
-    <a href="form.html" id="formLink">Candidate Form</a>
-    <a href="candidates.html" id="detailsLink">Candidate Details</a>
-    <a href="stats.html" id="statsLink">Statistics</a>
-    <a href="updatePositions.html" id="updatePositionsLink">Update Positions</a>
-    <a href="positions.html" id="positionsLink">Open Positions</a>
-    <a href="masterCandidates.html" id="masterCandidatesLink" >Master Candidate Details</a>
-    <a href="assignapplicants.html" id="assignApplicantLink" style="display: none;">Assign Applicant</a>
-    <a href="#" id="logoutLink" style="display: none">Logout</a>
-  </div>
-  <div class="form-container">
-    <div id="usernameDisplay"></div>
-    <h2>Applicant Tracking Form</h2>
-    <form id="applicantForm" enctype="multipart/form-data">
-      <div class="form-row">
-        <div class="form-field">
-          <label for="profileOwner" >Profile Owner:</label>
-          <input type="text" id="profileOwner" name="profileOwner" readonly />
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Applicant Tracking Form</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="navbar">
+      <!-- <a href="index.html" id="homeLink">Home</a> -->
+      <a href="login.html" id="loginLink">Login</a>
+      <a href="form.html" id="formLink">Candidate Form</a>
+      <a href="candidates.html" id="detailsLink">Candidate Details</a>
+      <a href="stats.html" id="statsLink">Statistics</a>
+      <a href="updatePositions.html" id="updatePositionsLink"
+        >Update Positions</a
+      >
+      <a href="positions.html" id="positionsLink">Open Positions</a>
+      <a href="masterCandidates.html" id="masterCandidatesLink"
+        >Master Candidate Details</a
+      >
+      <a
+        href="assignapplicants.html"
+        id="assignApplicantLink"
+        style="display: none"
+        >Assign Applicant</a
+      >
+      <a href="#" id="logoutLink" style="display: none">Logout</a>
+    </div>
+    <div class="form-container">
+      <div id="usernameDisplay"></div>
+      <h2>Applicant Tracking Form</h2>
+      <form id="applicantForm" enctype="multipart/form-data">
+        <div class="form-row">
+          <div class="form-field">
+            <label for="profileOwner">Profile Owner:</label>
+            <input type="text" id="profileOwner" name="profileOwner" readonly />
+          </div>
+          <div class="form-field">
+            <label for="applicantName" class="required">Candidate Name:</label>
+            <input
+              type="text"
+              id="applicantName"
+              name="applicantName"
+              required
+            />
+          </div>
         </div>
-        <div class="form-field">
-          <label for="applicantName" class="required">Candidate Name:</label>
-          <input type="text" id="applicantName" name="applicantName" required />
+
+        <div class="form-row">
+          <div class="form-field">
+            <label for="applicantPhone" class="required"
+              >Candidate Phone:</label
+            >
+            <input
+              type="text"
+              id="applicantPhone"
+              name="applicantPhone"
+              required
+            />
+          </div>
+          <div class="form-field">
+            <label for="applicantEmail" class="required"
+              >Candidate Email:</label
+            >
+            <input
+              type="email"
+              id="applicantEmail"
+              name="applicantEmail"
+              required
+            />
+          </div>
         </div>
-      </div>
 
-      <div class="form-row">
-        <div class="form-field">
-          <label for="applicantPhone" class="required">Candidate Phone:</label>
-          <input type="text" id="applicantPhone" name="applicantPhone" required />
+        <div class="form-row">
+          <div class="form-field">
+            <label for="currentCompany" class="required"
+              >Current Company:</label
+            >
+            <input
+              type="text"
+              id="currentCompany"
+              name="currentCompany"
+              required
+            />
+          </div>
+          <div class="form-field">
+            <label for="candidateWorkLocation" class="required"
+              >Candidate Work Location:</label
+            >
+            <input
+              type="text"
+              id="candidateWorkLocation"
+              name="candidateWorkLocation"
+              required
+            />
+          </div>
         </div>
-        <div class="form-field">
-          <label for="applicantEmail" class="required">Candidate Email:</label>
-          <input type="email" id="applicantEmail" name="applicantEmail" required />
+
+        <div class="form-row">
+          <div class="form-field">
+            <label for="nativeLocation" class="required"
+              >Native Location:</label
+            >
+            <input
+              type="text"
+              id="nativeLocation"
+              name="nativeLocation"
+              required
+            />
+          </div>
+          <div class="form-field">
+            <label for="qualification" class="required">Qualification:</label>
+            <input
+              type="text"
+              id="qualification"
+              name="qualification"
+              required
+            />
+          </div>
         </div>
-      </div>
 
-      <div class="form-row">
-        <div class="form-field">
-          <label for="currentCompany" class="required">Current Company:</label>
-          <input type="text" id="currentCompany" name="currentCompany" required />
+        <div class="form-row">
+          <div class="form-field">
+            <label for="experience" class="required">Experience:</label>
+            <input type="text" id="experience" name="experience" required />
+          </div>
+          <div class="form-field">
+            <label for="skills" class="required">Skills:</label>
+            <input type="text" id="skills" name="skills" required />
+          </div>
         </div>
-        <div class="form-field">
-          <label for="candidateWorkLocation" class="required">Candidate Work Location:</label>
-          <input type="text" id="candidateWorkLocation" name="candidateWorkLocation" required />
+
+        <div class="form-row">
+          <div class="form-field">
+            <label for="noticePeriod" class="required">Notice Period:</label>
+            <input type="text" id="noticePeriod" name="noticePeriod" required />
+          </div>
+          <div class="form-field">
+            <label for="currentctc" class="required">Current CTC:</label>
+            <input type="decimal" id="currentctc" name="currentctc" required />
+          </div>
         </div>
-      </div>
 
-      <div class="form-row">
-        <div class="form-field">
-          <label for="nativeLocation" class="required">Native Location:</label>
-          <input type="text" id="nativeLocation" name="nativeLocation" required />
+        <div class="form-row">
+          <div class="form-field">
+            <label for="expectedctc" class="required">Expected CTC:</label>
+            <input type="decimal" id="expectedctc" name="expectedctc" required />
+          </div>
+          <div class="form-field">
+            <label for="band">Band:</label>
+            <select id="band" name="band" required>
+              <option value="L0">L0</option>
+              <option value="L1">L1</option>
+              <option value="L2">L2</option>
+              <option value="L3">L3</option>
+              <option value="L4">L4</option>
+              <option value="CostPlus">CostPlus</option>
+              <option value="Non-Billable">Non-Billable</option>
+              <option value="Bench">Bench</option>
+            </select>
+          </div>
         </div>
-        <div class="form-field">
-          <label for="qualification" class="required">Qualification:</label>
-          <input type="text" id="qualification" name="qualification" required />
+
+        <div class="form-row">
+          <div class="form-field">
+            <label for="applicantResume" class="required"
+              >Applicant Resume:</label
+            >
+            <input
+              type="file"
+              id="applicantResume"
+              name="applicantResume"
+              required
+            />
+          </div>
+          <div class="form-field">
+            <label for="dateApplied" class="required">Date Applied:</label>
+            <input type="date" id="dateApplied" name="dateApplied" required />
+          </div>
         </div>
-      </div>
 
-      <div class="form-row">
-        <div class="form-field">
-          <label for="experience" class="required">Experience:</label>
-          <input type="text" id="experience" name="experience" required />
+        <div class="form-row">
+          <div class="form-field">
+            <label for="positionTitle" class="required">Position Title:</label>
+            <select id="positionTitle" name="positionTitle" required>
+              <option value="">Select Position Title</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label for="positionId" class="required">Position ID:</label>
+            <select id="positionId" name="positionId" required>
+              <option value="">Select Position ID</option>
+            </select>
+          </div>
         </div>
-        <div class="form-field">
-          <label for="skills" class="required">Skills:</label>
-          <input type="text" id="skills" name="skills" required />
+
+        <div class="form-row">
+          <div class="form-field">
+            <label for="status">Status:</label>
+            <select id="status" name="status" required>
+              <option value="OPEN">OPEN</option>
+              <option value="CLOSED">CLOSED</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label for="stage">Stage:</label>
+            <select id="stage" name="stage">
+              <option value="App. Recd.">App. Recd.</option>
+              <option value="Phone Screen">Phone Screen</option>
+              <option value="L1">L1</option>
+              <option value="L2_Internal">L2_Internal</option>
+              <option value="Yet to share">Yet to share</option>
+              <option value="Shared with client">Shared with client</option>
+              <option value="L1_Client">L1_Client</option>
+              <option value="L2_Client">L2_Client</option>
+              <option value="Final Discussion">Final Discussion</option>
+              <option value="HOLD">HOLD</option>
+              <option value="Buffer List">Buffer List</option>
+              <option value="Rejected">Rejected</option>
+              <option value="Declined">Declined</option>
+            </select>
+          </div>
         </div>
-      </div>
 
-      <div class="form-row">
-        <div class="form-field">
-          <label for="noticePeriod" class="required">Notice Period:</label>
-          <input type="text" id="noticePeriod" name="noticePeriod" required />
+        <div class="form-row">
+          <div class="form-field">
+            <label for="dateOfPhoneScreen">Date of Phone Screen:</label>
+            <input
+              type="date"
+              id="dateOfPhoneScreen"
+              name="dateOfPhoneScreen"
+            />
+          </div>
+          <div class="form-field">
+            <label for="interviewDate">Interview Date:</label>
+            <input type="date" id="interviewDate" name="interviewDate" />
+          </div>
         </div>
-        <div class="form-field">
-          <label for="currentctc" class="required">Current CTC:</label>
-          <input type="number" id="currentctc" name="currentctc" required />
+
+        <div class="form-row">
+          <div class="form-field">
+            <label for="dateOfOffer">Date of Offer:</label>
+            <input type="date" id="dateOfOffer" name="dateOfOffer" />
+          </div>
+          <div class="form-field">
+            <label for="reasonNotExtending"
+              >Reason for Not Extending Offer:</label
+            >
+            <select id="reasonNotExtending" name="reasonNotExtending">
+              <option value="">Select Value</option>
+              <option value="Salary Negotiation">Salary Negotiation</option>
+              <option value="Relocation Issues">Relocation Issues</option>
+            </select>
+          </div>
         </div>
-      </div>
 
-      <div class="form-row">
-        <div class="form-field">
-          <label for="expectedctc" class="required">Expected CTC:</label>
-          <input type="number" id="expectedctc" name="expectedctc" required />
+        <div class="form-row">
+          <div class="form-field full-width">
+            <label for="notes">Notes:</label>
+            <input type="text" id="notes" name="notes" />
+          </div>
         </div>
-        <div class="form-field">
-          <label for="band">Band:</label>
-          <select id="band" name="band" required>
-            <option value="L0">L0</option>
-            <option value="L1">L1</option>
-            <option value="L2">L2</option>
-            <option value="L3">L3</option>
-            <option value="L4">L4</option>
-            <option value="CostPlus">CostPlus</option>
-            <option value="Non-Billable">Non-Billable</option>
-            <option value="Bench">Bench</option>
-          </select>
+
+        <div class="form-row">
+          <div class="form-field full-width">
+            <button type="submit">Submit</button>
+          </div>
         </div>
-      </div>
-
-      <div class="form-row">
-        <div class="form-field">
-          <label for="applicantResume" class="required">Applicant Resume:</label>
-          <input type="file" id="applicantResume" name="applicantResume" required />
-        </div>
-        <div class="form-field">
-          <label for="dateApplied" class="required" >Date Applied:</label>
-          <input type="date" id="dateApplied" name="dateApplied" required />
-        </div>
-      </div>
-
-      <div class="form-row">
-        <div class="form-field">
-          <label for="positionTitle" class="required">Position Title:</label>
-          <select id="positionTitle" name="positionTitle" required>
-            <option value="">Select Position Title</option>
-          </select>
-        </div>
-        <div class="form-field">
-          <label for="positionId" class="required">Position ID:</label>
-          <select id="positionId" name="positionId" required>
-            <option value="">Select Position ID</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="form-row">
-        <div class="form-field">
-          <label for="status">Status:</label>
-          <select id="status" name="status" required>
-            <option value="OPEN">OPEN</option>
-            <option value="CLOSED">CLOSED</option>
-          </select>
-        </div>
-        <div class="form-field">
-          <label for="stage">Stage:</label>
-          <select id="stage" name="stage">
-            <option value="App. Recd.">App. Recd.</option>
-            <option value="Phone Screen">Phone Screen</option>
-            <option value="L1">L1</option>
-            <option value="L2_Internal">L2_Internal</option>
-            <option value="Yet to share">Yet to share</option>
-            <option value="Shared with client">Shared with client</option>
-            <option value="L1_Client">L1_Client</option>
-            <option value="L2_Client">L2_Client</option>
-            <option value="Final Discussion">Final Discussion</option>
-            <option value="HOLD">HOLD</option>
-            <option value="Buffer List">Buffer List</option>
-            <option value="Rejected">Rejected</option>
-            <option value="Declined">Declined</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="form-row">
-        <div class="form-field">
-          <label for="dateOfPhoneScreen">Date of Phone Screen:</label>
-          <input type="date" id="dateOfPhoneScreen" name="dateOfPhoneScreen" />
-        </div>
-        <div class="form-field">
-          <label for="interviewDate">Interview Date:</label>
-          <input type="date" id="interviewDate" name="interviewDate" />
-        </div>
-      </div>
-
-      <div class="form-row">
-        <div class="form-field">
-          <label for="dateOfOffer">Date of Offer:</label>
-          <input type="date" id="dateOfOffer" name="dateOfOffer" />
-        </div>
-        <div class="form-field">
-          <label for="reasonNotExtending">Reason for Not Extending Offer:</label>
-          <select id="reasonNotExtending" name="reasonNotExtending">
-            <option value="">Select Value</option>
-            <option value="Salary Negotiation">Salary Negotiation</option>
-            <option value="Relocation Issues">Relocation Issues</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="form-row">
-        <div class="form-field full-width">
-          <label for="notes">Notes:</label>
-          <input type="text" id="notes" name="notes" />
-        </div>
-      </div>
-
-      <div class="form-row">
-        <div class="form-field full-width">
-          <button type="submit">Submit</button>
-        </div>
-      </div>
-    </form>
-  </div>
-  <script src="userInfo.js"></script>
-  <script src="dashboard.js"></script>
-  
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const form = document.getElementById("applicantForm");
-      if (!(form instanceof HTMLFormElement)) {
-        console.error("Applicant form not found");
-        return;
-      }
-
-      // Check user role and show/hide admin-only links
-      const role = localStorage.getItem('role');
-      // console.log(role);
-      const masterCandidatesLink = document.getElementById('masterCandidatesLink');
-      const assignApplicantLink = document.getElementById('assignApplicantLink');
-
-      if (role === 'admin') {
-        if (masterCandidatesLink) masterCandidatesLink.style.display = 'inline';
-        if (assignApplicantLink) assignApplicantLink.style.display = 'inline';
-      } else{
-        // if (masterCandidatesLink) masterCandidatesLink.style.display = 'none';
-        if (assignApplicantLink) assignApplicantLink.style.display = 'none';
-      }
-
-      const inputs = {
-        profileOwner: form.querySelector("#profileOwner"),
-        applicantName: form.querySelector("#applicantName"),
-        applicantPhone: form.querySelector("#applicantPhone"),
-        applicantEmail: form.querySelector("#applicantEmail"),
-        currentCompany: form.querySelector("#currentCompany"),
-        candidateWorkLocation: form.querySelector("#candidateWorkLocation"),
-        nativeLocation: form.querySelector("#nativeLocation"),
-        qualification: form.querySelector("#qualification"),
-        experience: form.querySelector("#experience"),
-        skills: form.querySelector("#skills"),
-        noticePeriod: form.querySelector("#noticePeriod"),
-        currentctc: form.querySelector("#currentctc"),
-        expectedctc: form.querySelector("#expectedctc"),
-        band: form.querySelector("#band"),
-        applicantResume: form.querySelector("#applicantResume"),
-        dateApplied: form.querySelector("#dateApplied"),
-        positionTitle: form.querySelector("#positionTitle"),
-        positionId: form.querySelector("#positionId"),
-        status: form.querySelector("#status"),
-        stage: form.querySelector("#stage"),
-        dateOfPhoneScreen: form.querySelector("#dateOfPhoneScreen"),
-        interviewDate: form.querySelector("#interviewDate"),
-        dateOfOffer: form.querySelector("#dateOfOffer"),
-        reasonNotExtending: form.querySelector("#reasonNotExtending"),
-        notes: form.querySelector("#notes")
-      };
-
-      // Set today's date for dateApplied
-      const today = new Date().toISOString().split("T")[0];
-      if (inputs.dateApplied instanceof HTMLInputElement) {
-        inputs.dateApplied.value = today;
-      }
-
-      let positionMap = {};
-
-      // Fetch positions and populate the dropdowns
-      fetch("/api/positions", {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      })
-        .then(response => response.json())
-        .then(positions => {
-          const positionTitleSelect = document.getElementById("positionTitle");
-          const positionIdSelect = document.getElementById("positionId");
-
-          if (!(positionTitleSelect instanceof HTMLSelectElement) || 
-              !(positionIdSelect instanceof HTMLSelectElement)) {
-            throw new Error("Position select elements not found");
-          }
-
-          positions.forEach(position => {
-            if (typeof position.positionTitle !== 'string' || typeof position.positionId !== 'string') {
-              console.error("Invalid position data:", position);
-              return;
-            }
-
-            if (!positionMap[position.positionTitle]) {
-              positionMap[position.positionTitle] = [];
-            }
-            positionMap[position.positionTitle].push(position.positionId);
-
-            const optionTitle = document.createElement("option");
-            optionTitle.value = position.positionTitle;
-            optionTitle.textContent = position.positionTitle;
-            positionTitleSelect.appendChild(optionTitle);
-            
-            const optionId = document.createElement("option");
-            optionId.value = position.positionId;
-            optionId.textContent = position.positionId;
-            positionIdSelect.appendChild(optionId);
-          });
-
-          positionTitleSelect.addEventListener("change", () => {
-            const selectedTitle = positionTitleSelect.value;
-            positionIdSelect.innerHTML = '';
-            if (positionMap[selectedTitle]) {
-              positionMap[selectedTitle].forEach(positionId => {
-                const option = document.createElement("option");
-                option.value = positionId;
-                option.textContent = positionId;
-                positionIdSelect.appendChild(option);
-              });
-            }
-          });
-        })
-        .catch(error => console.error("Error fetching positions:", error));
-
-      form.addEventListener("submit", async (event) => {
-        event.preventDefault();
-
-        // Validate form data
-        for (const [key, element] of Object.entries(inputs)) {
-          if (element instanceof HTMLInputElement || element instanceof HTMLSelectElement) {
-            if (element.required && !element.value) {
-              alert(`Please fill out the ${key} field.`);
-              return;
-            }
-
-            // Improved type checks
-            const nameRegex = /^[a-zA-Z\s]+$/;
-            const phoneRegex = /^\d{10}$/;
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            const experienceRegex = /^\d+(\.\d+)?$/;
-            const integerRegex = /^\d+$/;
-
-            if (key === 'applicantName' && !nameRegex.test(element.value)) {
-              alert("Applicant name must contain only alphabets and spaces.");
-              return;
-            }
-            if (key === 'applicantPhone' && !phoneRegex.test(element.value)) {
-              alert("Phone number must be 10 digits.");
-              return;
-            }
-            if (key === 'applicantEmail' && !emailRegex.test(element.value)) {
-              alert("Please enter a valid email address.");
-              return;
-            }
-            if (key === 'experience' && !experienceRegex.test(element.value)) {
-              alert("Experience must be a number (integer or float).");
-              return;
-            }
-            if ((key === 'noticePeriod' || key === 'currentctc' || key === 'expectedctc') && !integerRegex.test(element.value)) {
-              alert(`${key} must be an integer.`);
-              return;
-            }
-          }
-        }
-
-        // Date validation
-        const dateApplied = new Date(inputs.dateApplied.value);
-        const dateOfPhoneScreen = new Date(inputs.dateOfPhoneScreen.value);
-        const interviewDate = new Date(inputs.interviewDate.value);
-        const dateOfOffer = new Date(inputs.dateOfOffer.value);
-
-        if (dateOfPhoneScreen <= dateApplied) {
-          alert("Date of phone screen must be after the date of application.");
-          return;
-        }
-        if (interviewDate <= dateOfPhoneScreen) {
-          alert("Interview date must be after the date of phone screen.");
-          return;
-        }
-        if (dateOfOffer <= interviewDate) {
-          alert("Date of offer must be after the interview date.");
-          return;
-        }
-
-        // Form submission logic
-        const formData = new FormData(form);
-        try {
-          const response = await fetch("/submit", {
-            method: "POST",
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-            body: formData,
-          });
-
-          // if (!response.ok) {
-          //   throw new Error("Failed to submit form");
-          // }
-
-          const result = await response.json();
-          alert(result.message);
-          // form.reset();
-        } catch (error) {
-          alert(error.message);
-        }
-      });
-    });
-  </script>
-    <script src="hideNav.js"></script>
+      </form>
+    </div>
+    <script src="userInfo.js"></script>
     <script src="dashboard.js"></script>
 
-</body>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const form = document.getElementById("applicantForm");
+        if (!(form instanceof HTMLFormElement)) {
+          console.error("Applicant form not found");
+          return;
+        }
+
+        // Check user role and show/hide admin-only links
+        const role = localStorage.getItem("role");
+        // console.log(role);
+        const masterCandidatesLink = document.getElementById(
+          "masterCandidatesLink"
+        );
+        const assignApplicantLink = document.getElementById(
+          "assignApplicantLink"
+        );
+
+        if (role === "admin") {
+          if (masterCandidatesLink)
+            masterCandidatesLink.style.display = "inline";
+          if (assignApplicantLink) assignApplicantLink.style.display = "inline";
+        } else {
+          // if (masterCandidatesLink) masterCandidatesLink.style.display = 'none';
+          if (assignApplicantLink) assignApplicantLink.style.display = "none";
+        }
+
+        const inputs = {
+          profileOwner: form.querySelector("#profileOwner"),
+          applicantName: form.querySelector("#applicantName"),
+          applicantPhone: form.querySelector("#applicantPhone"),
+          applicantEmail: form.querySelector("#applicantEmail"),
+          currentCompany: form.querySelector("#currentCompany"),
+          candidateWorkLocation: form.querySelector("#candidateWorkLocation"),
+          nativeLocation: form.querySelector("#nativeLocation"),
+          qualification: form.querySelector("#qualification"),
+          experience: form.querySelector("#experience"),
+          skills: form.querySelector("#skills"),
+          noticePeriod: form.querySelector("#noticePeriod"),
+          currentctc: form.querySelector("#currentctc"),
+          expectedctc: form.querySelector("#expectedctc"),
+          band: form.querySelector("#band"),
+          applicantResume: form.querySelector("#applicantResume"),
+          dateApplied: form.querySelector("#dateApplied"),
+          positionTitle: form.querySelector("#positionTitle"),
+          positionId: form.querySelector("#positionId"),
+          status: form.querySelector("#status"),
+          stage: form.querySelector("#stage"),
+          dateOfPhoneScreen: form.querySelector("#dateOfPhoneScreen"),
+          interviewDate: form.querySelector("#interviewDate"),
+          dateOfOffer: form.querySelector("#dateOfOffer"),
+          reasonNotExtending: form.querySelector("#reasonNotExtending"),
+          notes: form.querySelector("#notes"),
+        };
+
+        // Set today's date for dateApplied
+        const today = new Date().toISOString().split("T")[0];
+        if (inputs.dateApplied instanceof HTMLInputElement) {
+          inputs.dateApplied.value = today;
+        }
+
+        let positionMap = {};
+
+        // Fetch positions and populate the dropdowns
+        fetch("/api/positions", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        })
+          .then((response) => response.json())
+          .then((positions) => {
+            const positionTitleSelect =
+              document.getElementById("positionTitle");
+            const positionIdSelect = document.getElementById("positionId");
+
+            if (
+              !(positionTitleSelect instanceof HTMLSelectElement) ||
+              !(positionIdSelect instanceof HTMLSelectElement)
+            ) {
+              throw new Error("Position select elements not found");
+            }
+
+            positions.forEach((position) => {
+              if (
+                typeof position.positionTitle !== "string" ||
+                typeof position.positionId !== "string"
+              ) {
+                console.error("Invalid position data:", position);
+                return;
+              }
+
+              if (!positionMap[position.positionTitle]) {
+                positionMap[position.positionTitle] = [];
+              }
+              positionMap[position.positionTitle].push(position.positionId);
+
+              const optionTitle = document.createElement("option");
+              optionTitle.value = position.positionTitle;
+              optionTitle.textContent = position.positionTitle;
+              positionTitleSelect.appendChild(optionTitle);
+
+              const optionId = document.createElement("option");
+              optionId.value = position.positionId;
+              optionId.textContent = position.positionId;
+              positionIdSelect.appendChild(optionId);
+            });
+
+            positionTitleSelect.addEventListener("change", () => {
+              const selectedTitle = positionTitleSelect.value;
+              positionIdSelect.innerHTML = "";
+              if (positionMap[selectedTitle]) {
+                positionMap[selectedTitle].forEach((positionId) => {
+                  const option = document.createElement("option");
+                  option.value = positionId;
+                  option.textContent = positionId;
+                  positionIdSelect.appendChild(option);
+                });
+              }
+            });
+          })
+          .catch((error) => console.error("Error fetching positions:", error));
+
+        form.addEventListener("submit", async (event) => {
+          event.preventDefault();
+
+          // Validate form data
+          for (const [key, element] of Object.entries(inputs)) {
+            if (
+              element instanceof HTMLInputElement ||
+              element instanceof HTMLSelectElement
+            ) {
+              if (element.required && !element.value) {
+                alert(`Please fill out the ${key} field.`);
+                return;
+              }
+
+              // Improved type checks
+              const nameRegex = /^(?!.*\d)[a-zA-Z\s]+$/;
+              const phoneRegex = /^\d{10}$/;
+              const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+              const experienceRegex = /^\d+(\.\d+)?$/;
+              const numberRegex = /^\d+(\.\d+)?$/;
+
+              if (key === "applicantName" && !nameRegex.test(element.value)) {
+                alert("Applicant name must contain only alphabets and spaces.");
+                return;
+              }
+              if (key === "applicantPhone" && !phoneRegex.test(element.value)) {
+                alert("Phone number must be 10 digits.");
+                return;
+              }
+              if (key === "applicantEmail" && !emailRegex.test(element.value)) {
+                alert("Please enter a valid email address.");
+                return;
+              }
+              if (
+                key === "experience" &&
+                !experienceRegex.test(element.value)
+              ) {
+                alert("Experience must be a number (integer or float).");
+                return;
+              }
+              if (
+                (key === "currentctc" || key === "expectedctc") &&
+                !numberRegex.test(element.value)
+              ) {
+                alert(`${key} must be an integer.`);
+                return;
+              }
+            }
+          }
+
+          // Date validation
+          const dateApplied = new Date(inputs.dateApplied.value);
+          const dateOfPhoneScreen = new Date(inputs.dateOfPhoneScreen.value);
+          const interviewDate = new Date(inputs.interviewDate.value);
+          const dateOfOffer = new Date(inputs.dateOfOffer.value);
+
+          if (dateOfPhoneScreen < dateApplied) {
+            alert(
+              "Date of phone screen must be after the date of application."
+            );
+            return;
+          }
+          if (interviewDate <= dateOfPhoneScreen) {
+            alert("Interview date must be after the date of phone screen.");
+            return;
+          }
+          if (dateOfOffer <= interviewDate) {
+            alert("Date of offer must be after the interview date.");
+            return;
+          }
+
+          // Form submission logic
+          const formData = new FormData(form);
+          try {
+            const response = await fetch("/submit", {
+              method: "POST",
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+              },
+              body: formData,
+            });
+
+            // if (!response.ok) {
+            //   throw new Error("Failed to submit form");
+            // }
+
+            const result = await response.json();
+            alert(result.message);
+            // form.reset();
+          } catch (error) {
+            alert(error.message);
+          }
+        });
+      });
+    </script>
+    <script src="hideNav.js"></script>
+    <script src="dashboard.js"></script>
+  </body>
 </html>

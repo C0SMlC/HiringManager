@@ -13,8 +13,8 @@ CREATE TABLE IF NOT EXISTS ApplicantTracking (
     experience VARCHAR(255) NOT NULL,
     skills VARCHAR(255) NOT NULL,
     noticePeriod VARCHAR(50) NOT NULL,
-    currentctc integer not null,
-    expectedctc integer not null,
+    currentctc float not null,
+    expectedctc float not null,
     band VARCHAR(50) NOT NULL,
     applicantResume LONGBLOB NOT NULL,
     dateApplied DATE NOT NULL,
@@ -41,6 +41,7 @@ CREATE TABLE users (
 CREATE TABLE IF NOT EXISTS OpenPositions (
     positionId VARCHAR(255) PRIMARY KEY,
     positionTitle VARCHAR(255) NOT NULL,
+    manager VARCHAR(255) NOT NULL,
     jobdescription  TEXT NOT NULL,
     status ENUM('active', 'closed', 'hold') NOT NULL
 );
