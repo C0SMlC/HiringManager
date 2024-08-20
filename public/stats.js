@@ -98,7 +98,8 @@ function processData(data) {
         rejected: 0,
         buffer: 0,
         closed: 0,
-        joined: 0
+        joined: 0,
+        declined: 0,
     };
 
     data.forEach(candidate => {
@@ -107,6 +108,10 @@ function processData(data) {
             lists.active++;
         } else if (inactiveStages.hasOwnProperty(candidate.stage)) {
             inactiveStages[candidate.stage]++;
+
+            if (candidate.stage === 'Declined') {
+                lists.declined++; }
+            
             if (candidate.stage === 'Rejected') {
                 lists.rejected++;
             } else if (candidate.stage === 'Buffer List') {
@@ -143,7 +148,7 @@ function updateLists(lists) {
     // document.getElementById('rejectedCount').textContent = lists.rejected;
     document.getElementById('bufferCount').textContent = lists.buffer;
     document.getElementById('closedCount').textContent = lists.closed;
-    document.getElementById('joinedCount').textContent = lists.joined;
+    document.getElementById('declinedCount').textContent = lists.declined;
 }
 
 

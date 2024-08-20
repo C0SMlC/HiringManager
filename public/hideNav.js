@@ -4,7 +4,7 @@
       const assignApplicantLink = document.getElementById('assignApplicantLink');
 
       if (role === 'admin') {
-        if (masterCandidatesLink) masterCandidatesLink.style.display = 'inline';
+        if (masterCandidatesLink) masterCandidatesLink.style.display = 'inline !important';
         if (assignApplicantLink) assignApplicantLink.style.display = 'inline';
       } else{
         // if (masterCandidatesLink) masterCandidatesLink.style.display = 'none';

@@ -99,6 +99,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
           candidates = data;
 
+          function toggleInterviewer(applicantId) {
+            const stageSelect = document.getElementById(`stage-${applicantId}`);
+            const interviewerInput = document.getElementById(`interviewer-${applicantId}`);
+            const enabledStages = ['L1', 'L2_Internal', 'L1_Client', 'L2_Client', 'Final Discussion'];
+            
+            if (enabledStages.includes(stageSelect.value)) {
+              interviewerInput.disabled = false;
+            } else {
+              interviewerInput.disabled = true;
+            }
+            
+            console.log(`Toggled interviewer for ${applicantId}. Stage: ${stageSelect.value}, Disabled: ${interviewerInput.disabled}`);
+          }
+
           function renderCandidates(candidates, users = []) {
             candidateList.innerHTML = "";
 
@@ -151,7 +165,18 @@ document.addEventListener("DOMContentLoaded", () => {
                 <td><input type="text" id="noticePeriod-${candidate.applicantId}" value="${candidate.noticePeriod}"></td>
                 <td><input type="text" id="currentctc-${candidate.applicantId}" value="${candidate.currentctc}"></td>
                 <td><input type="text" id="expectedctc-${candidate.applicantId}" value="${candidate.expectedctc}"></td>
-                <td><input type="text" id="band-${candidate.applicantId}" value="${candidate.band}"></td>
+                <td>
+                    <select id="band-${candidate.applicantId}" name="band">
+                        <option value="L0" ${candidate.band === "L0" ? "selected" : ""}>L0</option>
+                        <option value="L1" ${candidate.band === "L1" ? "selected" : ""}>L1</option>
+                        <option value="L2" ${candidate.band === "L2" ? "selected" : ""}>L2</option>
+                        <option value="L3" ${candidate.band === "L3" ? "selected" : ""}>L3</option>
+                        <option value="L4" ${candidate.band === "L4" ? "selected" : ""}>L4</option>
+                        <option value="CostPlus" ${candidate.band === "CostPlus" ? "selected" : ""}>CostPlus</option>
+                        <option value="Non-Billable" ${candidate.band === "Non-Billable" ? "selected" : ""}>Non-Billable</option>
+                        <option value="Bench" ${candidate.band === "Bench" ? "selected" : ""}>Bench</option>
+                    </select>
+                </td>
                 <td><input type="date" id="dateApplied-${candidate.applicantId}" value="${formatDate(candidate.dateApplied)}"></td>
                 <td><input type="text" id="positionTitle-${candidate.applicantId}" value="${candidate.positionTitle}"></td>
                 <td><input type="text" id="positionId-${candidate.applicantId}" value="${candidate.positionId}"></td>
@@ -165,49 +190,25 @@ document.addEventListener("DOMContentLoaded", () => {
                         }>CLOSED</option>
                     </select>
                 </td>
-                <td>
-                    <select id="stage-${candidate.applicantId}" name="stage">
-                        <option value="App. Recd." ${
-                          candidate.stage === "App. Recd." ? "selected" : ""
-                        }>App. Recd.</option>
-                        <option value="Phone Screen" ${
-                          candidate.stage === "Phone Screen" ? "selected" : ""
-                        }>Phone Screen</option>
-                        <option value="L1" ${
-                          candidate.stage === "L1" ? "selected" : ""
-                        }>L1</option>
-                        <option value="L2_Internal" ${
-                          candidate.stage === "L2_Internal" ? "selected" : ""
-                        }>L2_Internal</option>
-                        <option value="Yet to share" ${
-                          candidate.stage === "Yet to share" ? "selected" : ""
-                        }>Yet to share</option>
-                        <option value="Shared with client" ${
-                          candidate.stage === "Shared with client" ? "selected" : ""
-                        }>Shared with client</option>
-                        <option value="L1_Client" ${
-                          candidate.stage === "L1_Client" ? "selected" : ""
-                        }>L1_Client</option>
-                        <option value="L2_Client" ${
-                          candidate.stage === "L2_Client" ? "selected" : ""
-                        }>L2_Client</option>
-                        <option value="Final Discussion" ${
-                          candidate.stage === "Final Discussion" ? "selected" : ""
-                        }>Final Discussion</option>
-                        <option value="HOLD" ${
-                          candidate.stage === "HOLD" ? "selected" : ""
-                        }>Hold</option>
-                        <option value="Buffer List" ${
-                          candidate.stage === "Buffer List" ? "selected" : ""
-                        }>Buffer List</option>
-                        <option value="Rejected" ${
-                          candidate.stage === "Rejected" ? "selected" : ""
-                        }>Rejected</option>
-                        <option value="Declined" ${
-                          candidate.stage === "Declined" ? "selected" : ""
-                        }>Declined</option>
-                    </select>
-                </td>
+                  <td>
+                      <select id="stage-${candidate.applicantId}" name="stage" onchange="toggleInterviewer(${candidate.applicantId})">
+                          <option value="App. Recd." ${candidate.stage === "App. Recd." ? "selected" : ""}>App. Recd.</option>
+                          <option value="Phone Screen" ${candidate.stage === "Phone Screen" ? "selected" : ""}>Phone Screen</option>
+                          <option value="L1" ${candidate.stage === "L1" ? "selected" : ""}>L1</option>
+                          <option value="L2_Internal" ${candidate.stage === "L2_Internal" ? "selected" : ""}>L2_Internal</option>
+                          <option value="Yet to share" ${candidate.stage === "Yet to share" ? "selected" : ""}>Yet to share</option>
+                          <option value="Shared with client" ${candidate.stage === "Shared with client" ? "selected" : ""}>Shared with client</option>
+                          <option value="L1_Client" ${candidate.stage === "L1_Client" ? "selected" : ""}>L1_Client</option>
+                          <option value="L2_Client" ${candidate.stage === "L2_Client" ? "selected" : ""}>L2_Client</option>
+                          <option value="Final Discussion" ${candidate.stage === "Final Discussion" ? "selected" : ""}>Final Discussion</option>
+                          <option value="HOLD" ${candidate.stage === "HOLD" ? "selected" : ""}>Hold</option>
+                          <option value="Buffer List" ${candidate.stage === "Buffer List" ? "selected" : ""}>Buffer List</option>
+                          <option value="Rejected" ${candidate.stage === "Rejected" ? "selected" : ""}>Rejected</option>
+                          <option value="Declined" ${candidate.stage === "Declined" ? "selected" : ""}>Declined</option>
+                      </select>
+                  </td>
+                  <td><input type="text" id="interviewer-${candidate.applicantId}" value="${candidate?.interviewer || "None"}" disabled></td>
+                  
                 <td><input type="date" id="interviewDate-${
                   candidate.applicantId
                 }" value="${formatDate(candidate.interviewDate)}"></td>
@@ -248,11 +249,24 @@ document.addEventListener("DOMContentLoaded", () => {
                 })">Export</button></td>`;
 
               candidateList.appendChild(row);
+
+
+              // Add event listener after appending the row
+              const stageSelect = document.getElementById(`stage-${candidate.applicantId}`);
+              stageSelect.addEventListener('change', () => toggleInterviewer(candidate.applicantId));
+
+              // Initial call to set the correct state
+              toggleInterviewer(candidate.applicantId);
             });
           }
 
           // Initial rendering
           renderCandidates(data, users);
+
+          candidates.forEach(candidate => {
+            toggleInterviewer(candidate.applicantId);
+        });
+        
 
           // Apply filter if admin
           if (isAdmin && statusFilter) {
@@ -286,15 +300,20 @@ function updateCandidate(applicantId) {
   if (!token) {
     window.location.href = "/login.html";
   }
+  
+  console.log("document.getElementById(`profileOwner-1`).value", document.getElementById(`profileOwner-1`).value)
+
 
   const updatedCandidate = {
+    // profileOwner:document.getElementById(`profileOwner-1`).value,
+    interviewer: document.getElementById(`interviewer-${applicantId}`).value === "None" ? "":document.getElementById(`interviewer-${applicantId}`).value,
     status: document.getElementById(`status-${applicantId}`).value,
     stage: document.getElementById(`stage-${applicantId}`).value,
     interviewDate: document.getElementById(`interviewDate-${applicantId}`).value || null,
     dateOfOffer: document.getElementById(`dateOfOffer-${applicantId}`).value || null,
     reasonNotExtending: document.getElementById(`reasonNotExtending-${applicantId}`).value,
     notes: document.getElementById(`notes-${applicantId}`).value,
-    profileOwner: isAdmin ? document.getElementById(`profileOwner-${applicantId}`).value : null,
+    profileOwner: document.getElementById(`profileOwner-${applicantId}`).value ,
     applicantName: document.getElementById(`applicantName-${applicantId}`).value,
     applicantPhone: document.getElementById(`applicantPhone-${applicantId}`).value,
     applicantEmail: document.getElementById(`applicantEmail-${applicantId}`).value,

@@ -106,6 +106,7 @@ router.put("/:applicantId", authenticateToken, (req, res) => {
     positionId,
     status,
     stage,
+    interviewer,
     interviewDate,
     dateOfOffer,
     reasonNotExtending,
@@ -132,7 +133,8 @@ router.put("/:applicantId", authenticateToken, (req, res) => {
         positionTitle = ?,
         positionId = ?,
         status = ?, 
-        stage = ?, 
+        stage = ?,
+        interviewer = ?,
         interviewDate = ?, 
         dateOfOffer = ?, 
         reasonNotExtending = ?, 
@@ -160,12 +162,15 @@ router.put("/:applicantId", authenticateToken, (req, res) => {
     positionId,
     status,
     stage,
+    interviewer || null,
     interviewDate || null,
     dateOfOffer || null,
     reasonNotExtending || null,
     notes || null,
     applicantId,
   ];
+
+  console.log(profileOwner)
 
   // If the user is not an admin, add a condition to only update their own candidates
   if (req.user.role !== 'admin') {

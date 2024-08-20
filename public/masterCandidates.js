@@ -160,6 +160,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <td>${candidate.positionId}</td>
                         <td>${candidate.status}</td>
                         <td>${candidate.stage}</td>
+                        <td>${candidate.interviewer}</td>
                         <td>${candidate.interviewDate || ''}</td>
                         <td>${candidate.dateOfOffer || ''}</td>
                         <td>${candidate.reasonNotExtending || ''}</td>

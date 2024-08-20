@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (detailsLink) detailsLink.style.display = token ? 'inline-block' : 'none';
     if (updatePositionsLink) updatePositionsLink.style.display = token ? 'inline-block' : 'none';
     if (positionsLink) positionsLink.style.display = token ? 'inline-block' : 'none';
-    if (masterCandidate) masterCandidate.style.display = token ? 'inline-block' : 'none';
+    // if (masterCandidate) masterCandidate.style.display = token ? 'inline-block' : 'none';
 
     if (logoutLink && token) {
         logoutLink.addEventListener('click', () => {
