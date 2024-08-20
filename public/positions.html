@@ -34,6 +34,8 @@
             <th>Position ID</th>
             <th>Position Title</th>
             <th>Job Description</th>
+            <th>Positions</th>
+            <th>Experience</th>
             <th>Manager</th>
             <th>Status</th>
             <th>Active Applicants</th>
@@ -103,6 +105,8 @@
               }</div>
             </div>
           </td>
+          <td>${position.openPositions}</td>
+          <td>${position.experienceRequired}</td>
           <td>${position.manager}</td>
           <td>
             <select class="status-dropdown" disabled>

@@ -38,6 +38,20 @@
         /><br />
         <label for="positionId">Position ID:</label>
         <input type="text" id="positionId" name="positionId" required /><br />
+        <label for="openPositions">Open Positions:</label>
+        <input
+          type="text"
+          id="openPositions"
+          name="openPositions"
+          required
+        /><br />
+        <label for="experienceRequired">Experience:</label>
+        <input
+          type="text"
+          id="experienceRequired"
+          name="experienceRequired"
+          required
+        /><br />
         <label for="positionId">Manager:</label>
         <input type="text" id="manager" name="manager" required /><br />
         <label for="description">Job description:</label>
@@ -58,6 +72,9 @@
           const positionId = document.getElementById("positionId").value;
           const description = document.getElementById("description").value;
           const manager = document.getElementById("manager").value;
+          const openPositions = document.getElementById("openPositions").value;
+          const experienceRequired =
+            document.getElementById("experienceRequired").value;
           const status = "active";
 
           try {
@@ -73,6 +90,8 @@
                 manager,
                 description,
                 status,
+                openPositions,
+                experienceRequired,
               }),
             });
 

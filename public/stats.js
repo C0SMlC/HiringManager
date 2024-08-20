@@ -1,245 +1,287 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener("DOMContentLoaded", function () {
+  if (localStorage.getItem("role") != "admin") {
+    document.querySelector(".filter-container").style.display = "none";
+  }
 
-    if(localStorage.getItem('role') != "admin"){
-        document.querySelector(".filter-container").style.display = "none";
-    }
+  fetchDashboardData();
+});
 
-    fetchDashboardData();
+document.addEventListener("DOMContentLoaded", function () {
+  let count = 0;
+  fetch("/positions/count", {
+    headers: {
+      Authorization: "Bearer " + localStorage.getItem("token"),
+    },
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      return response.json();
+    })
+    .then((data) => {
+      data.map((item) => (count += item.openPositions));
+      console.log("Fetched data hiiii:", count);
+      // updatePositions(data);
+      document.querySelector(".activePostionscount").textContent = count;
+    });
 });
 
 function fetchDashboardData() {
-    fetch('/candidates', {
-        headers: {
-            'Authorization': 'Bearer ' + localStorage.getItem('token')
-        }
+  fetch("/candidates", {
+    headers: {
+      Authorization: "Bearer " + localStorage.getItem("token"),
+    },
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      return response.json();
     })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.json();
+    .then((data) => {
+      console.log("Fetched data:", data);
+      if (document.getElementById("profileOwnerFilter").options.length === 1) {
+        populateProfileOwnerDropdown(data);
+      }
+      filterAndUpdateDashboard(data);
     })
-    .then(data => {
-        console.log("Fetched data:", data);
-        if (document.getElementById('profileOwnerFilter').options.length === 1) {
-            populateProfileOwnerDropdown(data);
-        }
-        filterAndUpdateDashboard(data);
-    })
-    .catch(error => {
-        console.error('Error fetching dashboard data:', error);
-        alert('Failed to load dashboard data. Please try again later.');
+    .catch((error) => {
+      console.error("Error fetching dashboard data:", error);
+      alert("Failed to load dashboard data. Please try again later.");
     });
 }
 
 function populateProfileOwnerDropdown(data) {
-    const dropdown = document.getElementById('profileOwnerFilter');
-    console.log("Candidates", data)
-    const profileOwners = [...new Set(data.map(candidate => candidate.profileOwner))];
-    
-    profileOwners.forEach(owner => {
-        const option = document.createElement('option');
-        option.value = owner;
-        option.textContent = owner;
-        dropdown.appendChild(option);
-    });
+  const dropdown = document.getElementById("profileOwnerFilter");
+  console.log("Candidates", data);
+  const profileOwners = [
+    ...new Set(data.map((candidate) => candidate.profileOwner)),
+  ];
 
-    // Remove any existing event listeners
-    dropdown.removeEventListener('change', dropdownChangeHandler);
-    
-    // Add the event listener
-    dropdown.addEventListener('change', dropdownChangeHandler);
+  profileOwners.forEach((owner) => {
+    const option = document.createElement("option");
+    option.value = owner;
+    option.textContent = owner;
+    dropdown.appendChild(option);
+  });
+
+  // Remove any existing event listeners
+  dropdown.removeEventListener("change", dropdownChangeHandler);
+
+  // Add the event listener
+  dropdown.addEventListener("change", dropdownChangeHandler);
 }
 
 function dropdownChangeHandler() {
-    console.log("Dropdown changed");
-    fetchDashboardData();
+  console.log("Dropdown changed");
+  fetchDashboardData();
 }
 
 function filterAndUpdateDashboard(data) {
-    const selectedOwner = document.getElementById('profileOwnerFilter').value;
-    console.log("Selected owner:", selectedOwner);
+  const selectedOwner = document.getElementById("profileOwnerFilter").value;
+  console.log("Selected owner:", selectedOwner);
 
-    localStorage.setItem('userForStats', selectedOwner);
-    
-    const filteredData = selectedOwner === 'all' ? data : data.filter(candidate => candidate.profileOwner === selectedOwner);
-    console.log("Filtered data:", filteredData);
-    
-    const processedData = processData(filteredData);
-    console.log("Processed data:", processedData);
-    
-    updateCharts(processedData);
-    updateLists(processedData.lists);
-    updateAnalytics(processedData.analytics);
+  localStorage.setItem("userForStats", selectedOwner);
+
+  const filteredData =
+    selectedOwner === "all"
+      ? data
+      : data.filter((candidate) => candidate.profileOwner === selectedOwner);
+  console.log("Filtered data:", filteredData);
+
+  const processedData = processData(filteredData);
+  console.log("Processed data:", processedData);
+
+  updateCharts(processedData);
+  updateLists(processedData.lists);
+  updateAnalytics(processedData.analytics);
 }
 
 function processData(data) {
-    const activeStages = {
-        'App. Recd.': 0,
-        'Phone Screen': 0,
-        'L1': 0,
-        'L2_Internal': 0,
-        'Yet to share': 0,
-        'Shared with client': 0,
-        'L1_Client': 0,
-        'L2_Client': 0,
-        'Final Discussion': 0
-    };
+  const activeStages = {
+    "App. Recd.": 0,
+    "Phone Screen": 0,
+    L1: 0,
+    L2_Internal: 0,
+    "Yet to share": 0,
+    "Shared with client": 0,
+    L1_Client: 0,
+    L2_Client: 0,
+    "Final Discussion": 0,
+  };
 
-    const inactiveStages = {
-        'HOLD': 0,
-        'Buffer List': 0,
-        'Rejected': 0,
-        'Declined': 0
-    };
+  const inactiveStages = {
+    HOLD: 0,
+    "Buffer List": 0,
+    Rejected: 0,
+    Declined: 0,
+  };
 
-    const lists = {
-        active: 0,
-        rejected: 0,
-        buffer: 0,
-        closed: 0,
-        joined: 0,
-        declined: 0,
-    };
+  const lists = {
+    active: 0,
+    rejected: 0,
+    buffer: 0,
+    closed: 0,
+    joined: 0,
+    declined: 0,
+  };
 
-    data.forEach(candidate => {
-        if (activeStages.hasOwnProperty(candidate.stage)) {
-            activeStages[candidate.stage]++;
-            lists.active++;
-        } else if (inactiveStages.hasOwnProperty(candidate.stage)) {
-            inactiveStages[candidate.stage]++;
+  data.forEach((candidate) => {
+    if (activeStages.hasOwnProperty(candidate.stage)) {
+      activeStages[candidate.stage]++;
+      lists.active++;
+    } else if (inactiveStages.hasOwnProperty(candidate.stage)) {
+      inactiveStages[candidate.stage]++;
 
-            if (candidate.stage === 'Declined') {
-                lists.declined++; }
-            
-            if (candidate.stage === 'Rejected') {
-                lists.rejected++;
-            } else if (candidate.stage === 'Buffer List') {
-                lists.buffer++;
-            }
-        }
+      if (candidate.stage === "Declined") {
+        lists.declined++;
+      }
 
-        if (candidate.status === 'CLOSED') {
-            lists.closed++;
-        }
+      if (candidate.stage === "Rejected") {
+        lists.rejected++;
+      } else if (candidate.stage === "Buffer List") {
+        lists.buffer++;
+      }
+    }
 
-        if (candidate.status === 'CLOSED' && candidate.stage === 'Final Discussion') {
-            lists.joined++;
-        }
-    });
+    if (candidate.status === "CLOSED") {
+      lists.closed++;
+    }
 
-    const analytics = {
-        totalApplicants: data.length,
-        activeApplicants: lists.active,
-        rejectedApplicants: lists.rejected,
-        joinedApplicants: lists.joined
-    };
+    if (
+      candidate.status === "CLOSED" &&
+      candidate.stage === "Final Discussion"
+    ) {
+      lists.joined++;
+    }
+  });
 
-    return {
-        activeStages,
-        inactiveStages,
-        lists,
-        analytics
-    };
+  const analytics = {
+    totalApplicants: data.length,
+    activeApplicants: lists.active,
+    rejectedApplicants: lists.rejected,
+    joinedApplicants: lists.joined,
+  };
+
+  return {
+    activeStages,
+    inactiveStages,
+    lists,
+    analytics,
+  };
 }
 
 function updateLists(lists) {
-    // document.getElementById('activeCount').textContent = lists.active;
-    // document.getElementById('rejectedCount').textContent = lists.rejected;
-    document.getElementById('bufferCount').textContent = lists.buffer;
-    document.getElementById('closedCount').textContent = lists.closed;
-    document.getElementById('declinedCount').textContent = lists.declined;
+  // document.getElementById('activeCount').textContent = lists.active;
+  // document.getElementById('rejectedCount').textContent = lists.rejected;
+  document.getElementById("bufferCount").textContent = lists.buffer;
+  document.getElementById("closedCount").textContent = lists.closed;
+  document.getElementById("declinedCount").textContent = lists.declined;
 }
-
 
 let activeStagesChart, inactiveStagesChart;
 
 function updateCharts(data) {
-    if (activeStagesChart) activeStagesChart.destroy();
-    if (inactiveStagesChart) inactiveStagesChart.destroy();
+  if (activeStagesChart) activeStagesChart.destroy();
+  if (inactiveStagesChart) inactiveStagesChart.destroy();
 
-    activeStagesChart = new Chart(document.getElementById('activeStagesChart'), {
-        type: 'pie',
-        data: {
-            labels: Object.keys(data.activeStages),
-            datasets: [{
-                data: Object.values(data.activeStages),
-                backgroundColor: [
-                    '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF',
-                    '#FF9F40', '#FF6384', '#36A2EB', '#FFCE56'
-                ]
-            }]
+  activeStagesChart = new Chart(document.getElementById("activeStagesChart"), {
+    type: "pie",
+    data: {
+      labels: Object.keys(data.activeStages),
+      datasets: [
+        {
+          data: Object.values(data.activeStages),
+          backgroundColor: [
+            "#FF6384",
+            "#36A2EB",
+            "#FFCE56",
+            "#4BC0C0",
+            "#9966FF",
+            "#FF9F40",
+            "#FF6384",
+            "#36A2EB",
+            "#FFCE56",
+          ],
         },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    position: 'top',
-                },
-                tooltip: {
-                    callbacks: {
-                        label: function(context) {
-                            let label = context.label || '';
-                            if (context.parsed > 0) {
-                                label += `: ${context.parsed}`;
-                            }
-                            return label;
-                        }
-                    }
-                },
-                title: {
-                    display: true,
-                    text: 'Active Profile Stats',
-                    font: {
-                        size: 16
-                    }
-                }
-            }
-        }
-    });
-
-    inactiveStagesChart = new Chart(document.getElementById('inactiveStagesChart'), {
-        type: 'bar',
-        data: {
-            labels: Object.keys(data.inactiveStages),
-            datasets: [{
-                label: 'Count',
-                data: Object.values(data.inactiveStages),
-                backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0']
-            }]
+      ],
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          position: "top",
         },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    display: false
-                },
-                tooltip: {
-                    callbacks: {
-                        label: function(context) {
-                            let label = context.label || '';
-                            if (context.parsed.y > 0) {
-                                label += `: ${context.parsed.y}`;
-                            }
-                            return label;
-                        }
-                    }
-                },
-                title: {
-                    display: true,
-                    text: 'Closed Profile Stats',
-                    font: {
-                        size: 16
-                    }
-                }
+        tooltip: {
+          callbacks: {
+            label: function (context) {
+              let label = context.label || "";
+              if (context.parsed > 0) {
+                label += `: ${context.parsed}`;
+              }
+              return label;
             },
-            scales: {
-                y: {
-                    beginAtZero: true
+          },
+        },
+        title: {
+          display: true,
+          text: "Active Profile Stats",
+          font: {
+            size: 16,
+          },
+        },
+      },
+    },
+  });
+
+  inactiveStagesChart = new Chart(
+    document.getElementById("inactiveStagesChart"),
+    {
+      type: "bar",
+      data: {
+        labels: Object.keys(data.inactiveStages),
+        datasets: [
+          {
+            label: "Count",
+            data: Object.values(data.inactiveStages),
+            backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0"],
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            display: false,
+          },
+          tooltip: {
+            callbacks: {
+              label: function (context) {
+                let label = context.label || "";
+                if (context.parsed.y > 0) {
+                  label += `: ${context.parsed.y}`;
                 }
-            }
-        }
-    });
+                return label;
+              },
+            },
+          },
+          title: {
+            display: true,
+            text: "Closed Profile Stats",
+            font: {
+              size: 16,
+            },
+          },
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+          },
+        },
+      },
+    }
+  );
 }
 
 // function updateLists(lists) {
@@ -262,9 +304,13 @@ function updateCharts(data) {
 // }
 
 function updateAnalytics(analytics) {
-    console.log("Updating analytics:", analytics);
-    document.getElementById('totalApplicants').textContent = analytics.totalApplicants;
-    document.getElementById('activeApplicants').textContent = analytics.activeApplicants;
-    document.getElementById('rejectedApplicants').textContent = analytics.rejectedApplicants;
-    document.getElementById('joinedApplicants').textContent = analytics.joinedApplicants;
+  console.log("Updating analytics:", analytics);
+  document.getElementById("totalApplicants").textContent =
+    analytics.totalApplicants;
+  document.getElementById("activeApplicants").textContent =
+    analytics.activeApplicants;
+  document.getElementById("rejectedApplicants").textContent =
+    analytics.rejectedApplicants;
+  document.getElementById("joinedApplicants").textContent =
+    analytics.joinedApplicants;
 }

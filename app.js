@@ -277,6 +277,8 @@ app.get(
           op.positionTitle, 
           op.jobdescription, 
           op.manager,
+          op.openPositions,
+          op.experienceRequired,
           GROUP_CONCAT(CASE WHEN at.status = 'OPEN' THEN at.applicantName END) as activeApplicants
         FROM 
           OpenPositions op
@@ -491,9 +493,15 @@ app.post(
 // );
 
 app.post("/updatePosition", authenticateToken, (req, res) => {
-  const { positionTitle, positionId, manager, description, status } = req.body;
-
-  console.log(positionTitle, positionId, description, status);
+  const {
+    positionTitle,
+    positionId,
+    manager,
+    description,
+    status,
+    openPositions,
+    experienceRequired,
+  } = req.body;
 
   const checkSql = "SELECT * FROM OpenPositions WHERE positionId = ?";
   db.query(checkSql, [positionId], (err, results) => {
@@ -508,12 +516,21 @@ app.post("/updatePosition", authenticateToken, (req, res) => {
                   UPDATE OpenPositions 
                   SET positionTitle = ?,
                       jobdescription = ?,
-                      status = ?
+                      status = ?,
+                      openPositions = ?,
+                      experienceRequired = ?
                   WHERE positionId = ?
               `;
       db.query(
         updateSql,
-        [positionTitle, description, status, positionId],
+        [
+          positionTitle,
+          description,
+          status,
+          positionId,
+          openPositions,
+          experienceRequired,
+        ],
         (err, result) => {
           if (err) {
             console.error("Error updating position: " + err.message);
@@ -526,12 +543,20 @@ app.post("/updatePosition", authenticateToken, (req, res) => {
     } else {
       // Position does not exist, insert new position
       const insertSql = `
-                  INSERT INTO OpenPositions (positionId, positionTitle, manager, jobdescription, status) 
-                  VALUES (?, ?, ?, ?, ?)
+                  INSERT INTO OpenPositions (positionId, positionTitle, manager, openPositions, experienceRequired, jobdescription, status) 
+                  VALUES (?, ?, ?, ?, ?, ?, ?)
               `;
       db.query(
         insertSql,
-        [positionId, positionTitle, manager, description, status],
+        [
+          positionId,
+          positionTitle,
+          manager,
+          openPositions,
+          experienceRequired,
+          description,
+          status,
+        ],
         (err, result) => {
           if (err) {
             console.error("Error inserting position: " + err.message);
@@ -726,6 +751,18 @@ app.get("/api/positions", (req, res) => {
   db.query(sql, (err, results) => {
     if (err) {
       console.error("Error fetching positions: " + err.message);
+      return res.status(500).json({ message: "Error fetching positions" });
+    }
+
+    res.status(200).json(results);
+  });
+});
+
+app.get("/positions/count", (req, res) => {
+  const sql = "SELECT openPositions FROM OpenPositions WHERE status = 'active'";
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error("Error fetching count: " + err.message);
       return res.status(500).json({ message: "Error fetching positions" });
     }
 
