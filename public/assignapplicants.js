@@ -18,8 +18,9 @@ document.addEventListener("DOMContentLoaded", function () {
       users.forEach((user) => {
         if (user.role === "user") {
           const option = document.createElement("option");
-          option.value = user.username; 
+          option.value = user.username;
           option.textContent = user.username;
+          option.dataset.email = user.email;
           assignToSelect.appendChild(option);
         }
       });
@@ -61,6 +62,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // If all validations pass, submit the form
     const formData = new FormData(form);
+
     fetch("/candidates/submit-application", {
       method: "POST",
       body: formData,
@@ -71,11 +73,50 @@ document.addEventListener("DOMContentLoaded", function () {
       .then((response) => response.json())
       .then((result) => {
         alert(result.message);
-        form.reset();
+
+        // Get the email of the assigned user
+        const assignedToOption = assignToSelect.options[assignToSelect.selectedIndex];
+        const assignedToEmail = assignedToOption.value;
+
+
+        console.log(assignedToEmail);
+
+        // Send email to the assigned user
+        return sendEmailToAssignedUser(
+          assignedToEmail,
+          "New Applicant Assigned",
+          `A new applicant has been assigned to you:\nName: ${nameInput.value}\nEmail: ${emailInput.value}\nPhone: ${phoneInput.value}`
+        );
+
+        // form.reset();
       })
       .catch((error) => {
         // console.error('Error:', error);
-        alert("An error occurred while submitting the form.");
+        console.error("Error:", error.message);
+        alert(`An error occurredgf while assigning the applicant: ${error.message}`);
       });
   });
 });
+
+async function sendEmailToAssignedUser(to, subject, text) {
+  try {
+    const response = await fetch("/send-email", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+      body: JSON.stringify({ to, subject, text }),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error);
+    }
+
+    console.log("Email sent successfully");
+  } catch (error) {
+    console.error("Error sending email:", error.message);
+    throw error;
+  }
+}

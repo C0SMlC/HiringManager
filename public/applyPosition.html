@@ -170,77 +170,73 @@
         const form = document.getElementById("applicantForm");
 
         form.addEventListener("submit", async (event) => {
-          event.preventDefault();
+        event.preventDefault();
 
-          // Validate form data
-          const inputs = form.elements;
-          for (const [key, element] of Object.entries(inputs)) {
+        // Validate form data
+        const inputs = form.elements;
+        for (const [key, element] of Object.entries(inputs)) {
+          if (
+            element instanceof HTMLInputElement ||
+            element instanceof HTMLSelectElement
+          ) {
+            if (element.required && !element.value) {
+              alert(`Please fill out the ${key} field.`);
+              return;
+            }
+
+            const nameRegex = /^[a-zA-Z\s]+$/;
+            const phoneRegex = /^\d{10}$/;
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            const experienceRegex = /^\d+(\.\d+)?$/;
+            const integerRegex = /^\d+$/;
+
+            if (key === "applicantName" && !nameRegex.test(element.value)) {
+              alert("Applicant name must contain only alphabets and spaces.");
+              return;
+            }
+            if (key === "applicantPhone" && !phoneRegex.test(element.value)) {
+              alert("Phone number must be 10 digits.");
+              return;
+            }
+            if (key === "applicantEmail" && !emailRegex.test(element.value)) {
+              alert("Please enter a valid email address.");
+              return;
+            }
+            if (key === "experience" && !experienceRegex.test(element.value)) {
+              alert("Experience must be a number (integer or float).");
+              return;
+            }
             if (
-              element instanceof HTMLInputElement ||
-              element instanceof HTMLSelectElement
+              (key === "noticePeriod" ||
+                key === "currentctc" ||
+                key === "expectedctc") &&
+              !integerRegex.test(element.value)
             ) {
-              if (element.required && !element.value) {
-                alert(`Please fill out the ${key} field.`);
-                return;
-              }
-
-              // Improved type checks
-              const nameRegex = /^[a-zA-Z\s]+$/;
-              const phoneRegex = /^\d{10}$/;
-              const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-              const experienceRegex = /^\d+(\.\d+)?$/;
-              const integerRegex = /^\d+$/;
-
-              if (key === "applicantName" && !nameRegex.test(element.value)) {
-                alert("Applicant name must contain only alphabets and spaces.");
-                return;
-              }
-              if (key === "applicantPhone" && !phoneRegex.test(element.value)) {
-                alert("Phone number must be 10 digits.");
-                return;
-              }
-              if (key === "applicantEmail" && !emailRegex.test(element.value)) {
-                alert("Please enter a valid email address.");
-                return;
-              }
-              if (
-                key === "experience" &&
-                !experienceRegex.test(element.value)
-              ) {
-                alert("Experience must be a number (integer or float).");
-                return;
-              }
-              if (
-                (key === "noticePeriod" ||
-                  key === "currentctc" ||
-                  key === "expectedctc") &&
-                !integerRegex.test(element.value)
-              ) {
-                alert(`${key} must be an integer.`);
-                return;
-              }
+              alert(`${key} must be an integer.`);
+              return;
             }
           }
+        }
 
+        try {
           const formData = new FormData(form);
+          const response = await fetch("/submit/public", {
+            method: "POST",
+            body: formData,
+          });
 
-          try {
-            const response = await fetch("/submit/public", {
-              method: "POST",
-              body: formData,
-            });
-
-            if (!response.ok) {
-              throw new Error("Failed to submit application");
-            }
-
-            const result = await response.json();
-            alert(result.message);
-            window.location.href = "openPositionPublic.html";
-          } catch (error) {
-            alert(error.message);
+          if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.message);
           }
-        });
+
+          const result = await response.json();
+          alert(result.message);
+          window.location.href = "openPositionPublic.html";
+        } catch (error) {
+          alert(`Error: ${error.message}`);
+        }
+      });
       });
     </script>
   </body>
