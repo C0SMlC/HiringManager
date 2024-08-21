@@ -492,6 +492,23 @@ app.post(
 //   }
 // );
 
+app.get("/users/activity", authenticateToken, (req, res) => {
+  if (req.user.role !== "admin") {
+    return res.status(403).json({ message: "Forbidden" });
+  }
+
+  const sql =
+    "SELECT username, loggedInTime, loggedOutTime FROM users WHERE role = 'user'";
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error("Error fetching users: " + err.message);
+      return res.status(500).json({ message: "Error fetching users" });
+    }
+
+    res.status(200).json(results);
+  });
+});
+
 app.post("/updatePosition", authenticateToken, (req, res) => {
   const {
     positionTitle,

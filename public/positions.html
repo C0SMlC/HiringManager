@@ -5,6 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Open Positions</title>
     <link rel="stylesheet" href="style.css" />
+    <style>
+      .share-container {
+        display: flex;
+        align-items: center;
+        margin-top: 1rem;
+      }
+
+      .share-link {
+        flex-grow: 1;
+        padding: 0.5rem;
+        font-size: 1rem;
+      }
+
+      .copy-btn {
+        margin-left: 0.5rem;
+        padding: 0.5rem 1rem;
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        cursor: pointer;
+      }
+    </style>
   </head>
   <body>
     <div class="navbar">
@@ -21,6 +43,8 @@
       <a href="masterCandidates.html" id="masterCandidatesLink"
         >Master Candidate Details</a
       >
+      <a href="userActivity.html" id="userActivity">User Activity</a>
+
       <a href="assignapplicants.html" id="assignApplicantLink"
         >Assign Applicant</a
       >
@@ -163,7 +187,7 @@
                 row.querySelector(".update-btn").style.display = "inline-block";
               });
             });
-            
+
             // Update event listeners for update (now "Done") buttons
             document.querySelectorAll(".update-btn").forEach((btn) => {
               btn.addEventListener("click", function () {
@@ -224,15 +248,44 @@
             document.querySelectorAll(".share-btn").forEach((btn) => {
               btn.addEventListener("click", function () {
                 const link = `${window.location.origin}/openPositionPublic.html`;
-                navigator.clipboard
-                  .writeText(link)
-                  .then(() => {
-                    alert("Link copied to clipboard!");
-                  })
-                  .catch((err) => {
-                    console.error("Failed to copy link: ", err);
-                  });
+                const shareContainer = document.createElement("div");
+                shareContainer.classList.add("share-container");
+
+                const linkInput = document.createElement("input");
+                linkInput.type = "text";
+                linkInput.value = link;
+                linkInput.classList.add("share-link");
+                linkInput.readOnly = true;
+
+                const copyBtn = document.createElement("button");
+                copyBtn.textContent = "Copy Link";
+                copyBtn.classList.add("copy-btn");
+
+                copyBtn.addEventListener("click", () => {
+                  linkInput.select();
+                  document.execCommand("copy");
+                  alert("Link copied to clipboard!");
+                });
+
+                shareContainer.appendChild(linkInput);
+                shareContainer.appendChild(copyBtn);
+
+                // Append the share container to the page
+                const positionsTable =
+                  document.getElementById("positionsTable");
+                positionsTable.parentNode.insertBefore(
+                  shareContainer,
+                  positionsTable.nextSibling
+                );
               });
+
+              setTimeout(function () {
+                const shareContainer =
+                  document.querySelector(".share-container");
+                if (shareContainer) {
+                  shareContainer.remove();
+                }
+              }, 3000);
             });
           })
           .catch((err) => {

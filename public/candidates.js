@@ -126,6 +126,17 @@ function downloadResume(applicantId) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  const tableContainer = document.querySelector(".table-container");
+  const candidateTable = document.getElementById("candidateTable");
+  const candidateBody = candidateTable.querySelector("tbody");
+
+  // Synchronize the horizontal scrolling of the table body with the table header
+  tableContainer.addEventListener("scroll", () => {
+    candidateBody.scrollLeft = tableContainer.scrollLeft;
+  });
+});
+
+document.addEventListener("DOMContentLoaded", () => {
   const token = localStorage.getItem("token");
 
   if (!token) {
@@ -229,7 +240,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
               row.innerHTML = `
                 ${profileOwnerCell}
-                <td><input type="text" id="applicantName-${
+                <td><input class="sticky-col" type="text" id="applicantName-${
                   candidate.applicantId
                 }" value="${candidate.applicantName}"></td>
                 <td><input type="tel" id="applicantPhone-${

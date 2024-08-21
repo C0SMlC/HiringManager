@@ -11,11 +11,14 @@
         width: 100%;
         overflow-x: auto;
         margin-top: 20px;
+        position: relative;
       }
+
       #candidateTable {
         width: max-content;
         border-collapse: collapse;
       }
+
       #candidateTable th,
       #candidateTable td {
         padding: 10px;
@@ -23,16 +26,29 @@
         border: 1px solid #ddd;
         white-space: nowrap;
       }
-      #candidateTable th {
+
+      #candidateTable thead {
+        position: sticky;
+        top: 0;
         background-color: #f2f2f2;
-        font-weight: bold;
+        z-index: 1;
       }
-      #candidateTable tr:nth-child(even) {
+
+      #candidateTable .sticky-col {
+        position: sticky;
+        left: 0;
+        background-color: #fff;
+        z-index: 2;
+      }
+
+      #candidateTable tbody tr:nth-child(even) {
         background-color: #f9f9f9;
       }
-      #candidateTable tr:hover {
+
+      #candidateTable tbody tr:hover {
         background-color: #f5f5f5;
       }
+
       .action-button {
         padding: 5px 10px;
         margin: 2px;
@@ -42,16 +58,21 @@
   </head>
   <body>
     <div class="navbar">
-        <!-- <a href="index.html" id="homeLink">Home</a> -->
-        <a href="login.html" id="loginLink">Login</a>
-        <a href="stats.html" id="statsLink">Home</a>
-        <a href="form.html" id="formLink">Candidate Form</a>
-        <a href="candidates.html" id="detailsLink">Candidate Details</a>
-        <!-- <a href="stats.html" id="statsLink">Statistics</a> -->
-        <a href="updatePositions.html" id="updatePositionsLink">Update Positions</a>
-        <a href="positions.html" id="positionsLink">Open Positions</a>
-        <a href="masterCandidates.html" id="masterCandidatesLink">Master Candidate Details</a>
-        <a href="assignapplicants.html" id="assignApplicantLink"
+      <!-- <a href="index.html" id="homeLink">Home</a> -->
+      <a href="login.html" id="loginLink">Login</a>
+      <a href="stats.html" id="statsLink">Home</a>
+      <a href="form.html" id="formLink">Candidate Form</a>
+      <a href="candidates.html" id="detailsLink">Candidate Details</a>
+      <!-- <a href="stats.html" id="statsLink">Statistics</a> -->
+      <a href="updatePositions.html" id="updatePositionsLink"
+        >Update Positions</a
+      >
+      <a href="positions.html" id="positionsLink">Open Positions</a>
+      <a href="masterCandidates.html" id="masterCandidatesLink"
+        >Master Candidate Details</a
+      >
+      <a href="userActivity.html" id="userActivity">User Activity</a>
+      <a href="assignapplicants.html" id="assignApplicantLink"
         >Assign Applicant</a
       >
       <a href="#" id="logoutLink" style="display: none">Logout</a>
@@ -85,7 +106,7 @@
           <thead>
             <tr>
               <th>Profile Owner</th>
-              <th>Name</th>
+              <th class="sticky-col">Name</th>
               <th>Phone</th>
               <th>Email</th>
               <th>Current Company</th>
