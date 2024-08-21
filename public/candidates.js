@@ -119,7 +119,7 @@ function downloadResume(applicantId) {
   const a = document.createElement("a");
   a.style.display = "none";
   a.href = url;
-  a.download = `resume_${candidate.applicantName}.pdf`;
+  a.download = `Delta_${candidate.applicantName}_Resume.pdf`;
   document.body.appendChild(a);
   a.click();
   window.URL.revokeObjectURL(url);
@@ -297,19 +297,32 @@ document.addEventListener("DOMContentLoaded", () => {
                   candidate.applicantId
                 }" value="${formatDate(candidate.dateApplied)}"></td>
                 <td>
-                  <select id="positionTitle-${candidate.applicantId}" onchange="updatePositionIds(${candidate.applicantId})">
-                    ${Object.keys(positionMap).map(title => 
-                      `<option value="${title}" ${title === candidate.positionTitle ? 'selected' : ''}>${title}</option>`
-                    ).join('')}
+                  <select id="positionTitle-${
+                    candidate.applicantId
+                  }" onchange="updatePositionIds(${candidate.applicantId})">
+                    ${Object.keys(positionMap)
+                      .map(
+                        (title) =>
+                          `<option value="${title}" ${
+                            title === candidate.positionTitle ? "selected" : ""
+                          }>${title}</option>`
+                      )
+                      .join("")}
                   </select>
                 </td>
                 <td>
                   <select id="positionId-${candidate.applicantId}">
-                    ${positionMap[candidate.positionTitle] ? 
-                      positionMap[candidate.positionTitle].map(id => 
-                        `<option value="${id}" ${id === candidate.positionId ? 'selected' : ''}>${id}</option>`
-                      ).join('') : 
-                      `<option value="${candidate.positionId}">${candidate.positionId}</option>`
+                    ${
+                      positionMap[candidate.positionTitle]
+                        ? positionMap[candidate.positionTitle]
+                            .map(
+                              (id) =>
+                                `<option value="${id}" ${
+                                  id === candidate.positionId ? "selected" : ""
+                                }>${id}</option>`
+                            )
+                            .join("")
+                        : `<option value="${candidate.positionId}">${candidate.positionId}</option>`
                     }
                   </select>
                 </td>
@@ -524,7 +537,8 @@ function updateCandidate(applicantId) {
     expectedctc: document.getElementById(`expectedctc-${applicantId}`).value,
     band: document.getElementById(`band-${applicantId}`).value,
     dateApplied: document.getElementById(`dateApplied-${applicantId}`).value,
-    positionTitle: document.getElementById(`positionTitle-${applicantId}`).value,
+    positionTitle: document.getElementById(`positionTitle-${applicantId}`)
+      .value,
     positionId: document.getElementById(`positionId-${applicantId}`).value,
   };
 
@@ -578,11 +592,11 @@ function updatePositionIds(applicantId) {
   const titleSelect = document.getElementById(`positionTitle-${applicantId}`);
   const idSelect = document.getElementById(`positionId-${applicantId}`);
   const selectedTitle = titleSelect.value;
-  
-  idSelect.innerHTML = '';
+
+  idSelect.innerHTML = "";
   if (positionMap[selectedTitle]) {
     positionMap[selectedTitle].forEach((id) => {
-      const option = document.createElement('option');
+      const option = document.createElement("option");
       option.value = id;
       option.textContent = id;
       idSelect.appendChild(option);
