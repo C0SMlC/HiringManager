@@ -149,10 +149,7 @@ function processData(data) {
       lists.closed++;
     }
 
-    if (
-      candidate.status === "CLOSED" &&
-      candidate.stage === "Final Discussion"
-    ) {
+    if (candidate.status === "CLOSED" && candidate.stage === "Joined") {
       lists.joined++;
     }
   });

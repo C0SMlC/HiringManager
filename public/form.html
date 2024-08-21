@@ -146,7 +146,12 @@
         <div class="form-row">
           <div class="form-field">
             <label for="expectedctc" class="required">Expected CTC:</label>
-            <input type="decimal" id="expectedctc" name="expectedctc" required />
+            <input
+              type="decimal"
+              id="expectedctc"
+              name="expectedctc"
+              required
+            />
           </div>
           <div class="form-field">
             <label for="band">Band:</label>
@@ -208,6 +213,7 @@
             <label for="stage">Stage:</label>
             <select id="stage" name="stage">
               <option value="App. Recd.">App. Recd.</option>
+              <option value="Not Answering">Not Answering</option>
               <option value="Phone Screen">Phone Screen</option>
               <option value="L1">L1</option>
               <option value="L2_Internal">L2_Internal</option>
@@ -283,7 +289,6 @@
 
         // Check user role and show/hide admin-only links
         const role = localStorage.getItem("role");
-        // console.log(role);
         const masterCandidatesLink = document.getElementById(
           "masterCandidatesLink"
         );
@@ -296,7 +301,6 @@
             masterCandidatesLink.style.display = "inline";
           if (assignApplicantLink) assignApplicantLink.style.display = "inline";
         } else {
-          // if (masterCandidatesLink) masterCandidatesLink.style.display = 'none';
           if (assignApplicantLink) assignApplicantLink.style.display = "none";
         }
 
@@ -396,97 +400,198 @@
           })
           .catch((error) => console.error("Error fetching positions:", error));
 
+        const requiredFields = [
+          "currentCompany",
+          "candidateWorkLocation",
+          "nativeLocation",
+          "qualification",
+          "experience",
+          "skills",
+          "noticePeriod",
+          "currentctc",
+          "expectedctc",
+          "band",
+          "dateOfPhoneScreen",
+          "interviewDate",
+          "dateOfOffer",
+          "reasonNotExtending",
+        ];
+
+        const notAnsweringRequiredFields = [
+          "applicantName",
+          "applicantEmail",
+          "applicantPhone",
+          "applicantResume",
+          "positionTitle",
+          "positionId",
+        ];
+
+        function setFieldState(fieldId, required, disabled, value = "") {
+          const field = inputs[fieldId];
+          if (field) {
+            field.required = required;
+            field.disabled = disabled;
+            if (disabled) {
+              field.value =
+                field.type === "date"
+                  ? ""
+                  : field.type === "number"
+                  ? "0"
+                  : "NA";
+            } else if (value) {
+              field.value = value;
+            }
+          }
+        }
+
+        function handleStageChange() {
+          const isNotAnswering = inputs.stage.value === "Not Answering";
+
+          requiredFields.forEach((fieldId) => {
+            setFieldState(fieldId, !isNotAnswering, isNotAnswering);
+          });
+
+          notAnsweringRequiredFields.forEach((fieldId) => {
+            setFieldState(fieldId, true, false);
+          });
+
+          // Special handling for status field
+          inputs.status.value = isNotAnswering ? "OPEN" : inputs.status.value;
+          inputs.status.disabled = isNotAnswering;
+
+          // Update form appearance
+          form.querySelectorAll(".form-field").forEach((field) => {
+            field.style.opacity =
+              isNotAnswering &&
+              !notAnsweringRequiredFields.includes(
+                field.querySelector("input, select").id
+              )
+                ? "0.5"
+                : "1";
+          });
+        }
+
+        inputs.stage.addEventListener("change", handleStageChange);
+
+        // Initialize form state
+        handleStageChange();
+
         form.addEventListener("submit", async (event) => {
           event.preventDefault();
 
+          const isNotAnswering = inputs.stage.value === "Not Answering";
+          const fieldsToValidate = isNotAnswering
+            ? notAnsweringRequiredFields
+            : Object.keys(inputs);
+
           // Validate form data
-          for (const [key, element] of Object.entries(inputs)) {
+          for (const key of fieldsToValidate) {
+            const element = inputs[key];
             if (
               element instanceof HTMLInputElement ||
               element instanceof HTMLSelectElement
             ) {
               if (element.required && !element.value) {
                 alert(`Please fill out the ${key} field.`);
+                element.focus();
                 return;
               }
 
-              // Improved type checks
-              const nameRegex = /^(?!.*\d)[a-zA-Z\s]+$/;
-              const phoneRegex = /^\d{10}$/;
-              const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-              const experienceRegex = /^\d+(\.\d+)?$/;
-              const numberRegex = /^\d+(\.\d+)?$/;
+              // Specific validations
+              const validations = {
+                applicantName: {
+                  regex: /^(?!.*\d)[a-zA-Z\s]+$/,
+                  message:
+                    "Applicant name must contain only alphabets and spaces.",
+                },
+                applicantPhone: {
+                  regex: /^\d{10}$/,
+                  message: "Phone number must be 10 digits.",
+                },
+                applicantEmail: {
+                  regex: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                  message: "Please enter a valid email address.",
+                },
+                experience: {
+                  regex: /^\d+(\.\d+)?$/,
+                  message: "Experience must be a number (integer or float).",
+                },
+                currentctc: {
+                  regex: /^\d+(\.\d+)?$/,
+                  message: "Current CTC must be a number.",
+                },
+                expectedctc: {
+                  regex: /^\d+(\.\d+)?$/,
+                  message: "Expected CTC must be a number.",
+                },
+              };
 
-              if (key === "applicantName" && !nameRegex.test(element.value)) {
-                alert("Applicant name must contain only alphabets and spaces.");
-                return;
-              }
-              if (key === "applicantPhone" && !phoneRegex.test(element.value)) {
-                alert("Phone number must be 10 digits.");
-                return;
-              }
-              if (key === "applicantEmail" && !emailRegex.test(element.value)) {
-                alert("Please enter a valid email address.");
-                return;
-              }
-              if (
-                key === "experience" &&
-                !experienceRegex.test(element.value)
-              ) {
-                alert("Experience must be a number (integer or float).");
-                return;
-              }
-              if (
-                (key === "currentctc" || key === "expectedctc") &&
-                !numberRegex.test(element.value)
-              ) {
-                alert(`${key} must be an integer.`);
+              const validation = validations[key];
+              if (validation && !validation.regex.test(element.value)) {
+                alert(validation.message);
+                element.focus();
                 return;
               }
             }
           }
 
-          // Date validation
-          const dateApplied = new Date(inputs.dateApplied.value);
-          const dateOfPhoneScreen = new Date(inputs.dateOfPhoneScreen.value);
-          const interviewDate = new Date(inputs.interviewDate.value);
-          const dateOfOffer = new Date(inputs.dateOfOffer.value);
+          // Date validations (only if not "Not Answering")
+          if (!isNotAnswering) {
+            const dateValidations = [
+              {
+                field: "dateOfPhoneScreen",
+                compareTo: "dateApplied",
+                message:
+                  "Date of phone screen must be after the date of application.",
+              },
+              {
+                field: "interviewDate",
+                compareTo: "dateOfPhoneScreen",
+                message:
+                  "Interview date must be after the date of phone screen.",
+              },
+              {
+                field: "dateOfOffer",
+                compareTo: "interviewDate",
+                message: "Date of offer must be after the interview date.",
+              },
+            ];
 
-          if (dateOfPhoneScreen < dateApplied) {
-            alert(
-              "Date of phone screen must be after the date of application."
-            );
-            return;
-          }
-          if (interviewDate <= dateOfPhoneScreen) {
-            alert("Interview date must be after the date of phone screen.");
-            return;
-          }
-          if (dateOfOffer <= interviewDate) {
-            alert("Date of offer must be after the interview date.");
-            return;
+            for (const validation of dateValidations) {
+              const date1 = new Date(inputs[validation.field].value);
+              const date2 = new Date(inputs[validation.compareTo].value);
+              if (date1 <= date2) {
+                alert(validation.message);
+                inputs[validation.field].focus();
+                return;
+              }
+            }
           }
 
-          // Form submission logic
+          // Form submission
           const formData = new FormData(form);
           try {
-            const response = await fetch("/submit", {
-              method: "POST",
-              headers: {
-                Authorization: `Bearer ${localStorage.getItem("token")}`,
-              },
-              body: formData,
-            });
+            const response = await fetch(
+              isNotAnswering ? "/candidates/submit-not-answering" : "/submit",
+              {
+                method: "POST",
+                headers: {
+                  Authorization: `Bearer ${localStorage.getItem("token")}`,
+                },
+                body: formData,
+              }
+            );
 
-            // if (!response.ok) {
-            //   throw new Error("Failed to submit form");
-            // }
+            if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+            }
 
             const result = await response.json();
             alert(result.message);
-            // form.reset();
+            // Do not reset the form here, as per the original code
           } catch (error) {
-            alert(error.message);
+            console.error("Submission error:", error);
+            alert(`An error occurred during submission: ${error.message}`);
           }
         });
       });

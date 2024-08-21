@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS ApplicantTracking (
     positionTitle VARCHAR(255) NOT NULL,
     positionId VARCHAR(50) NOT NULL,
     status ENUM('OPEN', 'CLOSED') NOT NULL,
-    stage ENUM('App. Recd.', 'Phone Screen', 'L1', 'L2_Internal','Yet to share','Shared with client', 'L1_Client','L2_Client','Final Discussion', 'HOLD', 'Buffer List', 'Rejected','Declined'),
+    stage ENUM('App. Recd.', 'Not Answering', 'Joined', 'Phone Screen', 'L1', 'L2_Internal','Yet to share','Shared with client', 'L1_Client','L2_Client','Final Discussion', 'HOLD', 'Buffer List', 'Rejected','Declined'),
     interviewer VARCHAR(255),
     dateOfPhoneScreen DATE,
     interviewDate DATE,
