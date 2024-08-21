@@ -36,7 +36,7 @@ function formatDate(dateString) {
 
   // If it's still invalid, return an empty string
   if (isNaN(date.getTime())) {
-    console.error("Invalid date:", dateString);
+    // console.error("Invalid date:", dateString);
     return "";
   }
 
@@ -46,7 +46,7 @@ function formatDate(dateString) {
   const day = String(date.getDate()).padStart(2, "0");
 
   const formattedDate = `${year}-${month}-${day}`;
-  console.log("Formatted date", formattedDate);
+  // console.log("Formatted date", formattedDate);
 
   return formattedDate;
 }
@@ -57,6 +57,38 @@ function adjustDateForTimezone(dateString) {
   return new Date(date.getTime() - date.getTimezoneOffset() * 60000)
     .toISOString()
     .split("T")[0];
+}
+
+function toggleInterviewer(applicantId) {
+  const stageSelect = document.getElementById(`stage-${applicantId}`);
+  const interviewerInput = document.getElementById(
+    `interviewer-${applicantId}`
+  );
+  const enabledStages = [
+    "L1",
+    "L2_Internal",
+    "L1_Client",
+    "L2_Client",
+    "Final Discussion",
+  ];
+
+  // Check if elements exist before accessing their properties
+  if (!stageSelect || !interviewerInput) {
+    console.warn(`Elements not found for applicant ${applicantId}`);
+    return;
+  }
+
+  if (enabledStages.includes(stageSelect.value)) {
+    interviewerInput.disabled = false;
+  } else {
+    interviewerInput.disabled = true;
+  }
+
+  // Handle "Joined" stage
+  if (stageSelect.value === "Joined") {
+    interviewerInput.disabled = true;
+    interviewerInput.value = "N/A";
+  }
 }
 
 function viewResume(applicantId) {
@@ -158,34 +190,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
           candidates = data;
 
-          function toggleInterviewer(applicantId) {
-            const stageSelect = document.getElementById(`stage-${applicantId}`);
-            const interviewerInput = document.getElementById(
-              `interviewer-${applicantId}`
-            );
-            const enabledStages = [
-              "L1",
-              "L2_Internal",
-              "L1_Client",
-              "L2_Client",
-              "Final Discussion",
-            ];
-
-            if (enabledStages.includes(stageSelect.value)) {
-              interviewerInput.disabled = false;
-            } else {
-              interviewerInput.disabled = true;
-            }
-
-            console.log(
-              `Toggled interviewer for ${applicantId}. Stage: ${stageSelect.value}, Disabled: ${interviewerInput.disabled}`
-            );
-          }
-
           function renderCandidates(candidates, users = []) {
             candidateList.innerHTML = "";
 
             candidates.forEach((candidate) => {
+              // Skip rendering closed candidates if not admin
               if (!isAdmin && candidate.status === "CLOSED") return;
 
               const row = document.createElement("tr");
@@ -322,6 +331,11 @@ document.addEventListener("DOMContentLoaded", () => {
                           <option value="App. Recd." ${
                             candidate.stage === "App. Recd." ? "selected" : ""
                           }>App. Recd.</option>
+                          <option value="Not Answering" ${
+                            candidate.stage === "Not Answering"
+                              ? "selected"
+                              : ""
+                          }>Not Answering</option>
                           <option value="Phone Screen" ${
                             candidate.stage === "Phone Screen" ? "selected" : ""
                           }>Phone Screen</option>
@@ -350,6 +364,9 @@ document.addEventListener("DOMContentLoaded", () => {
                               ? "selected"
                               : ""
                           }>Final Discussion</option>
+                          <option value="Joined" ${
+                            candidate.stage === "Joined" ? "selected" : ""
+                          }>Joined</option>
                           <option value="HOLD" ${
                             candidate.stage === "HOLD" ? "selected" : ""
                           }>Hold</option>
@@ -413,21 +430,23 @@ document.addEventListener("DOMContentLoaded", () => {
               const stageSelect = document.getElementById(
                 `stage-${candidate.applicantId}`
               );
-              stageSelect.addEventListener("change", () =>
-                toggleInterviewer(candidate.applicantId)
-              );
-
-              // Initial call to set the correct state
-              toggleInterviewer(candidate.applicantId);
+              if (stageSelect) {
+                stageSelect.addEventListener("change", () =>
+                  toggleInterviewer(candidate.applicantId)
+                );
+                // Initial call to set the correct state
+                toggleInterviewer(candidate.applicantId);
+              }
             });
           }
 
+          // console.log(data);
           // Initial rendering
           renderCandidates(data, users);
 
-          candidates.forEach((candidate) => {
-            toggleInterviewer(candidate.applicantId);
-          });
+          // candidates.forEach((candidate) => {
+          //   toggleInterviewer(candidate.applicantId);
+          // });
 
           // Apply filter if admin
           if (isAdmin && statusFilter) {
@@ -463,16 +482,6 @@ function updateCandidate(applicantId) {
   }
 
   // console.log("document.getElementById(`profileOwner-1`).value", document.getElementById(`profileOwner-1`).value)
-
-  console.log(
-    "date huuh",
-    adjustDateForTimezone(
-      document.getElementById(`interviewDate-${applicantId}`).value
-    ),
-    adjustDateForTimezone(
-      document.getElementById(`dateOfOffer-${applicantId}`).value
-    )
-  );
 
   const updatedCandidate = {
     // profileOwner:document.getElementById(`profileOwner-1`).value,
@@ -519,7 +528,11 @@ function updateCandidate(applicantId) {
     positionId: document.getElementById(`positionId-${applicantId}`).value,
   };
 
-  if (updatedCandidate.stage === "Rejected") updatedCandidate.status = "CLOSED";
+  if (
+    updatedCandidate.stage === "Rejected" ||
+    updatedCandidate.stage === "Joined"
+  )
+    updatedCandidate.status = "CLOSED";
 
   fetch(`/candidates/${applicantId}`, {
     method: "PUT",

@@ -8,12 +8,69 @@ const multer = require("multer");
 const upload = multer({ storage: multer.memoryStorage() });
 
 router.post(
+  "/submit-not-answering",
+  upload.single("applicantResume"),
+  async (req, res) => {
+    try {
+      const {
+        profileOwner,
+        applicantName,
+        applicantPhone,
+        applicantEmail,
+        positionTitle,
+        positionId,
+      } = req.body;
+
+      const applicantResume = req.file.buffer;
+
+      const sqlQuery = `INSERT INTO ApplicantTracking (
+        profileOwner, applicantName, applicantPhone, applicantEmail,
+        currentCompany, candidateWorkLocation, nativeLocation, qualification,
+        experience, skills, noticePeriod, currentctc, expectedctc, band,
+        applicantResume, dateApplied, positionTitle, positionId,
+        status, stage
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURDATE(), ?, ?, 'OPEN', 'Not Answering')`;
+
+      const variables = [
+        profileOwner,
+        applicantName,
+        applicantPhone,
+        applicantEmail,
+        "NA",
+        "NA",
+        "NA",
+        "NA",
+        "NA",
+        "NA",
+        "NA",
+        0,
+        0,
+        "NA",
+        applicantResume,
+        positionTitle,
+        positionId,
+      ];
+
+      db.query(sqlQuery, variables);
+
+      res.json({
+        message: "Form submitted successfully for Not Answering candidate",
+      });
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      res
+        .status(500)
+        .json({ message: "An error occurred while submitting the form" });
+    }
+  }
+);
+
+router.post(
   "/submit-application",
   authenticateToken,
   upload.single("resume"),
   (req, res) => {
     const { name, email, phone, assignTo, position, positionId } = req.body;
-    console.log(name, email, phone, assignTo, position, positionId);
     const resume = req.file ? req.file.buffer : null;
 
     if (req.user.role !== "admin") {
@@ -119,8 +176,6 @@ router.put("/:applicantId", authenticateToken, (req, res) => {
     reasonNotExtending,
     notes,
   } = req.body;
-
-  console.log(interviewDate, dateOfOffer);
 
   let updateQuery = `
     UPDATE ApplicantTracking

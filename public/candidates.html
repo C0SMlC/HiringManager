@@ -1,46 +1,46 @@
-
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Candidate Details</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
     <style>
-        .table-container {
-            width: 100%;
-            overflow-x: auto;
-            margin-top: 20px;
-        }
-        #candidateTable {
-            width: max-content;
-            border-collapse: collapse;
-        }
-        #candidateTable th, #candidateTable td {
-            padding: 10px;
-            text-align: left;
-            border: 1px solid #ddd;
-            white-space: nowrap;
-        }
-        #candidateTable th {
-            background-color: #f2f2f2;
-            font-weight: bold;
-        }
-        #candidateTable tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-        #candidateTable tr:hover {
-            background-color: #f5f5f5;
-        }
-        .action-button {
-            padding: 5px 10px;
-            margin: 2px;
-            cursor: pointer;
-        }
+      .table-container {
+        width: 100%;
+        overflow-x: auto;
+        margin-top: 20px;
+      }
+      #candidateTable {
+        width: max-content;
+        border-collapse: collapse;
+      }
+      #candidateTable th,
+      #candidateTable td {
+        padding: 10px;
+        text-align: left;
+        border: 1px solid #ddd;
+        white-space: nowrap;
+      }
+      #candidateTable th {
+        background-color: #f2f2f2;
+        font-weight: bold;
+      }
+      #candidateTable tr:nth-child(even) {
+        background-color: #f9f9f9;
+      }
+      #candidateTable tr:hover {
+        background-color: #f5f5f5;
+      }
+      .action-button {
+        padding: 5px 10px;
+        margin: 2px;
+        cursor: pointer;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="navbar">
         <!-- <a href="index.html" id="homeLink">Home</a> -->
         <a href="login.html" id="loginLink">Login</a>
@@ -54,16 +54,16 @@
         <a href="assignapplicants.html" id="assignApplicantLink"
         >Assign Applicant</a
       >
-        <a href="#" id="logoutLink" style="display:none;">Logout</a>
+      <a href="#" id="logoutLink" style="display: none">Logout</a>
     </div>
     <div class="forms-container">
-        <div id="usernameDisplay"></div>
-        <h2>Candidate Details</h2>
-        <div>
-            <p><strong>Username:</strong> <span id="username"></span></p>
-            <p><strong>Role:</strong> <span id="role"></span></p>
-        </div>
-        <!-- <div>
+      <div id="usernameDisplay"></div>
+      <h2>Candidate Details</h2>
+      <div>
+        <p><strong>Username:</strong> <span id="username"></span></p>
+        <p><strong>Role:</strong> <span id="role"></span></p>
+      </div>
+      <!-- <div>
             <label for="statusFilter">Filter by Status:</label>
             <select id="statusFilter">
                 <option value="all">All</option>
@@ -71,59 +71,58 @@
                 <option value="CLOSED">Closed</option>
             </select>
         </div> -->
-        <div class="filter-container">
-            <label for="statusFilter">Filter by Status:</label>
-            <select id="statusFilter">
-                <option value="all">All</option>
-                <option value="OPEN">Open</option>
-                <option value="CLOSED">Closed</option>
-            </select>
-        </div>
-        
-        <div class="table-container">
-            <table id="candidateTable">
-            <thead>
-                <tr>
-                    <th>Profile Owner</th>
-                    <th>Name</th>
-                    <th>Phone</th>
-                    <th>Email</th>
-                    <th>Current Company</th>
-                    <th>Work Location</th>
-                    <th>Native Location</th>
-                    <th>Qualification</th>
-                    <th>Experience</th>
-                    <th>Skills</th>
-                    <th>Notice Period</th>
-                    <th>Current CTC</th>
-                    <th>Expected CTC</th>
-                    <th>Band</th>
-                    <th>Date Applied</th>
-                    <th>Position Title</th>
-                    <th>Position ID</th>
-                    <th>Status</th>
-                    <th>Stage</th>
-                    <th>Interviewer</th>
-                    <th>Interview Date</th>
-                    <th>Date of Offer</th>
-                    <th>Reason for Not Extending Offer</th>
-                    <th>Notes</th>
-                    <th>Actions</th>
-                    <th>View Resume</th>
-                    <th>Download Resume</th>
-                    <th>Export</th> 
-                </tr>
-            </thead>
-            <tbody id="candidateList">
-                <!-- Candidates will be populated here -->
-            </tbody>
+      <div class="filter-container">
+        <label for="statusFilter">Filter by Status:</label>
+        <select id="statusFilter">
+          <option value="all">All</option>
+          <option value="OPEN">Open</option>
+          <option value="CLOSED">Closed</option>
+        </select>
+      </div>
+
+      <div class="table-container">
+        <table id="candidateTable">
+          <thead>
+            <tr>
+              <th>Profile Owner</th>
+              <th>Name</th>
+              <th>Phone</th>
+              <th>Email</th>
+              <th>Current Company</th>
+              <th>Work Location</th>
+              <th>Native Location</th>
+              <th>Qualification</th>
+              <th>Experience</th>
+              <th>Skills</th>
+              <th>Notice Period</th>
+              <th>Current CTC</th>
+              <th>Expected CTC</th>
+              <th>Band</th>
+              <th>Date Applied</th>
+              <th>Position Title</th>
+              <th>Position ID</th>
+              <th>Status</th>
+              <th>Stage</th>
+              <th>Interviewer</th>
+              <th>Interview Date</th>
+              <th>Date of Offer</th>
+              <th>Reason for Not Extending Offer</th>
+              <th>Notes</th>
+              <th>Actions</th>
+              <th>View Resume</th>
+              <th>Download Resume</th>
+              <th>Export</th>
+            </tr>
+          </thead>
+          <tbody id="candidateList">
+            <!-- Candidates will be populated here -->
+          </tbody>
         </table>
-        </div>
+      </div>
     </div>
+    <script src="candidates.js"></script>
     <script src="userInfo.js"></script>
     <script src="dashboard.js"></script>
-    <script src="candidates.js"></script>
     <script src="hideNav.js"></script>
-
-</body>
+  </body>
 </html>
