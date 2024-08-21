@@ -1,6 +1,27 @@
 let candidates = [];
 let isAdmin;
 
+let positionMap = {};
+
+function fetchPositions() {
+  return fetch("/api/positions", {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
+  })
+    .then((response) => response.json())
+    .then((positions) => {
+      positions.forEach((position) => {
+        if (!positionMap[position.positionTitle]) {
+          positionMap[position.positionTitle] = [];
+        }
+        positionMap[position.positionTitle].push(position.positionId);
+      });
+    })
+    .catch((error) => console.error("Error fetching positions:", error));
+}
+
 function formatDate(dateString) {
   console.log("Input dateString", dateString);
   if (!dateString) return "";
@@ -79,14 +100,16 @@ document.addEventListener("DOMContentLoaded", () => {
     window.location.href = "/login.html";
   }
 
-  fetch("/auth/verify", {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  })
-    .then((response) => response.json())
-    .then((userData) => {
+  Promise.all([
+    fetch("/auth/verify", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }).then((response) => response.json()),
+    fetchPositions(),
+  ])
+    .then(([userData]) => {
       localStorage.setItem("username", userData.username);
       localStorage.setItem("role", userData.role);
 
@@ -264,13 +287,23 @@ document.addEventListener("DOMContentLoaded", () => {
                 <td><input type="date" id="dateApplied-${
                   candidate.applicantId
                 }" value="${formatDate(candidate.dateApplied)}"></td>
-                <td><input type="text" id="positionTitle-${
-                  candidate.applicantId
-                }" value="${candidate.positionTitle}"></td>
-                <td><input type="text" id="positionId-${
-                  candidate.applicantId
-                }" value="${candidate.positionId}"></td>
                 <td>
+                  <select id="positionTitle-${candidate.applicantId}" onchange="updatePositionIds(${candidate.applicantId})">
+                    ${Object.keys(positionMap).map(title => 
+                      `<option value="${title}" ${title === candidate.positionTitle ? 'selected' : ''}>${title}</option>`
+                    ).join('')}
+                  </select>
+                </td>
+                <td>
+                  <select id="positionId-${candidate.applicantId}">
+                    ${positionMap[candidate.positionTitle] ? 
+                      positionMap[candidate.positionTitle].map(id => 
+                        `<option value="${id}" ${id === candidate.positionId ? 'selected' : ''}>${id}</option>`
+                      ).join('') : 
+                      `<option value="${candidate.positionId}">${candidate.positionId}</option>`
+                    }
+                  </select>
+                </td>
                     <select id="status-${candidate.applicantId}" name="status">
                         <option value="OPEN" ${
                           candidate.status === "OPEN" ? "selected" : ""
@@ -482,8 +515,7 @@ function updateCandidate(applicantId) {
     expectedctc: document.getElementById(`expectedctc-${applicantId}`).value,
     band: document.getElementById(`band-${applicantId}`).value,
     dateApplied: document.getElementById(`dateApplied-${applicantId}`).value,
-    positionTitle: document.getElementById(`positionTitle-${applicantId}`)
-      .value,
+    positionTitle: document.getElementById(`positionTitle-${applicantId}`).value,
     positionId: document.getElementById(`positionId-${applicantId}`).value,
   };
 
@@ -528,4 +560,19 @@ function exportCandidate(applicantId) {
   XLSX.utils.book_append_sheet(workbook, worksheet, "Candidate");
 
   XLSX.writeFile(workbook, `candidate_${candidate.applicantName}.xlsx`);
+}
+function updatePositionIds(applicantId) {
+  const titleSelect = document.getElementById(`positionTitle-${applicantId}`);
+  const idSelect = document.getElementById(`positionId-${applicantId}`);
+  const selectedTitle = titleSelect.value;
+  
+  idSelect.innerHTML = '';
+  if (positionMap[selectedTitle]) {
+    positionMap[selectedTitle].forEach((id) => {
+      const option = document.createElement('option');
+      option.value = id;
+      option.textContent = id;
+      idSelect.appendChild(option);
+    });
+  }
 }
