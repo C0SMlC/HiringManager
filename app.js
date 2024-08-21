@@ -503,6 +503,16 @@ app.post("/updatePosition", authenticateToken, (req, res) => {
     experienceRequired,
   } = req.body;
 
+  console.log(
+    positionTitle,
+    positionId,
+    manager,
+    description,
+    status,
+    openPositions,
+    experienceRequired
+  );
+
   const checkSql = "SELECT * FROM OpenPositions WHERE positionId = ?";
   db.query(checkSql, [positionId], (err, results) => {
     if (err) {
@@ -527,9 +537,9 @@ app.post("/updatePosition", authenticateToken, (req, res) => {
           positionTitle,
           description,
           status,
-          positionId,
           openPositions,
           experienceRequired,
+          positionId,
         ],
         (err, result) => {
           if (err) {

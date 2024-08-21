@@ -393,7 +393,7 @@ table {
 
 .form-container.openpositions-form {
   max-width: 90%;
-  width: 1200px;
+  width: 1400px;
   margin: 50px auto;
 }
 
@@ -442,6 +442,11 @@ table {
 #positionsTable th:nth-child(5),
 #positionsTable td:nth-child(5) {
   width: 10%;
+}
+
+#positionsTable th:nth-child(7),
+#positionsTable td:nth-child(7) {
+  width: 20%;
 }
 
 .navbar {
@@ -507,4 +512,27 @@ textarea {
   resize: vertical; /* Allows the user to manually resize the height if needed */
   overflow-y: hidden; /* Hides the scrollbar */
   font-family: Arial, sans-serif;
+}
+
+.status-cell {
+  min-width: 150px;
+}
+
+.status-dropdown {
+  width: 100%;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  font-size: 14px;
+}
+
+.status-dropdown:disabled {
+  background-color: #f0f0f0;
+  color: #666;
+}
+
+.status-dropdown:enabled {
+  background-color: #fff;
+  color: #000;
 }

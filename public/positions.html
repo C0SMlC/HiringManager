@@ -150,50 +150,20 @@
                 cells[2].querySelector(
                   ".job-description-content"
                 ).contentEditable = true;
-                cells[4].querySelector(".status-dropdown").disabled = false;
+
+                // Change openPositions to an input field
+                const openPositionsValue = cells[3].innerText;
+                cells[3].innerHTML = `<input type="number" value="${openPositionsValue}" min="1">`;
+
+                cells[4].contentEditable = true;
+                cells[6].querySelector(".status-dropdown").disabled = false;
 
                 // Show "Done" button and hide "Edit" button
                 this.style.display = "none";
                 row.querySelector(".update-btn").style.display = "inline-block";
               });
             });
-
-            // Add event listeners to update buttons
-            document.querySelectorAll(".update-btn").forEach((btn) => {
-              btn.addEventListener("click", function () {
-                const row = this.parentElement.parentElement;
-                const positionId = this.getAttribute("data-position-id");
-                const positionTitle = row.children[1].innerText.trim();
-                const description = row.children[2].innerText.trim();
-                const status = row.querySelector(".status-dropdown").value;
-
-                fetch("/updateposition", {
-                  method: "POST",
-                  headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
-                  },
-                  body: JSON.stringify({
-                    positionId: positionId,
-                    positionTitle: positionTitle,
-                    description,
-                    status: status,
-                  }),
-                })
-                  .then((response) => {
-                    if (response.ok) {
-                      alert("Position updated successfully");
-                    } else {
-                      alert("Failed to update position");
-                    }
-                  })
-                  .catch((err) => {
-                    console.error(err);
-                    alert("Error updating position");
-                  });
-              });
-            });
-
+            
             // Update event listeners for update (now "Done") buttons
             document.querySelectorAll(".update-btn").forEach((btn) => {
               btn.addEventListener("click", function () {
@@ -203,6 +173,9 @@
                 const description = row.children[2]
                   .querySelector(".job-description-content")
                   .innerText.trim();
+                const openPositions =
+                  row.children[3].querySelector("input").value;
+                const experienceRequired = row.children[4].innerText.trim();
                 const status = row.querySelector(".status-dropdown").value;
 
                 // Disable editing
@@ -210,6 +183,8 @@
                 row.children[2].querySelector(
                   ".job-description-content"
                 ).contentEditable = false;
+                row.children[3].innerHTML = openPositions; // Change back to text
+                row.children[4].contentEditable = false;
                 row.querySelector(".status-dropdown").disabled = true;
 
                 // Show "Edit" button and hide "Done" button
@@ -227,6 +202,8 @@
                     positionId: positionId,
                     positionTitle: positionTitle,
                     description,
+                    openPositions,
+                    experienceRequired,
                     status: status,
                   }),
                 })
@@ -243,7 +220,6 @@
                   });
               });
             });
-
             // Add event listeners to share buttons
             document.querySelectorAll(".share-btn").forEach((btn) => {
               btn.addEventListener("click", function () {

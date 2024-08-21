@@ -411,10 +411,10 @@
           "currentctc",
           "expectedctc",
           "band",
-          "dateOfPhoneScreen",
-          "interviewDate",
-          "dateOfOffer",
-          "reasonNotExtending",
+          //"dateOfPhoneScreen",
+          //"interviewDate",
+          //"dateOfOffer",
+          //"reasonNotExtending",
         ];
 
         const notAnsweringRequiredFields = [
@@ -499,11 +499,11 @@
 
               // Specific validations
               const validations = {
-                applicantName: {
+                /*applicantName: {
                   regex: /^(?!.*\d)[a-zA-Z\s]+$/,
                   message:
                     "Applicant name must contain only alphabets and spaces.",
-                },
+                },*/
                 applicantPhone: {
                   regex: /^\d{10}$/,
                   message: "Phone number must be 10 digits.",
@@ -560,7 +560,7 @@
             for (const validation of dateValidations) {
               const date1 = new Date(inputs[validation.field].value);
               const date2 = new Date(inputs[validation.compareTo].value);
-              if (date1 <= date2) {
+              if (date1 < date2) {
                 alert(validation.message);
                 inputs[validation.field].focus();
                 return;
