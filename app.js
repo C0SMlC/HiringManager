@@ -1,4 +1,6 @@
 const express = require("express");
+const nodemailer = require('nodemailer');
+
 const bodyParser = require("body-parser");
 const path = require("path");
 const multer = require("multer");
@@ -148,123 +150,219 @@ app.get("/updatePositions", authenticateToken, (req, res) => {
 //     });
 // });
 
-app.post("/submit/public", upload.single("applicantResume"), (req, res) => {
-  const {
-    applicantName,
-    applicantPhone,
-    applicantEmail,
-    currentCompany,
-    candidateWorkLocation,
-    nativeLocation,
-    qualification,
-    experience,
-    skills,
-    noticePeriod,
-    currentctc,
-    expectedctc,
-    band = "L0",
-    positionTitle,
-    positionId,
-    status,
-    stage,
-    dateOfPhoneScreen,
-    interviewDate,
-    dateOfOffer,
-    reasonNotExtending,
-    notes,
-  } = req.body;
+async function sendEmailToAdmin(to, subject, text) {
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: 'tp291101@gmail.com',
+      pass: 'hnmq vbwm rysa fdre'
+    }
+  });
 
-  const profileOwner = "admin";
-  const applicantResume = req.file.buffer;
-  let dateApplied = new Date();
+  const mailOptions = {
+    from: 'tp291101@gmail.com',
+    to,
+    subject,
+    text
+  };
 
-  // Check for existing records
-  const checkSql = `
-        SELECT COUNT(*) AS count FROM ApplicantTracking 
-        WHERE applicantPhone = ? OR applicantEmail = ?
+  try {
+    await transporter.sendMail(mailOptions);
+    console.log('Email sent successfully');
+  } catch (error) {
+    console.error('Error sending email:', error);
+    throw error;
+  }
+}
+async function getAdminUsers() {
+  const sql = 'SELECT username FROM users WHERE role = "admin"';
+
+  return new Promise((resolve, reject) => {
+    db.query(sql, (err, results) => {
+      if (err) {
+        console.error("Error fetching admin users: " + err.message);
+        reject(err);
+      } else {
+        resolve(results);
+      }
+    });
+  });
+}
+
+
+app.post("/submit/public", upload.single("applicantResume"), async (req, res) => {
+  try {
+    const {
+      applicantName,
+      applicantPhone,
+      applicantEmail,
+      currentCompany,
+      candidateWorkLocation,
+      nativeLocation,
+      qualification,
+      experience,
+      skills,
+      noticePeriod,
+      currentctc,
+      expectedctc,
+      band = "L0",
+      positionTitle,
+      positionId,
+      status,
+      stage,
+      dateOfPhoneScreen,
+      interviewDate,
+      dateOfOffer,
+      reasonNotExtending,
+      notes,
+    } = req.body;
+
+    const profileOwner = "admin";
+    const applicantResume = req.file.buffer;
+    let dateApplied = new Date();
+
+    // Check for existing records
+    const checkSql = `
+      SELECT COUNT(*) AS count FROM ApplicantTracking 
+      WHERE applicantPhone = ? OR applicantEmail = ?
     `;
 
-  db.query(checkSql, [applicantPhone, applicantEmail], (err, results) => {
-    if (err) {
-      console.error("Error: " + err.message);
-      return res.status(500).json({ message: "Error checking for duplicates" });
-    }
-
-    if (results[0].count > 0) {
-      return res.status(400).json({ message: "duplicates not allowed" });
-    }
-
-    // If no duplicates found, insert new record
-    const insertSql = `
-            INSERT INTO ApplicantTracking (
-                profileOwner,
-                applicantName,
-                applicantPhone,
-                applicantEmail,
-                currentCompany,
-                candidateWorkLocation,
-                nativeLocation,
-                qualification,
-                experience,
-                skills,
-                noticePeriod,
-                currentctc,
-                expectedctc,
-                band,
-                applicantResume,
-                dateApplied,
-                positionTitle,
-                positionId,
-                status,
-                stage,
-                dateOfPhoneScreen,
-                interviewDate,
-                dateOfOffer,
-                reasonNotExtending,
-                notes
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        `;
-
-    db.query(
-      insertSql,
-      [
-        profileOwner,
-        applicantName,
-        applicantPhone,
-        applicantEmail,
-        currentCompany,
-        candidateWorkLocation,
-        nativeLocation,
-        qualification,
-        experience,
-        skills,
-        noticePeriod,
-        currentctc,
-        expectedctc,
-        band,
-        applicantResume,
-        dateApplied,
-        positionTitle,
-        positionId,
-        status,
-        stage || null,
-        dateOfPhoneScreen || null,
-        interviewDate || null,
-        dateOfOffer || null,
-        reasonNotExtending || null,
-        notes || null,
-      ],
-      (err, result) => {
-        if (err) {
-          console.error("Error: " + err.message);
-          return res.status(500).json({ message: "Error submitting form" });
-        }
-
-        res.status(200).json({ message: "Form submitted successfully" });
+    db.query(checkSql, [applicantPhone, applicantEmail], (err, results) => {
+      if (err) {
+        console.error("Error: " + err.message);
+        return res.status(500).json({ message: "Error checking for duplicates" });
       }
-    );
-  });
+
+      if (results[0].count > 0) {
+        return res.status(400).json({ message: "Duplicates not allowed" });
+      }
+
+      // If no duplicates found, insert new record
+      const insertSql = `
+        INSERT INTO ApplicantTracking (
+          profileOwner,
+          applicantName,
+          applicantPhone,
+          applicantEmail,
+          currentCompany,
+          candidateWorkLocation,
+          nativeLocation,
+          qualification,
+          experience,
+          skills,
+          noticePeriod,
+          currentctc,
+          expectedctc,
+          band,
+          applicantResume,
+          dateApplied,
+          positionTitle,
+          positionId,
+          status,
+          stage,
+          dateOfPhoneScreen,
+          interviewDate,
+          dateOfOffer,
+          reasonNotExtending,
+          notes
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `;
+
+      db.query(
+        insertSql,
+        [
+          profileOwner,
+          applicantName,
+          applicantPhone,
+          applicantEmail,
+          currentCompany,
+          candidateWorkLocation,
+          nativeLocation,
+          qualification,
+          experience,
+          skills,
+          noticePeriod,
+          currentctc,
+          expectedctc,
+          band,
+          applicantResume,
+          dateApplied,
+          positionTitle,
+          positionId,
+          status,
+          stage || null,
+          dateOfPhoneScreen || null,
+          interviewDate || null,
+          dateOfOffer || null,
+          reasonNotExtending || null,
+          notes || null,
+        ],
+        async (err, result) => {
+          if (err) {
+            console.error("Error: " + err.message);
+            return res.status(500).json({ message: "Error submitting form" });
+          }
+
+          try {
+            const adminEmails = await getAdminUsers();
+
+            console.log(JSON.stringify(adminEmails));
+
+            adminEmails.forEach(admin => {
+               sendEmailToAdmin(
+                admin.username,
+                "New Applicant Submission",
+                `
+                  A new applicant has submitted the form:
+                  Applicant Name: ${applicantName}
+                  Applicant Email: ${applicantEmail}
+                  Applicant Phone: ${applicantPhone}
+                  Position Applied: ${positionTitle}
+                `
+              );
+            });
+
+            res.status(200).json({ message: "Form submitted successfully" });
+          } catch (error) {
+            console.error("Error sending email:", error);
+            res.status(500).json({ message: "Error submitting form" });
+          }
+        }
+      );
+    });
+  } catch (error) {
+    console.error("Error: " + error.message);
+    res.status(500).json({ message: "Error submitting form" });
+  }
 });
+
+
+
+// Add this function to send the email to the admin
+// async function sendEmailToAdmin(to, subject, text) {
+//   const transporter = nodemailer.createTransport({
+//     service: 'gmail',
+//     auth: {
+//       user: 'tp291101@gmail.com',
+//       pass: 'uxun hadx tosg phof'
+//     }
+//   });
+
+//   const mailOptions = {
+//     from: 'tp291101@gmail.com',
+//     to:'mabipi9043@brinkc.com',
+//     subject:'vahv',
+//     text:'fi;uqovqwwvwefhqpcq[pvphvolblkwn;n'
+//   };
+
+//   try {
+//     await transporter.sendMail(mailOptions);
+//     console.log('Email sent successfully');
+//   } catch (error) {
+//     console.error('Error sending email:', error);
+//     throw error;
+//   }
+// }
 
 app.get(
   "/positionWithActiveApplicants",
@@ -768,6 +866,9 @@ app.get("/api/positions", (req, res) => {
   });
 });
 
+// const nodemailer = require('nodemailer');
+
+
 app.get("/positions/count", (req, res) => {
   const sql = "SELECT openPositions FROM OpenPositions WHERE status = 'active'";
   db.query(sql, (err, results) => {
@@ -785,3 +886,14 @@ app.listen(port, () => {
 });
 
 // });
+app.post("/send-email", authenticateToken, async (req, res) => {
+  const { to, subject, text } = req.body;
+
+  try {
+    await sendEmailToAdmin(to, subject, text);
+    res.status(200).json({ message: "Email sent successfully" });
+  } catch (error) {
+    console.error("Error sending email:", error);
+    res.status(500).json({ error: "Failed to send email" });
+  }
+});
