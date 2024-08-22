@@ -1,8 +1,40 @@
+// Global variables
 let candidates = [];
-let isAdmin;
-
+let isAdmin = false;
+let users = [];
 let positionMap = {};
 
+// Utility functions
+function formatDate(dateString) {
+  if (!dateString) return "";
+  let date = new Date(dateString);
+  if (isNaN(date.getTime())) {
+    date = new Date(dateString + "T00:00:00Z");
+  }
+  if (isNaN(date.getTime())) {
+    return "";
+  }
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+function adjustDateForTimezone(dateString) {
+  if (!dateString) return null;
+  const date = new Date(dateString);
+  return new Date(date.getTime() - date.getTimezoneOffset() * 60000)
+    .toISOString()
+    .split("T")[0];
+}
+
+function compareDates(date1, date2) {
+  const d1 = new Date(date1);
+  const d2 = new Date(date2);
+  return d1 - d2;
+}
+
+// Fetch positions
 function fetchPositions() {
   return fetch("/api/positions", {
     method: "GET",
@@ -22,47 +54,7 @@ function fetchPositions() {
     .catch((error) => console.error("Error fetching positions:", error));
 }
 
-function formatDate(dateString) {
-  console.log("Input dateString", dateString);
-  if (!dateString) return "";
-
-  // Try parsing the date directly
-  let date = new Date(dateString);
-
-  // If the date is invalid, try parsing it as UTC
-  if (isNaN(date.getTime())) {
-    date = new Date(dateString + "T00:00:00Z");
-  }
-
-  // If it's still invalid, return an empty string
-  if (isNaN(date.getTime())) {
-    // console.error("Invalid date:", dateString);
-    return "";
-  }
-
-  // Format the date as YYYY-MM-DD in local time
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-
-  const formattedDate = `${year}-${month}-${day}`;
-  // console.log("Formatted date", formattedDate);
-
-  return formattedDate;
-}
-
-function adjustDateForTimezone(dateString) {
-  if (!dateString) return null;
-  const date = new Date(dateString);
-  return new Date(date.getTime() - date.getTimezoneOffset() * 60000)
-    .toISOString()
-    .split("T")[0];
-}
-function compareDates(date1, date2) {
-  const d1 = new Date(date1);
-  const d2 = new Date(date2);
-  return d1 - d2;
-}
+// Toggle interviewer input
 function toggleInterviewer(applicantId) {
   const stageSelect = document.getElementById(`stage-${applicantId}`);
   const interviewerInput = document.getElementById(
@@ -76,7 +68,6 @@ function toggleInterviewer(applicantId) {
     "Final Discussion",
   ];
 
-  // Check if elements exist before accessing their properties
   if (!stageSelect || !interviewerInput) {
     console.warn(`Elements not found for applicant ${applicantId}`);
     return;
@@ -88,13 +79,13 @@ function toggleInterviewer(applicantId) {
     interviewerInput.disabled = true;
   }
 
-  // Handle "Joined" stage
   if (stageSelect.value === "Joined") {
     interviewerInput.disabled = true;
     interviewerInput.value = "N/A";
   }
 }
 
+// View resume
 function viewResume(applicantId) {
   const candidate = candidates.find((c) => c.applicantId === applicantId);
   if (!candidate || !candidate.applicantResume) {
@@ -109,6 +100,7 @@ function viewResume(applicantId) {
   window.open(url, "_blank");
 }
 
+// Download resume
 function downloadResume(applicantId) {
   const candidate = candidates.find((c) => c.applicantId === applicantId);
   if (!candidate || !candidate.applicantResume) {
@@ -129,22 +121,136 @@ function downloadResume(applicantId) {
   window.URL.revokeObjectURL(url);
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  const tableContainer = document.querySelector(".table-container");
-  const candidateTable = document.getElementById("candidateTable");
-  const candidateBody = candidateTable.querySelector("tbody");
+// Update candidate
+function updateCandidate(applicantId) {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    window.location.href = "/login.html";
+    return;
+  }
 
-  // Synchronize the horizontal scrolling of the table body with the table header
-  tableContainer.addEventListener("scroll", () => {
-    candidateBody.scrollLeft = tableContainer.scrollLeft;
-  });
-});
+  const updatedCandidate = {
+    interviewer:
+      document.getElementById(`interviewer-${applicantId}`).value === "None"
+        ? ""
+        : document.getElementById(`interviewer-${applicantId}`).value,
+    status: document.getElementById(`status-${applicantId}`).value,
+    stage: document.getElementById(`stage-${applicantId}`).value,
+    interviewDate: adjustDateForTimezone(
+      document.getElementById(`interviewDate-${applicantId}`).value
+    ),
+    dateOfOffer: adjustDateForTimezone(
+      document.getElementById(`dateOfOffer-${applicantId}`).value
+    ),
+    reasonNotExtending: document.getElementById(
+      `reasonNotExtending-${applicantId}`
+    ).value,
+    notes: document.getElementById(`notes-${applicantId}`).value,
+    profileOwner: document.getElementById(`profileOwner-${applicantId}`).value,
+    applicantName: document.getElementById(`applicantName-${applicantId}`)
+      .value,
+    applicantPhone: document.getElementById(`applicantPhone-${applicantId}`)
+      .value,
+    applicantEmail: document.getElementById(`applicantEmail-${applicantId}`)
+      .value,
+    currentCompany: document.getElementById(`currentCompany-${applicantId}`)
+      .value,
+    candidateWorkLocation: document.getElementById(
+      `candidateWorkLocation-${applicantId}`
+    ).value,
+    nativeLocation: document.getElementById(`nativeLocation-${applicantId}`)
+      .value,
+    qualification: document.getElementById(`qualification-${applicantId}`)
+      .value,
+    experience: document.getElementById(`experience-${applicantId}`).value,
+    skills: document.getElementById(`skills-${applicantId}`).value,
+    noticePeriod: document.getElementById(`noticePeriod-${applicantId}`).value,
+    currentctc: document.getElementById(`currentctc-${applicantId}`).value,
+    expectedctc: document.getElementById(`expectedctc-${applicantId}`).value,
+    band: document.getElementById(`band-${applicantId}`).value,
+    dateApplied: document.getElementById(`dateApplied-${applicantId}`).value,
+    positionTitle: document.getElementById(`positionTitle-${applicantId}`)
+      .value,
+    positionId: document.getElementById(`positionId-${applicantId}`).value,
+  };
 
+  if (
+    updatedCandidate.stage === "Rejected" ||
+    updatedCandidate.stage === "Joined"
+  )
+    updatedCandidate.status = "CLOSED";
+
+  fetch(`/candidates/${applicantId}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(updatedCandidate),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      alert(data.message);
+      window.location.reload();
+    })
+    .catch((err) => {
+      console.error(err);
+      alert("Failed to update candidate");
+    });
+}
+
+// Export candidate
+function exportCandidate(applicantId) {
+  const candidate = candidates.find((c) => c.applicantId === applicantId);
+  if (!candidate) {
+    alert("Candidate not found");
+    return;
+  }
+
+  const excludeFields = ["applicantResume", "applicantId"];
+  const exportData = Object.keys(candidate)
+    .filter((key) => !excludeFields.includes(key))
+    .reduce((obj, key) => {
+      obj[key] = candidate[key];
+      return obj;
+    }, {});
+
+  const worksheet = XLSX.utils.json_to_sheet([exportData]);
+  const workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook, worksheet, "Candidate");
+
+  XLSX.writeFile(workbook, `candidate_${candidate.applicantName}.xlsx`);
+}
+
+// Update position IDs
+function updatePositionIds(applicantId) {
+  const titleSelect = document.getElementById(`positionTitle-${applicantId}`);
+  const idSelect = document.getElementById(`positionId-${applicantId}`);
+  const selectedTitle = titleSelect.value;
+
+  idSelect.innerHTML = "";
+  if (positionMap[selectedTitle]) {
+    positionMap[selectedTitle].forEach((id) => {
+      const option = document.createElement("option");
+      option.value = id;
+      option.textContent = id;
+      idSelect.appendChild(option);
+    });
+  }
+}
+
+// Main functionality
 document.addEventListener("DOMContentLoaded", () => {
   const token = localStorage.getItem("token");
 
   if (!token) {
     window.location.href = "/login.html";
+    return;
+  }
+
+  const logoutLink = document.getElementById("logoutLink");
+  if (logoutLink) {
+    logoutLink.style.display = "inline-block";
   }
 
   Promise.all([
@@ -174,10 +280,9 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!isAdmin && filterContainer) {
         filterContainer.style.display = "none";
       }
-      let users;
 
       if (isAdmin) {
-        fetchUsers = fetch("/users", {
+        return fetch("/users", {
           method: "GET",
           headers: {
             Authorization: `Bearer ${token}`,
@@ -191,59 +296,42 @@ document.addEventListener("DOMContentLoaded", () => {
             });
           });
       }
-
+    })
+    .then(() => {
       return fetch("/candidates", {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          const candidateList = document.getElementById("candidateList");
-          const statusFilter = document.getElementById("statusFilter");
+      });
+    })
+    .then((response) => response.json())
+    .then((data) => {
+      candidates = data;
+      if (isAdmin) {
+        initializeFilters();
+      } else {
+        renderCandidates(candidates.filter((c) => c.status !== "CLOSED"));
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+      alert("Failed to fetch user data or candidates");
+    });
 
-          candidates = data;
+  function renderCandidates(filteredCandidates) {
+    const candidateList = document.getElementById("candidateList");
+    candidateList.innerHTML = "";
 
-          function renderCandidates(candidates, users = []) {
-            candidateList.innerHTML = "";
-            const profileOwnerFilter = document.getElementById("profileOwnerFilter");
-            const uniqueProfileOwners = [...new Set(candidates.map(c => c.profileOwner))];
-            profileOwnerFilter.innerHTML = '<option value="all">All</option>' + 
-              uniqueProfileOwners.map(owner => `<option value="${owner}">${owner}</option>`).join('');
+    filteredCandidates.forEach((candidate) => {
+      const row = document.createElement("tr");
 
-            // Apply filters
-            const selectedStatus = statusFilter.value;
-            const selectedProfileOwner = profileOwnerFilter.value;
-            const dateAppliedSortOrder = document.getElementById("dateAppliedSort").value;
+      let profileOwnerCell = `<td><input type="text" id="profileOwner-${
+        candidate.applicantId
+      }" value="${candidate.profileOwner}" ${!isAdmin ? "disabled" : ""}></td>`;
 
-            let filteredCandidates = candidates.filter(candidate => 
-              (selectedStatus === "all" || candidate.status === selectedStatus) &&
-              (selectedProfileOwner === "all" || candidate.profileOwner === selectedProfileOwner) &&
-              (!isAdmin || candidate.status !== "CLOSED")
-            );
-
-            // Sort by date applied if selected
-            if (dateAppliedSortOrder !== "none") {
-              filteredCandidates.sort((a, b) => {
-                const comparison = compareDates(a.dateApplied, b.dateApplied);
-                return dateAppliedSortOrder === "ascending" ? comparison : -comparison;
-              });
-            }
-            candidates.forEach((candidate) => {
-              // Skip rendering closed candidates if not admin
-              if (!isAdmin && candidate.status === "CLOSED") return;
-
-              const row = document.createElement("tr");
-
-              let profileOwnerCell = `<td><input type="text" id="profileOwner-${
-                candidate.applicantId
-              }" value="${candidate.profileOwner}" ${
-                !isAdmin ? "disabled" : ""
-              }></td>`;
-
-              if (isAdmin) {
-                profileOwnerCell = `
+      if (isAdmin) {
+        profileOwnerCell = `
                     <td>
                         <select id="profileOwner-${candidate.applicantId}">
                             ${users
@@ -262,9 +350,9 @@ document.addEventListener("DOMContentLoaded", () => {
                         </select>
                     </td>
                 `;
-              }
+      }
 
-              row.innerHTML = `
+      row.innerHTML = `
                 ${profileOwnerCell}
                 <td><input class="sticky-col" type="text" id="applicantName-${
                   candidate.applicantId
@@ -363,6 +451,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     }
                   </select>
                 </td>
+                <td>
                     <select id="status-${candidate.applicantId}" name="status">
                         <option value="OPEN" ${
                           candidate.status === "OPEN" ? "selected" : ""
@@ -376,8 +465,8 @@ document.addEventListener("DOMContentLoaded", () => {
                       <select id="stage-${
                         candidate.applicantId
                       }" name="stage" onchange="toggleInterviewer(${
-                candidate.applicantId
-              })">
+        candidate.applicantId
+      })">
                           <option value="App. Recd." ${
                             candidate.stage === "App. Recd." ? "selected" : ""
                           }>App. Recd.</option>
@@ -474,187 +563,67 @@ document.addEventListener("DOMContentLoaded", () => {
                   candidate.applicantId
                 })">Export</button></td>`;
 
-              candidateList.appendChild(row);
+      candidateList.appendChild(row);
 
-              // Add event listener after appending the row
-              const stageSelect = document.getElementById(
-                `stage-${candidate.applicantId}`
-              );
-              if (stageSelect) {
-                stageSelect.addEventListener("change", () =>
-                  toggleInterviewer(candidate.applicantId)
-                );
-                // Initial call to set the correct state
-                toggleInterviewer(candidate.applicantId);
-              }
-            });
-          }
-
-          // console.log(data);
-          // Initial rendering
-          renderCandidates(data, users);
-
-          // candidates.forEach((candidate) => {
-          //   toggleInterviewer(candidate.applicantId);
-          // });
-
-          // Apply filter if admin
-          if (isAdmin && statusFilter) {
-            const profileOwnerFilter = document.getElementById("profileOwnerFilter");
-            const dateAppliedSort = document.getElementById("dateAppliedSort");
-          
-            function applyFilters() {
-              const selectedStatus = statusFilter.value;
-              const selectedProfileOwner = profileOwnerFilter.value;
-              const sortOrder = dateAppliedSort.value;
-          
-              let filteredCandidates = data.filter(
-                (candidate) =>
-                  (selectedStatus === "all" || candidate.status === selectedStatus) &&
-                  (selectedProfileOwner === "all" || candidate.profileOwner === selectedProfileOwner)
-              );
-          
-              if (sortOrder !== "none") {
-                filteredCandidates.sort((a, b) => {
-                  const comparison = compareDates(a.dateApplied, b.dateApplied);
-                  return sortOrder === "ascending" ? comparison : -comparison;
-                });
-              }
-          
-              renderCandidates(filteredCandidates, users);
-            }
-          
-            statusFilter.addEventListener("change", applyFilters);
-            profileOwnerFilter.addEventListener("change", applyFilters);
-            dateAppliedSort.addEventListener("change", applyFilters);
-          }
-          })
-          .catch((err) => {
-            console.error(err);
-            alert("Failed to fetch candidates");
-          });
-          })
-    .catch((err) => {
-      console.error(err);
-      alert("Failed to verify user");
+      const stageSelect = document.getElementById(
+        `stage-${candidate.applicantId}`
+      );
+      if (stageSelect) {
+        stageSelect.addEventListener("change", () =>
+          toggleInterviewer(candidate.applicantId)
+        );
+        toggleInterviewer(candidate.applicantId);
+      }
     });
+  }
+
+  function applyFilters() {
+    const statusFilter = document.getElementById("statusFilter");
+    const profileOwnerFilter = document.getElementById("profileOwnerFilter");
+    const dateAppliedSort = document.getElementById("dateAppliedSort");
+
+    const selectedStatus = statusFilter.value;
+    const selectedProfileOwner = profileOwnerFilter.value;
+    const sortOrder = dateAppliedSort.value;
+
+    let filteredCandidates = candidates.filter(
+      (candidate) =>
+        (selectedStatus === "all" || candidate.status === selectedStatus) &&
+        (selectedProfileOwner === "all" ||
+          candidate.profileOwner === selectedProfileOwner)
+    );
+
+    if (sortOrder !== "none") {
+      filteredCandidates.sort((a, b) => {
+        const comparison = compareDates(a.dateApplied, b.dateApplied);
+        return sortOrder === "ascending" ? comparison : -comparison;
+      });
+    }
+
+    renderCandidates(filteredCandidates);
+  }
+
+  function initializeFilters() {
+    const statusFilter = document.getElementById("statusFilter");
+    const profileOwnerFilter = document.getElementById("profileOwnerFilter");
+    const dateAppliedSort = document.getElementById("dateAppliedSort");
+
+    // Populate profile owner filter
+    const uniqueProfileOwners = [
+      ...new Set(candidates.map((c) => c.profileOwner)),
+    ];
+    profileOwnerFilter.innerHTML =
+      '<option value="all">All</option>' +
+      uniqueProfileOwners
+        .map((owner) => `<option value="${owner}">${owner}</option>`)
+        .join("");
+
+    // Add event listeners
+    statusFilter.addEventListener("change", applyFilters);
+    profileOwnerFilter.addEventListener("change", applyFilters);
+    dateAppliedSort.addEventListener("change", applyFilters);
+
+    // Initial filter application
+    applyFilters();
+  }
 });
-
-const logoutLink = document.getElementById("logoutLink");
-logoutLink.style.display = "inline-block";
-
-function updateCandidate(applicantId) {
-  const token = localStorage.getItem("token");
-  if (!token) {
-    window.location.href = "/login.html";
-  }
-
-  // console.log("document.getElementById(`profileOwner-1`).value", document.getElementById(`profileOwner-1`).value)
-
-  const updatedCandidate = {
-    // profileOwner:document.getElementById(`profileOwner-1`).value,
-    interviewer:
-      document.getElementById(`interviewer-${applicantId}`).value === "None"
-        ? ""
-        : document.getElementById(`interviewer-${applicantId}`).value,
-    status: document.getElementById(`status-${applicantId}`).value,
-    stage: document.getElementById(`stage-${applicantId}`).value,
-    interviewDate: adjustDateForTimezone(
-      document.getElementById(`interviewDate-${applicantId}`).value
-    ),
-    dateOfOffer: adjustDateForTimezone(
-      document.getElementById(`dateOfOffer-${applicantId}`).value
-    ),
-    reasonNotExtending: document.getElementById(
-      `reasonNotExtending-${applicantId}`
-    ).value,
-    notes: document.getElementById(`notes-${applicantId}`).value,
-    profileOwner: document.getElementById(`profileOwner-${applicantId}`).value,
-    applicantName: document.getElementById(`applicantName-${applicantId}`)
-      .value,
-    applicantPhone: document.getElementById(`applicantPhone-${applicantId}`)
-      .value,
-    applicantEmail: document.getElementById(`applicantEmail-${applicantId}`)
-      .value,
-    currentCompany: document.getElementById(`currentCompany-${applicantId}`)
-      .value,
-    candidateWorkLocation: document.getElementById(
-      `candidateWorkLocation-${applicantId}`
-    ).value,
-    nativeLocation: document.getElementById(`nativeLocation-${applicantId}`)
-      .value,
-    qualification: document.getElementById(`qualification-${applicantId}`)
-      .value,
-    experience: document.getElementById(`experience-${applicantId}`).value,
-    skills: document.getElementById(`skills-${applicantId}`).value,
-    noticePeriod: document.getElementById(`noticePeriod-${applicantId}`).value,
-    currentctc: document.getElementById(`currentctc-${applicantId}`).value,
-    expectedctc: document.getElementById(`expectedctc-${applicantId}`).value,
-    band: document.getElementById(`band-${applicantId}`).value,
-    dateApplied: document.getElementById(`dateApplied-${applicantId}`).value,
-    positionTitle: document.getElementById(`positionTitle-${applicantId}`)
-      .value,
-    positionId: document.getElementById(`positionId-${applicantId}`).value,
-  };
-
-  if (
-    updatedCandidate.stage === "Rejected" ||
-    updatedCandidate.stage === "Joined"
-  )
-    updatedCandidate.status = "CLOSED";
-
-  fetch(`/candidates/${applicantId}`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify(updatedCandidate),
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      alert(data.message);
-      window.location.reload();
-    })
-    .catch((err) => {
-      console.error(err);
-      alert("Failed to update candidate");
-    });
-}
-
-function exportCandidate(applicantId) {
-  const candidate = candidates.find((c) => c.applicantId === applicantId);
-  if (!candidate) {
-    alert("Candidate not found");
-    return;
-  }
-
-  const excludeFields = ["applicantResume", "applicantId"];
-  const exportData = Object.keys(candidate)
-    .filter((key) => !excludeFields.includes(key))
-    .reduce((obj, key) => {
-      obj[key] = candidate[key];
-      return obj;
-    }, {});
-
-  const worksheet = XLSX.utils.json_to_sheet([exportData]);
-  const workbook = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(workbook, worksheet, "Candidate");
-
-  XLSX.writeFile(workbook, `candidate_${candidate.applicantName}.xlsx`);
-}
-function updatePositionIds(applicantId) {
-  const titleSelect = document.getElementById(`positionTitle-${applicantId}`);
-  const idSelect = document.getElementById(`positionId-${applicantId}`);
-  const selectedTitle = titleSelect.value;
-
-  idSelect.innerHTML = "";
-  if (positionMap[selectedTitle]) {
-    positionMap[selectedTitle].forEach((id) => {
-      const option = document.createElement("option");
-      option.value = id;
-      option.textContent = id;
-      idSelect.appendChild(option);
-    });
-  }
-}
