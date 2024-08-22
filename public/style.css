@@ -536,3 +536,45 @@ textarea {
   background-color: #fff;
   color: #000;
 }
+.filter-container {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: nowrap;
+}
+
+.filter-item {
+  display: flex;
+  align-items: center;
+  margin-right: 20px;
+}
+
+.filter-container label {
+  margin-right: 10px;
+  white-space: nowrap;
+}
+
+.filter-container select {
+  width: auto;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+#statusFilter,
+#profileOwnerFilter,
+#dateAppliedSort {
+  min-width: 120px;
+}
+
+@media (max-width: 768px) {
+  .filter-container {
+    flex-wrap: wrap;
+  }
+
+  .filter-item {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+}

@@ -92,14 +92,32 @@
                 <option value="CLOSED">Closed</option>
             </select>
         </div> -->
-      <div class="filter-container">
-        <label for="statusFilter">Filter by Status:</label>
-        <select id="statusFilter">
-          <option value="all">All</option>
-          <option value="OPEN">Open</option>
-          <option value="CLOSED">Closed</option>
-        </select>
-      </div>
+        <div class="filter-container">
+          <div class="filter-item">
+            <label for="statusFilter">Filter by Status:</label>
+            <select id="statusFilter">
+              <option value="all">All</option>
+              <option value="OPEN">Open</option>
+              <option value="CLOSED">Closed</option>
+            </select>
+          </div>
+        
+          <div class="filter-item">
+            <label for="profileOwnerFilter">Filter by Profile Owner:</label>
+            <select id="profileOwnerFilter">
+              <option value="all">All</option>
+            </select>
+          </div>
+        
+          <div class="filter-item">
+            <label for="dateAppliedSort">Sort by Date Applied:</label>
+            <select id="dateAppliedSort">
+              <!-- <option value="none">None</option> -->
+              <option value="ascending">Ascending</option>
+              <option value="descending">Descending</option>
+            </select>
+          </div>
+        </div>
 
       <div class="table-container">
         <table id="candidateTable">

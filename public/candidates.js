@@ -58,7 +58,11 @@ function adjustDateForTimezone(dateString) {
     .toISOString()
     .split("T")[0];
 }
-
+function compareDates(date1, date2) {
+  const d1 = new Date(date1);
+  const d2 = new Date(date2);
+  return d1 - d2;
+}
 function toggleInterviewer(applicantId) {
   const stageSelect = document.getElementById(`stage-${applicantId}`);
   const interviewerInput = document.getElementById(
@@ -203,7 +207,29 @@ document.addEventListener("DOMContentLoaded", () => {
 
           function renderCandidates(candidates, users = []) {
             candidateList.innerHTML = "";
+            const profileOwnerFilter = document.getElementById("profileOwnerFilter");
+            const uniqueProfileOwners = [...new Set(candidates.map(c => c.profileOwner))];
+            profileOwnerFilter.innerHTML = '<option value="all">All</option>' + 
+              uniqueProfileOwners.map(owner => `<option value="${owner}">${owner}</option>`).join('');
 
+            // Apply filters
+            const selectedStatus = statusFilter.value;
+            const selectedProfileOwner = profileOwnerFilter.value;
+            const dateAppliedSortOrder = document.getElementById("dateAppliedSort").value;
+
+            let filteredCandidates = candidates.filter(candidate => 
+              (selectedStatus === "all" || candidate.status === selectedStatus) &&
+              (selectedProfileOwner === "all" || candidate.profileOwner === selectedProfileOwner) &&
+              (!isAdmin || candidate.status !== "CLOSED")
+            );
+
+            // Sort by date applied if selected
+            if (dateAppliedSortOrder !== "none") {
+              filteredCandidates.sort((a, b) => {
+                const comparison = compareDates(a.dateApplied, b.dateApplied);
+                return dateAppliedSortOrder === "ascending" ? comparison : -comparison;
+              });
+            }
             candidates.forEach((candidate) => {
               // Skip rendering closed candidates if not admin
               if (!isAdmin && candidate.status === "CLOSED") return;
@@ -474,22 +500,40 @@ document.addEventListener("DOMContentLoaded", () => {
 
           // Apply filter if admin
           if (isAdmin && statusFilter) {
-            statusFilter.addEventListener("change", () => {
+            const profileOwnerFilter = document.getElementById("profileOwnerFilter");
+            const dateAppliedSort = document.getElementById("dateAppliedSort");
+          
+            function applyFilters() {
               const selectedStatus = statusFilter.value;
-              const filteredCandidates = data.filter(
+              const selectedProfileOwner = profileOwnerFilter.value;
+              const sortOrder = dateAppliedSort.value;
+          
+              let filteredCandidates = data.filter(
                 (candidate) =>
-                  selectedStatus === "all" ||
-                  candidate.status === selectedStatus
+                  (selectedStatus === "all" || candidate.status === selectedStatus) &&
+                  (selectedProfileOwner === "all" || candidate.profileOwner === selectedProfileOwner)
               );
+          
+              if (sortOrder !== "none") {
+                filteredCandidates.sort((a, b) => {
+                  const comparison = compareDates(a.dateApplied, b.dateApplied);
+                  return sortOrder === "ascending" ? comparison : -comparison;
+                });
+              }
+          
               renderCandidates(filteredCandidates, users);
-            });
+            }
+          
+            statusFilter.addEventListener("change", applyFilters);
+            profileOwnerFilter.addEventListener("change", applyFilters);
+            dateAppliedSort.addEventListener("change", applyFilters);
           }
-        })
-        .catch((err) => {
-          console.error(err);
-          alert("Failed to fetch candidates");
-        });
-    })
+          })
+          .catch((err) => {
+            console.error(err);
+            alert("Failed to fetch candidates");
+          });
+          })
     .catch((err) => {
       console.error(err);
       alert("Failed to verify user");
