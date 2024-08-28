@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   fetchDashboardData();
+  document.getElementById("applyFilters").addEventListener("click", fetchDashboardData);
 });
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -80,14 +81,27 @@ function dropdownChangeHandler() {
 
 function filterAndUpdateDashboard(data) {
   const selectedOwner = document.getElementById("profileOwnerFilter").value;
+  const startDate = document.getElementById("startDate").value;
+  const endDate = document.getElementById("endDate").value;
+
   console.log("Selected owner:", selectedOwner);
+  console.log("Date range:", startDate, "to", endDate);
 
   localStorage.setItem("userForStats", selectedOwner);
 
-  const filteredData =
-    selectedOwner === "all"
-      ? data
-      : data.filter((candidate) => candidate.profileOwner === selectedOwner);
+  let filteredData = data;
+
+  if (selectedOwner !== "all") {
+    filteredData = filteredData.filter((candidate) => candidate.profileOwner === selectedOwner);
+  }
+
+  if (startDate && endDate) {
+    filteredData = filteredData.filter((candidate) => {
+      const candidateDate = new Date(candidate.dateApplied);
+      return candidateDate >= new Date(startDate) && candidateDate <= new Date(endDate);
+    });
+  }
+
   console.log("Filtered data:", filteredData);
 
   const processedData = processData(filteredData);
