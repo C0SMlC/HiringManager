@@ -44,8 +44,8 @@ CREATE TABLE IF NOT EXISTS OpenPositions (
     positionId VARCHAR(255) PRIMARY KEY,
     positionTitle VARCHAR(255) NOT NULL,
     manager VARCHAR(255) NOT NULL,
-    openPositions:INT NOT NULL,
-    experienceRequired:VARCHAR(255),
+    openPositions INT NOT NULL,
+    experienceRequired VARCHAR(255),
     jobdescription  TEXT NOT NULL,
     status ENUM('active', 'closed', 'hold') NOT NULL
 );
