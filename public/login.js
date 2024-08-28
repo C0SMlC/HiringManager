@@ -23,8 +23,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const data = await response.json();
       if (data.token) {
+        console.log(data);
         localStorage.setItem("token", data.token);
         localStorage.setItem("role", data.role);
+        localStorage.setItem("userId", data.userId);
+
+        localStorage.setItem("hasJoinedRoom", false);
+
         localStorage.setItem("username", username); // Store username
         window.location.href = "stats.html";
       } else {

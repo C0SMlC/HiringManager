@@ -44,6 +44,9 @@ router.post("/login", (req, res) => {
       console.error("Error fetching user: " + err.message);
       return res.status(500).json({ message: "Error fetching user" });
     }
+
+    console.log(JSON.stringify(results));
+
     if (results.length === 0) {
       return res.status(401).json({ message: "Invalid username or password" });
     }
@@ -68,7 +71,8 @@ router.post("/login", (req, res) => {
         console.error("Error updating login time: " + err.message);
         return res.status(500).json({ message: "Error updating login time" });
       }
-      res.status(200).json({ token, role: user.role });
+      console.log(user.userId);
+      res.status(200).json({ userId: user.userId, token, role: user.role });
     });
   });
 });

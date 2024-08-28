@@ -562,11 +562,11 @@
             for (const validation of dateValidations) {
               const date1 = new Date(inputs[validation.field].value);
               const date2 = new Date(inputs[validation.compareTo].value);
-              if (date1 < date2) {
+              /* if (date1 >= date2) {
                 alert(validation.message);
                 inputs[validation.field].focus();
                 return;
-              }
+              }*/
             }
           }
 
@@ -584,21 +584,23 @@
               }
             );
 
-            if (!response.ok) {
-              throw new Error(`HTTP error! status: ${response.status}`);
-            }
+           /* if (!response.ok) {
+              alert(`An error occurred during submission: ${response.message}`);
+            } */
 
             const result = await response.json();
             alert(result.message);
             // Do not reset the form here, as per the original code
           } catch (error) {
             console.error("Submission error:", error);
-            alert(`An error occurred during submission: ${error.message}`);
+            // alert(`An error occurred during submission: ${error.message}`);
           }
         });
       });
     </script>
     <script src="hideNav.js"></script>
     <script src="dashboard.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="socket.js"></script>
   </body>
 </html>

@@ -75,11 +75,28 @@ document.addEventListener("DOMContentLoaded", function () {
         alert(result.message);
 
         // Get the email of the assigned user
-        const assignedToOption = assignToSelect.options[assignToSelect.selectedIndex];
+        const assignedToOption =
+          assignToSelect.options[assignToSelect.selectedIndex];
         const assignedToEmail = assignedToOption.value;
 
+        const socket = io();
 
-        console.log(assignedToEmail);
+        fetch("/assign-task", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          body: JSON.stringify({
+            username: assignedToEmail,
+          }),
+        })
+          .then((response) => response.json())
+          .then((result) => {
+            console.log(result.message);
+
+            // Emit an event to notify the assigned user
+          });
 
         // Send email to the assigned user
         return sendEmailToAssignedUser(
@@ -93,7 +110,9 @@ document.addEventListener("DOMContentLoaded", function () {
       .catch((error) => {
         // console.error('Error:', error);
         console.error("Error:", error.message);
-        alert(`An error occurredgf while assigning the applicant: ${error.message}`);
+        alert(
+          `An error occurredgf while assigning the applicant: ${error.message}`
+        );
       });
   });
 });

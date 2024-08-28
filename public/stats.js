@@ -125,6 +125,7 @@ function processData(data) {
     closed: 0,
     joined: 0,
     declined: 0,
+    aboutToJoin: 0,
   };
 
   data.forEach((candidate) => {
@@ -143,6 +144,10 @@ function processData(data) {
       } else if (candidate.stage === "Buffer List") {
         lists.buffer++;
       }
+    }
+
+    if (candidate.stage === "About To Join") {
+      lists.aboutToJoin++;
     }
 
     if (candidate.status === "CLOSED") {
@@ -175,6 +180,7 @@ function updateLists(lists) {
   document.getElementById("bufferCount").textContent = lists.buffer;
   document.getElementById("closedCount").textContent = lists.closed;
   document.getElementById("declinedCount").textContent = lists.declined;
+  document.getElementById("aboutToJoinCount").textContent = lists.aboutToJoin;
 }
 
 let activeStagesChart, inactiveStagesChart;

@@ -503,6 +503,11 @@ document.addEventListener("DOMContentLoaded", () => {
                               ? "selected"
                               : ""
                           }>Final Discussion</option>
+                          <option value="About To Join" ${
+                            candidate.stage === "About To Join"
+                              ? "selected"
+                              : ""
+                          }>About To Join</option>
                           <option value="Joined" ${
                             candidate.stage === "Joined" ? "selected" : ""
                           }>Joined</option>
