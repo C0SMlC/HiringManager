@@ -120,10 +120,7 @@
     </div>
     <div class="dashboard-container">
       <h1>Applicant Tracking Dashboard</h1>
-      <div class="activePostionscountContainer">
-        <p>Active Positions:</p>
-        <p class="activePostionscount">0</p>
-      </div>
+
       <div class="filter-container">
         <label for="profileOwnerFilter">Filter by Profile Owner:</label>
         <select id="profileOwnerFilter">
@@ -137,6 +134,10 @@
       </div>
 
       <div class="analytics-container">
+        <div class="analytic-item disableClick">
+          <h3>Active Positions:</h3>
+          <p class="activePostionscount">0</p>
+        </div>
         <div
           class="analytic-item list-container-master"
           data-stage="active"
@@ -149,9 +150,9 @@
           <h3>Active Applicants</h3>
           <p id="activeApplicants">0</p>
         </div>
-        <div class="analytic-item" data-stage="rejected">
-          <h3>Rejected Applicants</h3>
-          <p id="rejectedApplicants">0</p>
+        <div class="analytic-item" data-stage="About To Join">
+          <h3>About To Join</h3>
+          <p id="aboutToJoinCount">0</p>
         </div>
         <div class="analytic-item" data-stage="joined">
           <h3>Joined Applicants</h3>
@@ -169,9 +170,9 @@
       </div>
 
       <div class="analytics-container marginContianer">
-        <div class="analytic-item" data-stage="About To Join">
-          <h3>About To Join</h3>
-          <p id="aboutToJoinCount">0</p>
+        <div class="analytic-item" data-stage="rejected">
+          <h3>Rejected Applicants</h3>
+          <p id="rejectedApplicants">0</p>
         </div>
         <div class="analytic-item" data-stage="buffer list">
           <h3>Buffer</h3>
