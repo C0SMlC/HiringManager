@@ -303,26 +303,6 @@ body {
   line-height: 1.6;
 }
 
-/* Navbar styles */
-/* .navbar {
-    background-color: #333;
-    overflow: hidden;
-    padding: 0.5rem;
-}
-
-.navbar a {
-    float: left;
-    color: #f2f2f2;
-    text-align: center;
-    padding: 0.5rem 1rem;
-    text-decoration: none;
-}
-
-.navbar a:hover {
-    background-color: #ddd;
-    color: black;
-} */
-
 /* Container styles */
 .forms-container {
   margin: 1rem auto;
