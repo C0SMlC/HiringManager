@@ -5,157 +5,267 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Apply for Position</title>
     <link rel="stylesheet" href="style.css" />
+    <style>
+      body {
+          font-family: Arial, sans-serif;
+          margin: 0;
+          padding: 0;
+          background-color: #f0f0f0;
+      }
+      .header {
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            color: #0d6efd;
+            font-size: 24px;
+            font-weight: bold;
+        }
+      .container {
+          display: flex;
+          max-width: 1200px;
+          margin: 50px auto;
+          padding: 20px;
+      }
+      .job-description {
+          flex: 1;
+          background-color: white;
+          padding: 20px;
+          margin-top: 50px;
+          margin-bottom: 50px;
+          margin-right: 20px;
+          border-radius: 5px;
+          box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      }
+      .job-description h2 {
+          color: #333;
+          border-bottom: 2px solid #0d6efd;
+          padding-bottom: 10px;
+          margin-bottom: 20px;
+      }
+      .job-description h3 {
+          color: #0d6efd;
+          margin-top: 20px;
+          margin-bottom: 10px;
+      }
+      .job-description p {
+          margin-bottom: 15px;
+          line-height: 1.6;
+      }
+      .job-description ul {
+          padding-left: 20px;
+      }
+      .job-description li {
+          margin-bottom: 10px;
+      }
+      .form-container { 
+          flex: 1;
+          background-color: white;
+          padding: 20px;
+          border-radius: 5px;
+          box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      }
+      .form-row {
+          display: flex;
+          margin-bottom: 15px;
+      }
+      .form-field {
+          flex: 1;
+          margin-right: 15px;
+      }
+      .form-field:last-child {
+          margin-right: 0;
+      }
+      label {
+          display: block;
+          margin-bottom: 5px;
+      }
+      input, select {
+          width: 100%;
+          padding: 8px;
+          border: 1px solid #ddd;
+          border-radius: 4px;
+      }
+      button {
+          background-color: #4CAF50;
+          color: white;
+          padding: 10px 15px;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+      }
+      button:hover {
+          background-color: #45a049;
+      }
+      .required::after {
+          content: " *";
+          color: red;
+      }
+  </style>
   </head>
   <body>
-    <div class="form-container">
-      <h2>Apply for <span id="positionTitle"></span></h2>
-      <form id="applicantForm" enctype="multipart/form-data">
-        <div class="form-row">
-          <div class="form-field">
-            <label for="applicantName" class="required">Name:</label>
-            <input
-              type="text"
-              id="applicantName"
-              name="applicantName"
-              required
-            />
+    <header class="header">
+      <div class="logo">Delta IoT Solutions</div>
+  </header>
+    <div class="container">
+      <div class="job-description">
+        <h2>Job Description</h2>
+        <div id="jobDescriptionContent"></div>
+      </div>
+      <div class="form-container">
+        <h2>Apply for <span id="positionTitle"></span></h2>
+        <form id="applicantForm" enctype="multipart/form-data">
+          <div class="form-row">
+            <div class="form-field">
+              <label for="applicantName" class="required">Name:</label>
+              <input
+                type="text"
+                id="applicantName"
+                name="applicantName"
+                required
+              />
+            </div>
           </div>
-        </div>
 
-        <div class="form-row">
-          <div class="form-field">
-            <label for="applicantPhone" class="required">Phone:</label>
-            <input
-              type="text"
-              id="applicantPhone"
-              name="applicantPhone"
-              required
-            />
+          <div class="form-row">
+            <div class="form-field">
+              <label for="applicantPhone" class="required">Phone:</label>
+              <input
+                type="text"
+                id="applicantPhone"
+                name="applicantPhone"
+                required
+              />
+            </div>
+            <div class="form-field">
+              <label for="applicantEmail" class="required">Email:</label>
+              <input
+                type="email"
+                id="applicantEmail"
+                name="applicantEmail"
+                required
+              />
+            </div>
           </div>
-          <div class="form-field">
-            <label for="applicantEmail" class="required">Email:</label>
-            <input
-              type="email"
-              id="applicantEmail"
-              name="applicantEmail"
-              required
-            />
-          </div>
-        </div>
 
-        <div class="form-row">
-          <div class="form-field">
-            <label for="currentCompany" class="required">Current Company:</label>
-            <input
-              type="text"
-              id="currentCompany"
-              name="currentCompany"
-              required
-            />
+          <div class="form-row">
+            <div class="form-field">
+              <label for="currentCompany" class="required">Current Company:</label>
+              <input
+                type="text"
+                id="currentCompany"
+                name="currentCompany"
+                required
+              />
+            </div>
+            <div class="form-field">
+              <label for="candidateWorkLocation" class="required">Work Location:</label>
+              <input
+                type="text"
+                id="candidateWorkLocation"
+                name="candidateWorkLocation"
+                required
+              />
+            </div>
           </div>
-          <div class="form-field">
-            <label for="candidateWorkLocation" class="required">Work Location:</label>
-            <input
-              type="text"
-              id="candidateWorkLocation"
-              name="candidateWorkLocation"
-              required
-            />
-          </div>
-        </div>
 
-        <div class="form-row">
-          <div class="form-field">
-            <label for="nativeLocation">Native Location:</label>
-            <input
-              type="text"
-              id="nativeLocation"
-              name="nativeLocation"
-              required
-            />
+          <div class="form-row">
+            <div class="form-field">
+              <label for="nativeLocation">Native Location:</label>
+              <input
+                type="text"
+                id="nativeLocation"
+                name="nativeLocation"
+                required
+              />
+            </div>
+            <div class="form-field">
+              <label for="qualification" class="required">Qualification:</label>
+              <input
+                type="text"
+                id="qualification"
+                name="qualification"
+                required
+              />
+            </div>
           </div>
-          <div class="form-field">
-            <label for="qualification" class="required">Qualification:</label>
-            <input
-              type="text"
-              id="qualification"
-              name="qualification"
-              required
-            />
-          </div>
-        </div>
 
-        <div class="form-row">
-          <div class="form-field">
-            <label for="experience" class="required">Experience:</label>
-            <input type="text" id="experience" name="experience" required />
+          <div class="form-row">
+            <div class="form-field">
+              <label for="experience" class="required">Experience:</label>
+              <input type="text" id="experience" name="experience" required />
+            </div>
+            <div class="form-field">
+              <label for="skills">Skills:</label>
+              <input type="text" id="skills" name="skills" required />
+            </div>
           </div>
-          <div class="form-field">
-            <label for="skills">Skills:</label>
-            <input type="text" id="skills" name="skills" required />
-          </div>
-        </div>
 
-        <div class="form-row">
-          <div class="form-field">
-            <label for="noticePeriod" class="required">Notice Period:</label>
-            <input type="text" id="noticePeriod" name="noticePeriod" required />
+          <div class="form-row">
+            <div class="form-field">
+              <label for="noticePeriod" class="required">Notice Period:</label>
+              <input type="text" id="noticePeriod" name="noticePeriod" required />
+            </div>
+            <div class="form-field">
+              <label for="currentctc" class="required">Current CTC:</label>
+              <input type="number" id="currentctc" name="currentctc" required />
+            </div>
           </div>
-          <div class="form-field">
-            <label for="currentctc" class="required">Current CTC:</label>
-            <input type="number" id="currentctc" name="currentctc" required />
-          </div>
-        </div>
 
-        <div class="form-row">
-          <div class="form-field">
-            <label for="expectedctc" class="required">Expected CTC:</label>
-            <input type="number" id="expectedctc" name="expectedctc" required />
+          <div class="form-row">
+            <div class="form-field">
+              <label for="expectedctc" class="required">Expected CTC:</label>
+              <input type="number" id="expectedctc" name="expectedctc" required />
+            </div>
+            <!-- <div class="form-field">
+              <label for="band">Band:</label>
+              <select id="band" name="band" required>
+                <option value="L0">L0</option>
+                <option value="L1">L1</option>
+                <option value="L2">L2</option>
+                <option value="L3">L3</option>
+                <option value="L4">L4</option>
+                <option value="CostPlus">CostPlus</option>
+                <option value="Non-Billable">Non-Billable</option>
+                <option value="Bench">Bench</option>
+              </select>
+            </div> -->
           </div>
-          <!-- <div class="form-field">
-            <label for="band">Band:</label>
-            <select id="band" name="band" required>
-              <option value="L0">L0</option>
-              <option value="L1">L1</option>
-              <option value="L2">L2</option>
-              <option value="L3">L3</option>
-              <option value="L4">L4</option>
-              <option value="CostPlus">CostPlus</option>
-              <option value="Non-Billable">Non-Billable</option>
-              <option value="Bench">Bench</option>
-            </select>
+
+          <div class="form-row">
+            <div class="form-field">
+              <label for="applicantResume" class="required">Resume:</label>
+              <input
+                type="file"
+                id="applicantResume"
+                name="applicantResume"
+                required
+              />
+            </div>
+          </div>
+
+          <input type="hidden" id="positionTitle" name="positionTitle" />
+          <input type="hidden" id="positionId" name="positionId" />
+          <input type="hidden" id="status" name="status" value="OPEN" />
+          <input type="hidden" id="stage" name="stage" value="App. Recd." />
+
+          <!-- <div class="form-row">
+            <div class="form-field full-width">
+              <label for="notes">Notes:</label>
+              <input type="text" id="notes" name="notes" />
+            </div>
           </div> -->
-        </div>
-
-        <div class="form-row">
-          <div class="form-field">
-            <label for="applicantResume" class="required">Resume:</label>
-            <input
-              type="file"
-              id="applicantResume"
-              name="applicantResume"
-              required
-            />
+          <div class="form-row">
+            <div class="form-field full-width">
+              <button type="submit">Submit </button>
+            </div>
           </div>
-        </div>
-
-        <input type="hidden" id="positionTitle" name="positionTitle" />
-        <input type="hidden" id="positionId" name="positionId" />
-        <input type="hidden" id="status" name="status" value="OPEN" />
-        <input type="hidden" id="stage" name="stage" value="App. Recd." />
-
-        <!-- <div class="form-row">
-          <div class="form-field full-width">
-            <label for="notes">Notes:</label>
-            <input type="text" id="notes" name="notes" />
-          </div>
-        </div> -->
-        <div class="form-row">
-          <div class="form-field full-width">
-            <button type="submit">Submit </button>
-          </div>
-        </div>
-      </form>
+        </form>
+      </div>
     </div>
     <script>
       document.addEventListener("DOMContentLoaded", () => {
@@ -166,6 +276,21 @@
         document.getElementById("positionTitle").textContent = positionTitle;
         document.getElementById("positionId").value = positionId;
         document.getElementById("positionTitle").value = positionTitle;
+        // console.log(positionId)
+        fetch(`/positions/${positionId}`)
+          .then(response => response.json())
+          .then(data => {
+            // console.log(data)
+              if (data.length > 0 && data[0].jobdescription) {
+                  document.getElementById("jobDescriptionContent").innerHTML = data[0].jobdescription;
+              } else {
+                  document.getElementById("jobDescriptionContent").textContent = "Job description not available.";
+              }
+          })
+          .catch(error => {
+              console.error("Error fetching job description:", error);
+              document.getElementById("jobDescriptionContent").textContent = "Error loading job description.";
+          });
 
         const form = document.getElementById("applicantForm");
 

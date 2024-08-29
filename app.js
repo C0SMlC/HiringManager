@@ -570,6 +570,20 @@ app.get("/positions/count", (req, res) => {
   });
 });
 
+
+app.get("/positions/:positionId", (req, res) => {
+  const {positionId} = req.params;
+  // console.log(positionId)
+  const sql = "SELECT jobdescription FROM OpenPositions WHERE positionId = ?";
+  db.query(sql,[positionId] ,(err, results) => {
+    if (err) {
+      console.error("Error fetching count: " + err.message);
+      return res.status(500).json({ message: "Error fetching positions" });
+    }
+    res.status(200).json(results);
+  });
+});
+
 app.post("/send-email", authenticateToken, async (req, res) => {
   const { to, subject, text } = req.body;
 
