@@ -94,6 +94,7 @@
 document.addEventListener("DOMContentLoaded", () => {
   const token = localStorage.getItem("token");
   const searchInput = document.getElementById("searchInput");
+  const stageFilter = document.getElementById("stageFilter");
   let allCandidates = []; // Store all candidates
 
   if (!token) {
@@ -142,6 +143,14 @@ document.addEventListener("DOMContentLoaded", () => {
             option.textContent = owner;
             ownerFilter.appendChild(option);
           });
+          // Populate "Stage" dropdown
+          const stages = [...new Set(data.map((candidate) => candidate.stage))];
+          stages.forEach((stage) => {
+            const option = document.createElement("option");
+            option.value = stage;
+            option.textContent = stage;
+            stageFilter.appendChild(option);
+          });
 
           function renderCandidates(candidates) {
             candidateList.innerHTML = "";
@@ -186,20 +195,21 @@ document.addEventListener("DOMContentLoaded", () => {
           function applyFilters() {
             const selectedStatus = statusFilter.value;
             const selectedOwner = ownerFilter.value;
-
+            const selectedStage = stageFilter.value;
+          
             const filteredCandidates = allCandidates.filter(
               (candidate) =>
-                (selectedStatus === "all" ||
-                  candidate.status === selectedStatus) &&
-                (selectedOwner === "all" ||
-                  candidate.profileOwner === selectedOwner)
+                (selectedStatus === "all" || candidate.status === selectedStatus) &&
+                (selectedOwner === "all" || candidate.profileOwner === selectedOwner) &&
+                (selectedStage === "all" || candidate.stage === selectedStage)
             );
-
+          
             renderCandidates(filteredCandidates);
           }
 
           statusFilter.addEventListener("change", applyFilters);
           ownerFilter.addEventListener("change", applyFilters);
+          stageFilter.addEventListener("change", applyFilters);
           searchInput.addEventListener("input", () => {
             const searchTerm = searchInput.value.toLowerCase();
             const filteredCandidates = allCandidates.filter(

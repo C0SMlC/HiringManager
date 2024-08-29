@@ -1,121 +1,124 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Open Positions</title>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JobEntry - Open Positions</title>
     <style>
-      body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-        background-color: #f4f4f4;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: 100vh;
-      }
-      .container {
-        width: 90%;
-        max-width: 800px;
-        background: #ffffff;
-        border-radius: 8px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        padding: 20px;
-        margin: 20px;
-        text-align: center;
-      }
-      h1 {
-        color: #333;
-        margin-bottom: 20px;
-      }
-      .position-item {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        background: #fafafa;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        margin-bottom: 15px;
-        padding: 15px;
-        text-align: left;
-      }
-      .position-item h2 {
-        margin: 0 15px 0 0;
-        color: #2c3e50;
-        font-size: 18px;
-        flex-basis: 20%;
-      }
-      .position-item p {
-        margin: 0 15px;
-        color: #555;
-        flex-basis: 20%;
-      }
-      .position-description {
-        margin: 0 15px;
-        color: #555;
-        flex-basis: 40%;
-        max-height: 200px;
-        overflow-y: auto;
-        border-left: 1px solid #ddd;
-        padding-left: 15px;
-      }
-      .position-item button {
-        background-color: #3498db;
-        border: none;
-        color: #fff;
-        padding: 10px 20px;
-        text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        font-size: 16px;
-        margin-left: auto;
-        border-radius: 4px;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-      }
-      .position-item button:hover {
-        background-color: #2980b9;
-      }
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+        .header {
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            color: #00a86b;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        .job-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .job-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .job-title-container {
+            flex-grow: 1;
+        }
+        .job-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin: 0 0 5px 0;
+        }
+        .job-id {
+            color: #666;
+            font-size: 14px;
+        }
+        .job-description {
+            color: #333;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+        .apply-btn {
+            background-color: #0d6efd;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
     </style>
-  </head>
-  <body>
-    <div class="container">
-      <h1>Open Positions</h1>
-      <div id="positionsList"></div>
+</head>
+<body>
+    <header class="header">
+        <div class="logo">JobEntry</div>
+    </header>
+
+    <div class="container" id="jobContainer">
+        <!-- Job listings will be dynamically added here -->
     </div>
+
     <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        const positionsList = document.getElementById("positionsList");
+        function createJobCard(job) {
+            return `
+                <div class="job-card">
+                    <div class="job-header">
+                        <div class="job-title-container">
+                            <h2 class="job-title">${job.positionTitle}</h2>
+                            <div class="job-id">Position ID: ${job.positionId}</div>
+                        </div>
+                        <button class="apply-btn" onclick="applyForJob('${job.positionId}', '${encodeURIComponent(job.positionTitle)}')">Apply Now</button>
+                    </div>
+                </div>
+            `;
+        }
 
-        fetch("/api/positions", {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        })
-          .then((response) => response.json())
-          .then((positions) => {
-            positions.forEach((position) => {
-              const positionDiv = document.createElement("div");
-              positionDiv.className = "position-item";
-              positionDiv.innerHTML = `
-                        <h2>${position.positionTitle}</h2>
-                        <p>Position ID: ${position.positionId}</p>
-                        <div class="position-description">${position.jobdescription}</div>
-                        <button onclick="applyForPosition('${position.positionId}', '${position.positionTitle}')">Apply</button>
-                    `;
-              positionsList.appendChild(positionDiv);
+        function loadJobs() {
+            fetch('/api/positions', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            })
+            .then(response => response.json())
+            .then(jobs => {
+                const jobContainer = document.getElementById('jobContainer');
+                jobContainer.innerHTML = jobs.map(createJobCard).join('');
+            })
+            .catch(error => {
+                console.error('Error fetching positions:', error);
+                document.getElementById('jobContainer').innerHTML = '<p>Error loading job positions. Please try again later.</p>';
             });
-          })
-          .catch((error) => console.error("Error fetching positions:", error));
-      });
+        }
 
-      function applyForPosition(positionId, positionTitle) {
-        window.location.href = `applyPosition.html?id=${positionId}&title=${encodeURIComponent(
-          positionTitle
-        )}`;
-      }
+        function applyForJob(positionId, positionTitle) {
+            // Redirect to the application form page
+            window.location.href = `applyPosition.html?id=${positionId}&title=${positionTitle}`;
+        }
+
+        // Load jobs when the page loads
+        window.onload = loadJobs;
     </script>
-  </body>
+</body>
 </html>
