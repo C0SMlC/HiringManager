@@ -110,9 +110,9 @@ document.addEventListener("DOMContentLoaded", function () {
       .catch((error) => {
         // console.error('Error:', error);
         console.error("Error:", error.message);
-        alert(
-          `An error occurredgf while assigning the applicant: ${error.message}`
-        );
+        // alert(
+        //   `An error occurredgf while assigning the applicant: ${error.message}`
+        // );
       });
   });
 });

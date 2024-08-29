@@ -74,30 +74,54 @@ router.post(
     const resume = req.file ? req.file.buffer : null;
 
     if (req.user.role !== "admin") {
-      res.status(400).json({ message: "Not Authorised" });
+      return res.status(403).json({ message: "Not Authorized" });
     }
 
-    const sql = `
-    INSERT INTO ApplicantTracking 
-    (applicantName, applicantEmail, applicantPhone, profileOwner, currentCompany, candidateWorkLocation, nativeLocation, 
-    qualification, experience, skills, noticePeriod, currentctc, expectedctc, band, applicantResume, dateApplied, positionTitle, 
-    positionId, status, stage, dateOfPhoneScreen, interviewDate, dateOfOffer, reasonNotExtending, notes) 
-    VALUES (?, ?, ?, ?, '', '', '', '', '', '', '', 0, 0, '', ?, NOW(), ?, ?, 'OPEN', 'App. Recd.', NULL, NULL, NULL, NULL, '')
-  `;
+    // Check for existing records
+    const checkSql = `
+        SELECT COUNT(*) AS count FROM ApplicantTracking 
+        WHERE applicantPhone = ? OR applicantEmail = ?
+    `;
 
-    db.query(
-      sql,
-      [name, email, phone, assignTo, resume, position, positionId],
-      (err, result) => {
-        if (err) {
-          console.error("Error inserting applicant:", err);
-          return res
-            .status(500)
-            .json({ message: "Error submitting application" });
-        }
-        res.status(200).json({ message: "Application submitted successfully" });
+    db.query(checkSql, [phone, email], (err, results) => {
+      if (err) {
+        console.error("Error: " + err.message);
+        return res
+          .status(500)
+          .json({ message: "Error checking for duplicates" });
       }
-    );
+
+      if (results[0].count > 0) {
+        return res
+          .status(400)
+          .json({ message: "User with this Email Or Phone already exists!" });
+      }
+
+      // If no duplicates found, insert new record
+      const sql = `
+        INSERT INTO ApplicantTracking 
+        (applicantName, applicantEmail, applicantPhone, profileOwner, currentCompany, candidateWorkLocation, nativeLocation, 
+        qualification, experience, skills, noticePeriod, currentctc, expectedctc, band, applicantResume, dateApplied, positionTitle, 
+        positionId, status, stage, dateOfPhoneScreen, interviewDate, dateOfOffer, reasonNotExtending, notes) 
+        VALUES (?, ?, ?, ?, '', '', '', '', '', '', '', 0, 0, '', ?, NOW(), ?, ?, 'OPEN', 'App. Recd.', NULL, NULL, NULL, NULL, '')
+      `;
+
+      db.query(
+        sql,
+        [name, email, phone, assignTo, resume, position, positionId],
+        (insertErr, result) => {
+          if (insertErr) {
+            console.error("Error inserting applicant:", insertErr);
+            return res
+              .status(500)
+              .json({ message: "Error submitting application" });
+          }
+          res
+            .status(200)
+            .json({ message: "Application submitted successfully" });
+        }
+      );
+    });
   }
 );
 
