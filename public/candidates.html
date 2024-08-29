@@ -55,7 +55,7 @@
       /* Create a spacer element to match the width of the table */
       .scrollbar-spacer {
         height: 1px; /* Minimal height */
-        width: 100%; /* Will be set dynamically to match table width */
+        width: 200%; /* Will be set dynamically to match table width */
       }
 
       /* Hide the default scrollbar for WebKit browsers */
@@ -260,9 +260,15 @@
         const scrollbarSpacer = document.querySelector(".scrollbar-spacer");
         const table = document.getElementById("candidateTable");
 
-        // Set the width of the spacer to match the table width
+        // Function to update the spacer width
         function updateSpacerWidth() {
-          scrollbarSpacer.style.width = `${table.offsetWidth}px`;
+          // Get the total width of all columns
+          const totalWidth = Array.from(table.rows[0].cells).reduce(
+            (sum, cell) => sum + cell.offsetWidth,
+            0
+          );
+          scrollbarSpacer.style.width = `${totalWidth}px`;
+          floatingScrollbar.style.width = `${tableWrapper.clientWidth}px`;
         }
 
         // Synchronize the table scroll with the floating scrollbar
@@ -280,6 +286,10 @@
 
         // Initial setup
         updateSpacerWidth();
+
+        // Observe the table for changes (e.g., data loading)
+        const observer = new MutationObserver(updateSpacerWidth);
+        observer.observe(table, { childList: true, subtree: true });
       });
     </script>
     <script src="candidates.js"></script>
