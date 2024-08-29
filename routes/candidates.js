@@ -293,4 +293,29 @@ router.get("/positions", authenticateToken, (req, res) => {
   });
 });
 
+router.post("/duplicate", authenticateToken, (req, res) => {
+  const { applicantEmail, applicantPhone } = req.body;
+
+  // Check for existing records
+  const checkSql = `
+        SELECT COUNT(*) AS count FROM ApplicantTracking 
+        WHERE applicantPhone = ? OR applicantEmail = ?
+    `;
+
+  db.query(checkSql, [applicantPhone, applicantEmail], (err, results) => {
+    if (err) {
+      console.error("Error: " + err.message);
+      return res.status(500).json({ message: "Error checking for duplicates" });
+    }
+
+    if (results[0].count > 0) {
+      return res
+        .status(400)
+        .json({ message: "User with this Email Or Phone already exists!" });
+    }
+
+    res.status(200).json({ message: "No duplicate found" });
+  });
+});
+
 module.exports = router;
