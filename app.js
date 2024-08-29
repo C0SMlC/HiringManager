@@ -280,7 +280,7 @@ app.get(
 
       let results;
 
-      await db.query(query, (err, result) => {
+       db.query(query, (err, result) => {
         if (err) {
           console.error("Error fetching positions: " + err.message);
           return res.status(500).json({ message: "Error fetching positions" });
