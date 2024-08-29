@@ -340,6 +340,61 @@
           inputs.dateApplied.value = today;
         }
 
+        // Add debounce function
+        function debounce(func, delay) {
+          let debounceTimer;
+          return function () {
+            const context = this;
+            const args = arguments;
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => func.apply(context, args), delay);
+          };
+        }
+
+        // Function to check for duplicates
+        async function checkDuplicate(field) {
+          const value = field.value.trim();
+          if (!value) return;
+
+          try {
+            const response = await fetch("/candidates/duplicate", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+              },
+              body: JSON.stringify({
+                applicantEmail: field.id === "applicantEmail" ? value : "",
+                applicantPhone: field.id === "applicantPhone" ? value : "",
+              }),
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+              // No duplicate found
+              field.style.borderColor = "green";
+              field.title = "Unique entry";
+            } else {
+              // Duplicate found
+              field.style.borderColor = "red";
+              field.title = data.message;
+              alert(data.message);
+            }
+          } catch (error) {
+            //console.error("Error checking for duplicates:", error);
+          }
+        }
+
+        // Add event listeners for email and phone fields
+        const debouncedCheck = debounce(checkDuplicate, 500);
+        inputs.applicantEmail.addEventListener("input", () =>
+          debouncedCheck(inputs.applicantEmail)
+        );
+        inputs.applicantPhone.addEventListener("input", () =>
+          debouncedCheck(inputs.applicantPhone)
+        );
+
         let positionMap = {};
 
         // Fetch positions and populate the dropdowns
@@ -584,7 +639,7 @@
               }
             );
 
-           /* if (!response.ok) {
+            /* if (!response.ok) {
               alert(`An error occurred during submission: ${response.message}`);
             } */
 
