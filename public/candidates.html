@@ -7,7 +7,68 @@
     <link rel="stylesheet" href="style.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
     <style>
-      body, html {
+      /* Ensure the table container takes up the full height of its parent */
+      .forms-container {
+        height: calc(100vh - 60px); /* Adjust based on your navbar height */
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* Make the table container take up all available space */
+      .table-container {
+        flex: 1;
+        overflow: hidden;
+        position: relative;
+      }
+
+      /* Create a wrapper for the table */
+      .table-wrapper {
+        height: 100%;
+        overflow-y: auto;
+        padding-bottom: 20px; /* Make room for the floating scrollbar */
+      }
+
+      /* Style the table */
+      #candidateTable {
+        width: max-content;
+        border-collapse: collapse;
+      }
+
+      /* Create a floating container for the horizontal scrollbar */
+      .floating-scrollbar {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 20px; /* Height of the scrollbar */
+        background-color: rgba(
+          242,
+          242,
+          242,
+          0.9
+        ); /* Semi-transparent background */
+        overflow-x: auto;
+        overflow-y: hidden;
+        z-index: 1000;
+      }
+
+      /* Create a spacer element to match the width of the table */
+      .scrollbar-spacer {
+        height: 1px; /* Minimal height */
+        width: 100%; /* Will be set dynamically to match table width */
+      }
+
+      /* Hide the default scrollbar for WebKit browsers */
+      .table-wrapper::-webkit-scrollbar {
+        display: none;
+      }
+
+      /* Hide the default scrollbar for Firefox */
+      .table-wrapper {
+        scrollbar-width: none;
+      }
+      body,
+      html {
         height: 100%;
         margin: 0;
         padding: 0;
@@ -121,79 +182,111 @@
                 <option value="CLOSED">Closed</option>
             </select>
         </div> -->
-        <div class="filter-container">
-          <div class="filter-item">
-            <label for="statusFilter">Filter by Status:</label>
-            <select id="statusFilter">
-              <option value="all">All</option>
-              <option value="OPEN">Open</option>
-              <option value="CLOSED">Closed</option>
-            </select>
-          </div>
-        
-          <div class="filter-item">
-            <label for="profileOwnerFilter">Filter by Profile Owner:</label>
-            <select id="profileOwnerFilter">
-              <option value="all">All</option>
-            </select>
-          </div>
-        
-          <div class="filter-item">
-            <label for="dateAppliedSort">Sort by Date Applied:</label>
-            <select id="dateAppliedSort">
-              <!-- <option value="none">None</option> -->
-              <option value="ascending">Ascending</option>
-              <option value="descending">Descending</option>
-            </select>
-          </div>
+      <div class="filter-container">
+        <div class="filter-item">
+          <label for="statusFilter">Filter by Status:</label>
+          <select id="statusFilter">
+            <option value="all">All</option>
+            <option value="OPEN">Open</option>
+            <option value="CLOSED">Closed</option>
+          </select>
         </div>
 
+        <div class="filter-item">
+          <label for="profileOwnerFilter">Filter by Profile Owner:</label>
+          <select id="profileOwnerFilter">
+            <option value="all">All</option>
+          </select>
+        </div>
+
+        <div class="filter-item">
+          <label for="dateAppliedSort">Sort by Date Applied:</label>
+          <select id="dateAppliedSort">
+            <!-- <option value="none">None</option> -->
+            <option value="ascending">Ascending</option>
+            <option value="descending">Descending</option>
+          </select>
+        </div>
+      </div>
       <div class="table-container">
-        <table id="candidateTable">
-          <thead>
-            <tr>
-              <th>Profile Owner</th>
-              <th class="sticky-col">Name</th>
-              <th>Phone</th>
-              <th>Email</th>
-              <th>Current Company</th>
-              <th>Work Location</th>
-              <th>Native Location</th>
-              <th>Qualification</th>
-              <th>Experience</th>
-              <th>Skills</th>
-              <th>Notice Period</th>
-              <th>Current CTC</th>
-              <th>Expected CTC</th>
-              <th>Band</th>
-              <th>Date Applied</th>
-              <th>Position Title</th>
-              <th>Position ID</th>
-              <th>Status</th>
-              <th>Stage</th>
-              <th>Interviewer</th>
-              <th>Interview Date</th>
-              <th>Date of Offer</th>
-              <th>Reason for Not Extending Offer</th>
-              <th>Notes</th>
-              <th>Actions</th>
-              <th>View Resume</th>
-              <th>Download Resume</th>
-              <th>Export</th>
-            </tr>
-          </thead>
-          <tbody id="candidateList">
-            <!-- Candidates will be populated here -->
-          </tbody>
-        </table>
+        <div class="table-wrapper">
+          <table id="candidateTable">
+            <thead>
+              <tr>
+                <th>Profile Owner</th>
+                <th class="sticky-col">Name</th>
+                <th>Phone</th>
+                <th>Email</th>
+                <th>Current Company</th>
+                <th>Work Location</th>
+                <th>Native Location</th>
+                <th>Qualification</th>
+                <th>Experience</th>
+                <th>Skills</th>
+                <th>Notice Period</th>
+                <th>Current CTC</th>
+                <th>Expected CTC</th>
+                <th>Band</th>
+                <th>Date Applied</th>
+                <th>Position Title</th>
+                <th>Position ID</th>
+                <th>Status</th>
+                <th>Stage</th>
+                <th>Interviewer</th>
+                <th>Interview Date</th>
+                <th>Date of Offer</th>
+                <th>Reason for Not Extending Offer</th>
+                <th>Notes</th>
+                <th>Actions</th>
+                <th>View Resume</th>
+                <th>Download Resume</th>
+                <th>Export</th>
+              </tr>
+            </thead>
+            <tbody id="candidateList">
+              <!-- Candidates will be populated here -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="floating-scrollbar">
+        <div class="scrollbar-spacer"></div>
       </div>
     </div>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const tableWrapper = document.querySelector(".table-wrapper");
+        const floatingScrollbar = document.querySelector(".floating-scrollbar");
+        const scrollbarSpacer = document.querySelector(".scrollbar-spacer");
+        const table = document.getElementById("candidateTable");
+
+        // Set the width of the spacer to match the table width
+        function updateSpacerWidth() {
+          scrollbarSpacer.style.width = `${table.offsetWidth}px`;
+        }
+
+        // Synchronize the table scroll with the floating scrollbar
+        floatingScrollbar.addEventListener("scroll", function () {
+          tableWrapper.scrollLeft = floatingScrollbar.scrollLeft;
+        });
+
+        // Synchronize the floating scrollbar with the table scroll
+        tableWrapper.addEventListener("scroll", function () {
+          floatingScrollbar.scrollLeft = tableWrapper.scrollLeft;
+        });
+
+        // Update the spacer width when the window resizes
+        window.addEventListener("resize", updateSpacerWidth);
+
+        // Initial setup
+        updateSpacerWidth();
+      });
+    </script>
     <script src="candidates.js"></script>
     <script src="userInfo.js"></script>
     <script src="dashboard.js"></script>
     <script src="hideNav.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="socket.js"></script>
-
   </body>
 </html>

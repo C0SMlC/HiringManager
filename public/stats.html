@@ -127,9 +127,9 @@
           <option value="all">All Profile Owners</option>
         </select>
         <label for="startDate">From:</label>
-        <input type="date" id="startDate">
+        <input type="date" id="startDate" />
         <label for="endDate">To:</label>
-        <input type="date" id="endDate">
+        <input type="date" id="endDate" />
         <button id="applyFilters">Apply Filters</button>
       </div>
 
@@ -170,6 +170,10 @@
       </div>
 
       <div class="analytics-container marginContianer">
+        <div class="analytic-item" data-stage="Exceeding Limit">
+          <h3>Exceeding Limit</h3>
+          <p id="exceedingLimitCount">0</p>
+        </div>
         <div class="analytic-item" data-stage="rejected">
           <h3>Rejected Applicants</h3>
           <p id="rejectedApplicants">0</p>

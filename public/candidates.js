@@ -517,6 +517,9 @@ document.addEventListener("DOMContentLoaded", () => {
                           <option value="Buffer List" ${
                             candidate.stage === "Buffer List" ? "selected" : ""
                           }>Buffer List</option>
+                          <option value="Exceeding Limit" ${
+                            candidate.stage === "Exceeding Limit" ? "selected" : ""
+                          }>Exceeding Limit</option>
                           <option value="Rejected" ${
                             candidate.stage === "Rejected" ? "selected" : ""
                           }>Rejected</option>

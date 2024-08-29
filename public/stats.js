@@ -4,7 +4,9 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   fetchDashboardData();
-  document.getElementById("applyFilters").addEventListener("click", fetchDashboardData);
+  document
+    .getElementById("applyFilters")
+    .addEventListener("click", fetchDashboardData);
 });
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -92,13 +94,18 @@ function filterAndUpdateDashboard(data) {
   let filteredData = data;
 
   if (selectedOwner !== "all") {
-    filteredData = filteredData.filter((candidate) => candidate.profileOwner === selectedOwner);
+    filteredData = filteredData.filter(
+      (candidate) => candidate.profileOwner === selectedOwner
+    );
   }
 
   if (startDate && endDate) {
     filteredData = filteredData.filter((candidate) => {
       const candidateDate = new Date(candidate.dateApplied);
-      return candidateDate >= new Date(startDate) && candidateDate <= new Date(endDate);
+      return (
+        candidateDate >= new Date(startDate) &&
+        candidateDate <= new Date(endDate)
+      );
     });
   }
 
@@ -126,6 +133,7 @@ function processData(data) {
   };
 
   const inactiveStages = {
+    // "Exceeding Limit": 0,
     HOLD: 0,
     "Buffer List": 0,
     Rejected: 0,
@@ -140,6 +148,7 @@ function processData(data) {
     joined: 0,
     declined: 0,
     aboutToJoin: 0,
+    exceedingLimit: 0,
   };
 
   data.forEach((candidate) => {
@@ -158,6 +167,10 @@ function processData(data) {
       } else if (candidate.stage === "Buffer List") {
         lists.buffer++;
       }
+    }
+
+    if (candidate.stage === "Exceeding Limit") {
+      lists.exceedingLimit++;
     }
 
     if (candidate.stage === "About To Join") {
@@ -190,7 +203,7 @@ function processData(data) {
 
 function updateLists(lists) {
   // document.getElementById('activeCount').textContent = lists.active;
-  // document.getElementById('rejectedCount').textContent = lists.rejected;
+  document.getElementById("exceedingLimitCount").textContent = lists.exceedingLimit;
   document.getElementById("bufferCount").textContent = lists.buffer;
   document.getElementById("closedCount").textContent = lists.closed;
   document.getElementById("declinedCount").textContent = lists.declined;
