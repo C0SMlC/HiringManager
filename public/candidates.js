@@ -115,12 +115,12 @@ function downloadResume(applicantId) {
   const a = document.createElement("a");
   a.style.display = "none";
   a.href = url;
-  a.download = `Delta_${candidate.applicantName}_Resume.pdf`;
+  a.download = `DELTAIOT_${candidate.applicantName}_RESUME.pdf`;
   document.body.appendChild(a);
   a.click();
   window.URL.revokeObjectURL(url);
 }
-
+ 
 // Update candidate
 function updateCandidate(applicantId) {
   const token = localStorage.getItem("token");
@@ -191,7 +191,7 @@ function updateCandidate(applicantId) {
     .then((response) => response.json())
     .then((data) => {
       alert(data.message);
-      window.location.reload();
+      // window.location.reload();
     })
     .catch((err) => {
       console.error(err);

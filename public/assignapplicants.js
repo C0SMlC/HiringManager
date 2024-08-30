@@ -94,7 +94,7 @@ document.addEventListener("DOMContentLoaded", function () {
           .then((response) => response.json())
           .then((result) => {
             console.log(result.message);
-
+            form.reset();
             // Emit an event to notify the assigned user
           });
 
@@ -104,8 +104,6 @@ document.addEventListener("DOMContentLoaded", function () {
           "New Applicant Assigned",
           `A new applicant has been assigned to you:\nName: ${nameInput.value}\nEmail: ${emailInput.value}\nPhone: ${phoneInput.value}`
         );
-
-        // form.reset();
       })
       .catch((error) => {
         // console.error('Error:', error);
