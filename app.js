@@ -262,25 +262,42 @@ app.get(
   async (req, res) => {
     try {
       const query = `
-        SELECT 
-          op.positionId, 
-          op.positionTitle, 
-          op.jobdescription, 
-          op.manager,
-          op.openPositions,
-          op.experienceRequired,
-          GROUP_CONCAT(CASE WHEN at.status = 'OPEN' THEN at.applicantName END) as activeApplicants
-        FROM 
-          OpenPositions op
-        LEFT JOIN 
-          ApplicantTracking at ON op.positionId = at.positionId
-        GROUP BY 
-          op.positionId, op.positionTitle, op.jobdescription
-      `;
+  SELECT 
+    op.positionId, 
+    op.positionTitle, 
+    op.jobdescription, 
+    op.manager,
+    op.openPositions,
+    op.experienceRequired,
+    GROUP_CONCAT(
+      CASE 
+        WHEN at.status = 'OPEN' THEN CONCAT(at.applicantName, '(', at.stage, ')')
+        ELSE NULL
+      END
+    ) AS activeApplicants,
+    CONCAT_WS(', ',
+      CONCAT('Yet to share: ', 
+        SUM(CASE WHEN at.status = 'OPEN' AND at.stage = 'Yet to share' THEN 1 ELSE 0 END)),
+      CONCAT('Shared with client: ', 
+        SUM(CASE WHEN at.status = 'OPEN' AND at.stage = 'Shared with client' THEN 1 ELSE 0 END)),
+      CONCAT('L1_Client: ', 
+        SUM(CASE WHEN at.status = 'OPEN' AND at.stage = 'L1_Client' THEN 1 ELSE 0 END)),
+      CONCAT('L2_Client: ', 
+        SUM(CASE WHEN at.status = 'OPEN' AND at.stage = 'L2_Client' THEN 1 ELSE 0 END)),
+      CONCAT('Final Discussion: ', 
+        SUM(CASE WHEN at.status = 'OPEN' AND at.stage = 'Final Discussion' THEN 1 ELSE 0 END))
+    ) AS activeApplicationsInStages
+  FROM 
+    OpenPositions op
+  LEFT JOIN 
+    ApplicantTracking at ON op.positionId = at.positionId
+  GROUP BY 
+    op.positionId, op.positionTitle, op.jobdescription, op.manager, op.openPositions, op.experienceRequired;
+`;
 
       let results;
 
-       db.query(query, (err, result) => {
+      db.query(query, (err, result) => {
         if (err) {
           console.error("Error fetching positions: " + err.message);
           return res.status(500).json({ message: "Error fetching positions" });
@@ -297,8 +314,6 @@ app.get(
 
         res.json(processedResults);
       });
-
-      // Process the results to split the concatenated names
     } catch (error) {
       console.error("Error fetching positions with active applicants:", error);
       res.status(500).json({ error: "Internal server error" });
@@ -570,12 +585,11 @@ app.get("/positions/count", (req, res) => {
   });
 });
 
-
 app.get("/positions/:positionId", (req, res) => {
-  const {positionId} = req.params;
+  const { positionId } = req.params;
   // console.log(positionId)
   const sql = "SELECT jobdescription FROM OpenPositions WHERE positionId = ?";
-  db.query(sql,[positionId] ,(err, results) => {
+  db.query(sql, [positionId], (err, results) => {
     if (err) {
       console.error("Error fetching count: " + err.message);
       return res.status(500).json({ message: "Error fetching positions" });

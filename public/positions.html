@@ -6,25 +6,54 @@
     <title>Open Positions</title>
     <link rel="stylesheet" href="style.css" />
     <style>
-      .share-container {
-        display: flex;
-        align-items: center;
-        margin-top: 1rem;
+      .form-container {
+        overflow-x: auto !important;
+        width: 100% !important;
       }
 
-      .share-link {
-        flex-grow: 1;
-        padding: 0.5rem;
-        font-size: 1rem;
+      #positionsTable {
+        border-collapse: collapse !important;
+        width: 100% !important;
+        table-layout: fixed !important;
       }
 
-      .copy-btn {
-        margin-left: 0.5rem;
-        padding: 0.5rem 1rem;
-        background-color: #4caf50;
-        color: white;
-        border: none;
-        cursor: pointer;
+      #positionsTable th,
+      #positionsTable td {
+        border: 1px solid #ddd !important;
+        padding: 10px !important;
+        text-align: left !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+      }
+
+      #positionsTable th {
+        background-color: #2c3e50 !important;
+        color: white !important;
+        position: sticky !important;
+        top: 0 !important;
+        z-index: 1 !important;
+      }
+
+      .multiline-cell {
+        white-space: pre-wrap !important;
+        max-height: 100px !important;
+        overflow-y: auto !important;
+      }
+
+      .job-description-container {
+        max-height: 100px !important;
+        overflow-y: auto !important;
+      }
+
+      .status-dropdown {
+        width: 100% !important;
+      }
+
+      .edit-btn,
+      .update-btn,
+      .share-btn {
+        margin-right: 5px !important;
       }
     </style>
   </head>
@@ -53,25 +82,30 @@
     <div class="form-container openpositions-form">
       <div id="usernameDisplay"></div>
       <h2>Open Positions</h2>
-      <table id="positionsTable">
-        <thead>
-          <tr>
-            <th>Position ID</th>
-            <th>Position Title</th>
-            <th>Job Description</th>
-            <th>Positions</th>
-            <th>Experience</th>
-            <th>Manager</th>
-            <th>Status</th>
-            <th>Active Applicants</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody id="positionsList">
-          <!-- Positions will be populated here -->
-        </tbody>
-      </table>
+      <div>
+        <!-- Adds horizontal scrolling -->
+        <table id="positionsTable">
+          <thead>
+            <tr>
+              <th>Position ID</th>
+              <th>Position Title</th>
+              <th>Job Description</th>
+              <th>Positions</th>
+              <th>Experience</th>
+              <th>Manager</th>
+              <th>Status</th>
+              <th>Active Applicants</th>
+              <th>Active Applications in Stages</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="positionsList">
+            <!-- Positions will be populated here -->
+          </tbody>
+        </table>
+      </div>
     </div>
+
     <script src="userInfo.js"></script>
     <script src="dashboard.js"></script>
     <script>
@@ -117,48 +151,54 @@
 
               const activeApplicantsHtml =
                 position.activeApplicants.length > 0
-                  ? position.activeApplicants.join(", ")
+                  ? position.activeApplicants.join("<br>") // Join items with line breaks
                   : "No active applicants";
 
+              const activeApplicationsInStagesHtml =
+                position.activeApplicationsInStages.length > 0
+                  ? position.activeApplicationsInStages.split(", ").join("<br>") // Split by comma and join with line breaks
+                  : "No active applications in stages";
+
               row.innerHTML = `
-          <td>${position.positionId}</td>
-          <td>${position.positionTitle}</td>
-          <td>
-            <div class="job-description-container">
-              <div class="job-description-content" contenteditable="false">${
-                position.jobdescription
-              }</div>
-            </div>
-          </td>
-          <td>${position.openPositions}</td>
-          <td>${position.experienceRequired}</td>
-          <td>${position.manager}</td>
-          <td>
-            <select class="status-dropdown" disabled>
-              <option value="active" ${
-                position.status === "active" ? "selected" : ""
-              }>Active</option>
-              <option value="closed" ${
-                position.status === "closed" ? "selected" : ""
-              }>Closed</option>
-              <option value="hold" ${
-                position.status === "hold" ? "selected" : ""
-              }>Hold</option>
-            </select>
-          </td>
-          <td class = "activeApplicants">${activeApplicantsHtml}</td>
-          <td>
-            <button class="edit-btn" data-position-id="${
-              position.positionId
-            }">Edit</button>
-            <button class="update-btn" data-position-id="${
-              position.positionId
-            }" style="display:none;">Done</button>
-            <button class="share-btn" data-position-id="${
-              position.positionId
-            }">Share</button>
-          </td>
-        `;
+      <td>${position.positionId}</td>
+      <td>${position.positionTitle}</td>
+      <td>
+        <div class="job-description-container">
+          <div class="job-description-content" contenteditable="false">${
+            position.jobdescription
+          }</div>
+        </div>
+      </td>
+      <td>${position.openPositions}</td>
+      <td>${position.experienceRequired}</td>
+      <td>${position.manager}</td>
+      <td>
+        <select class="status-dropdown" disabled>
+          <option value="active" ${
+            position.status === "active" ? "selected" : ""
+          }>Active</option>
+          <option value="closed" ${
+            position.status === "closed" ? "selected" : ""
+          }>Closed</option>
+          <option value="hold" ${
+            position.status === "hold" ? "selected" : ""
+          }>Hold</option>
+        </select>
+      </td>
+      <td class="multiline-cell">${activeApplicantsHtml}</td>
+      <td class="multiline-cell">${activeApplicationsInStagesHtml}</td>
+      <td>
+        <button class="edit-btn" data-position-id="${
+          position.positionId
+        }">Edit</button>
+        <button class="update-btn" data-position-id="${
+          position.positionId
+        }" style="display:none;">Done</button>
+        <button class="share-btn" data-position-id="${
+          position.positionId
+        }">Share</button>
+      </td>
+    `;
 
               positionsList.appendChild(row);
             });
@@ -244,6 +284,7 @@
                   });
               });
             });
+
             // Add event listeners to share buttons
             document.querySelectorAll(".share-btn").forEach((btn) => {
               btn.addEventListener("click", function () {
@@ -289,11 +330,12 @@
             });
           })
           .catch((err) => {
-            // console.error(err);
+            console.error(err);
             alert("Failed to fetch positions");
           });
       });
     </script>
+
     <script src="hideNav.js"></script>
     <script src="dashboard.js"></script>
     <script src="/socket.io/socket.io.js"></script>
