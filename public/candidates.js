@@ -85,42 +85,62 @@ function toggleInterviewer(applicantId) {
   }
 }
 
+// Function to fetch resume
+function fetchResume(applicantId) {
+  const token = localStorage.getItem("token");
+  return fetch(`/candidates/${applicantId}/resume`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Resume not available");
+      }
+      return response.json();
+    })
+    .then((data) => data.applicantResume);
+}
+
 // View resume
 function viewResume(applicantId) {
-  const candidate = candidates.find((c) => c.applicantId === applicantId);
-  if (!candidate || !candidate.applicantResume) {
-    alert("Resume not available");
-    return;
-  }
-
-  const blob = new Blob([new Uint8Array(candidate.applicantResume.data)], {
-    type: "application/pdf",
-  });
-  const url = URL.createObjectURL(blob);
-  window.open(url, "_blank");
+  fetchResume(applicantId)
+    .then((resumeData) => {
+      const blob = new Blob([new Uint8Array(resumeData.data)], {
+        type: "application/pdf",
+      });
+      const url = URL.createObjectURL(blob);
+      window.open(url, "_blank");
+    })
+    .catch((error) => {
+      console.error("Error fetching resume:", error);
+      alert("Resume not available");
+    });
 }
 
 // Download resume
 function downloadResume(applicantId) {
-  const candidate = candidates.find((c) => c.applicantId === applicantId);
-  if (!candidate || !candidate.applicantResume) {
-    alert("Resume not available");
-    return;
-  }
-
-  const blob = new Blob([new Uint8Array(candidate.applicantResume.data)], {
-    type: "application/pdf",
-  });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.style.display = "none";
-  a.href = url;
-  a.download = `DELTAIOT_${candidate.applicantName}_RESUME.pdf`;
-  document.body.appendChild(a);
-  a.click();
-  window.URL.revokeObjectURL(url);
+  fetchResume(applicantId)
+    .then((resumeData) => {
+      const blob = new Blob([new Uint8Array(resumeData.data)], {
+        type: "application/pdf",
+      });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.style.display = "none";
+      a.href = url;
+      a.download = `DELTAIOT_${applicantId}_RESUME.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+    })
+    .catch((error) => {
+      console.error("Error downloading resume:", error);
+      alert("Resume not available for download");
+    });
 }
- 
+
 // Update candidate
 function updateCandidate(applicantId) {
   const token = localStorage.getItem("token");
@@ -518,7 +538,9 @@ document.addEventListener("DOMContentLoaded", () => {
                             candidate.stage === "Buffer List" ? "selected" : ""
                           }>Buffer List</option>
                           <option value="Exceeding Limit" ${
-                            candidate.stage === "Exceeding Limit" ? "selected" : ""
+                            candidate.stage === "Exceeding Limit"
+                              ? "selected"
+                              : ""
                           }>Exceeding Limit</option>
                           <option value="Rejected" ${
                             candidate.stage === "Rejected" ? "selected" : ""

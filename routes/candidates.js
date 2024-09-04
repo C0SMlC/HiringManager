@@ -132,7 +132,8 @@ router.get("/", authenticateToken, (req, res) => {
 
   const userRole = req.user.role;
 
-  let sql = "SELECT * FROM ApplicantTracking";
+  let sql =
+    "SELECT applicantId, profileOwner, applicantName, applicantPhone, applicantEmail, currentCompany, candidateWorkLocation, nativeLocation, qualification, experience, skills, noticePeriod, currentctc, expectedctc, band, dateApplied, positionTitle, positionId, status, stage, interviewer, dateOfPhoneScreen, interviewDate, dateOfOffer, reasonNotExtending, notes FROM ApplicantTracking";
   let params = [];
 
   if (userRole !== "admin" && isgetAll !== "true") {
@@ -147,6 +148,34 @@ router.get("/", authenticateToken, (req, res) => {
     }
 
     res.json(results);
+  });
+});
+
+// New endpoint for fetching resume
+router.get("/:id/resume", authenticateToken, (req, res) => {
+  const applicantId = req.params.id;
+  const userRole = req.user.role;
+
+  let sql =
+    "SELECT applicantResume FROM ApplicantTracking WHERE applicantId = ?";
+  let params = [applicantId];
+
+  if (userRole !== "admin") {
+    sql += " AND profileOwner = ?";
+    params.push(req.user.username);
+  }
+
+  db.query(sql, params, (err, results) => {
+    if (err) {
+      console.error("Error: " + err.message);
+      return res.status(500).json({ message: "Error fetching resume" });
+    }
+
+    if (results.length === 0) {
+      return res.status(404).json({ message: "Resume not found" });
+    }
+
+    res.json({ applicantResume: results[0].applicantResume });
   });
 });
 
