@@ -45,7 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function renderCandidates(candidatesToRender) {
     candidateList.innerHTML = "";
-    const showDateOfJoining = stage === "Joined" || stage === "About To Join";
+    const showDateOfJoining = stage === "joined" || stage === "About To Join";
     dateOfJoiningHeader.style.display = showDateOfJoining
       ? "table-cell"
       : "none";
