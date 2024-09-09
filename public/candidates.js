@@ -607,53 +607,69 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  function applyFilters() {
-    const statusFilter = document.getElementById("statusFilter");
-    const profileOwnerFilter = document.getElementById("profileOwnerFilter");
-    const dateAppliedSort = document.getElementById("dateAppliedSort");
+ function applyFilters() {
+   const statusFilter = document.getElementById("statusFilter");
+   const profileOwnerFilter = document.getElementById("profileOwnerFilter");
+   const positionTitleFilter = document.getElementById("positionTitleFilter");
+   const dateAppliedSort = document.getElementById("dateAppliedSort");
 
-    const selectedStatus = statusFilter.value;
-    const selectedProfileOwner = profileOwnerFilter.value;
-    const sortOrder = dateAppliedSort.value;
+   const selectedStatus = statusFilter.value;
+   const selectedProfileOwner = profileOwnerFilter.value;
+   const selectedPositionTitle = positionTitleFilter.value;
+   const sortOrder = dateAppliedSort.value;
 
-    let filteredCandidates = candidates.filter(
-      (candidate) =>
-        (selectedStatus === "all" || candidate.status === selectedStatus) &&
-        (selectedProfileOwner === "all" ||
-          candidate.profileOwner === selectedProfileOwner)
-    );
+   let filteredCandidates = candidates.filter(
+     (candidate) =>
+       (selectedStatus === "all" || candidate.status === selectedStatus) &&
+       (selectedProfileOwner === "all" ||
+         candidate.profileOwner === selectedProfileOwner) &&
+       (selectedPositionTitle === "all" ||
+         candidate.positionTitle === selectedPositionTitle)
+   );
 
-    if (sortOrder !== "none") {
-      filteredCandidates.sort((a, b) => {
-        const comparison = compareDates(a.dateApplied, b.dateApplied);
-        return sortOrder === "ascending" ? comparison : -comparison;
-      });
-    }
+   if (sortOrder !== "none") {
+     filteredCandidates.sort((a, b) => {
+       const comparison = compareDates(a.dateApplied, b.dateApplied);
+       return sortOrder === "ascending" ? comparison : -comparison;
+     });
+   }
 
-    renderCandidates(filteredCandidates);
-  }
+   renderCandidates(filteredCandidates);
+ }
 
-  function initializeFilters() {
-    const statusFilter = document.getElementById("statusFilter");
-    const profileOwnerFilter = document.getElementById("profileOwnerFilter");
-    const dateAppliedSort = document.getElementById("dateAppliedSort");
+function initializeFilters() {
+  const statusFilter = document.getElementById("statusFilter");
+  const profileOwnerFilter = document.getElementById("profileOwnerFilter");
+  const positionTitleFilter = document.getElementById("positionTitleFilter");
+  const dateAppliedSort = document.getElementById("dateAppliedSort");
 
-    // Populate profile owner filter
-    const uniqueProfileOwners = [
-      ...new Set(candidates.map((c) => c.profileOwner)),
-    ];
-    profileOwnerFilter.innerHTML =
-      '<option value="all">All</option>' +
-      uniqueProfileOwners
-        .map((owner) => `<option value="${owner}">${owner}</option>`)
-        .join("");
+  // Populate profile owner filter
+  const uniqueProfileOwners = [
+    ...new Set(candidates.map((c) => c.profileOwner)),
+  ];
+  profileOwnerFilter.innerHTML =
+    '<option value="all">All</option>' +
+    uniqueProfileOwners
+      .map((owner) => `<option value="${owner}">${owner}</option>`)
+      .join("");
 
-    // Add event listeners
-    statusFilter.addEventListener("change", applyFilters);
-    profileOwnerFilter.addEventListener("change", applyFilters);
-    dateAppliedSort.addEventListener("change", applyFilters);
+  // Populate position title filter
+  const uniquePositionTitles = [
+    ...new Set(candidates.map((c) => c.positionTitle)),
+  ];
+  positionTitleFilter.innerHTML =
+    '<option value="all">All</option>' +
+    uniquePositionTitles
+      .map((title) => `<option value="${title}">${title}</option>`)
+      .join("");
 
-    // Initial filter application
-    applyFilters();
-  }
+  // Add event listeners
+  statusFilter.addEventListener("change", applyFilters);
+  profileOwnerFilter.addEventListener("change", applyFilters);
+  positionTitleFilter.addEventListener("change", applyFilters);
+  dateAppliedSort.addEventListener("change", applyFilters);
+
+  // Initial filter application
+  applyFilters();
+}
 });
