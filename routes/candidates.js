@@ -182,7 +182,8 @@ router.get("/:id/resume", authenticateToken, (req, res) => {
 router.get("/stats/filter", authenticateToken, (req, res) => {
   const { profileOwnerFilter } = req.query;
 
-  let sql = "SELECT * FROM ApplicantTracking";
+  let sql =
+    "SELECT  applicantId, profileOwner, applicantName, applicantPhone, applicantEmail, currentCompany, candidateWorkLocation, nativeLocation, qualification, experience, skills, noticePeriod, currentctc, expectedctc, band, dateApplied, positionTitle, positionId, status, stage, interviewer, dateOfPhoneScreen, interviewDate, dateOfOffer, reasonNotExtending, notes FROM ApplicantTracking";
   let params = [];
 
   if (profileOwnerFilter && profileOwnerFilter != "all") {

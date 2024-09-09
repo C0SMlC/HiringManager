@@ -45,8 +45,6 @@ router.post("/login", (req, res) => {
       return res.status(500).json({ message: "Error fetching user" });
     }
 
-    console.log(JSON.stringify(results));
-
     if (results.length === 0) {
       return res.status(401).json({ message: "Invalid username or password" });
     }
@@ -61,8 +59,6 @@ router.post("/login", (req, res) => {
       { expiresIn: "12h" }
     );
 
-    // console.log(token);
-
     // Update the loggedInTime in the database
     const updateLoginTime =
       "UPDATE users SET loggedInTime = ? WHERE userId = ?";
@@ -71,7 +67,6 @@ router.post("/login", (req, res) => {
         console.error("Error updating login time: " + err.message);
         return res.status(500).json({ message: "Error updating login time" });
       }
-      console.log(user.userId);
       res.status(200).json({ userId: user.userId, token, role: user.role });
     });
   });
@@ -80,8 +75,6 @@ router.post("/login", (req, res) => {
 router.post("/logout", (req, res) => {
   const token = req.headers.authorization.split(" ")[1];
   try {
-    // console.log(token);
-
     const decoded = jwt.verify(token, config.secret);
     const sql = "SELECT * FROM users WHERE username = ?";
     db.query(sql, [decoded.username], (err, results) => {
