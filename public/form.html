@@ -646,6 +646,7 @@
             const result = await response.json();
             alert(result.message);
             // Do not reset the form here, as per the original code
+            form.reset();
           } catch (error) {
             console.error("Submission error:", error);
             // alert(`An error occurred during submission: ${error.message}`);
