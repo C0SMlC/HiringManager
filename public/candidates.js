@@ -120,7 +120,7 @@ function viewResume(applicantId) {
 }
 
 // Download resume
-function downloadResume(applicantId) {
+function downloadResume(applicantId, applicantName) {
   fetchResume(applicantId)
     .then((resumeData) => {
       const blob = new Blob([new Uint8Array(resumeData.data)], {
@@ -130,7 +130,7 @@ function downloadResume(applicantId) {
       const a = document.createElement("a");
       a.style.display = "none";
       a.href = url;
-      a.download = `DELTAIOT_${applicantId}_RESUME.pdf`;
+      a.download = `DELTAIOT_${applicantName}_RESUME.pdf`;
       document.body.appendChild(a);
       a.click();
       window.URL.revokeObjectURL(url);
@@ -586,9 +586,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 <td><button class="action-button" onclick="viewResume(${
                   candidate.applicantId
                 })">View</button></td>
-                <td><button class="action-button" onclick="downloadResume(${
-                  candidate.applicantId
-                })">Download</button></td>
+             <td><button class="action-button" onclick="downloadResume(${candidate.applicantId}, '${candidate.applicantName}')">Download</button></td>
+
                 <td><button class="action-button" onclick="exportCandidate(${
                   candidate.applicantId
                 })">Export</button></td>`;

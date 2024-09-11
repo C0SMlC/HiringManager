@@ -1,124 +1,167 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JobEntry - Open Positions</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Keller - Find Your Next Job</title>
     <style>
-        body, html {
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-        }
-        .header {
-            background-color: white;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            padding: 15px 5%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .logo {
-            color: #0d6efd;
-            font-size: 24px;
-            font-weight: bold;
-        }
-        .container {
-            max-width: 800px;
-            margin: 40px auto;
-            padding: 0 20px;
-        }
-        .job-card {
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-        .job-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-        .job-title-container {
-            flex-grow: 1;
-        }
-        .job-title {
-            font-size: 18px;
-            font-weight: bold;
-            margin: 0 0 5px 0;
-        }
-        .job-id {
-            color: #666;
-            font-size: 14px;
-        }
-        .job-description {
-            color: #333;
-            font-size: 14px;
-            margin-bottom: 15px;
-        }
-        .apply-btn {
-            background-color: #0d6efd;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            white-space: nowrap;
-        }
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        line-height: 1.6;
+      }
+      .container {
+        width: 80%;
+        margin: 0 auto;
+        overflow: hidden;
+      }
+      header {
+        background: #f4f4f4;
+        padding: 1rem 0;
+      }
+      nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      nav ul {
+        display: flex;
+        list-style: none;
+      }
+      nav ul li {
+        padding: 0 10px;
+      }
+      .hero {
+        background: url("https://via.placeholder.com/1500x500") no-repeat center
+          center/cover;
+        height: 400px;
+        color: #fff;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+      .hero h1 {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+      }
+      .search-form {
+        display: flex;
+        justify-content: center;
+        margin-top: 2rem;
+      }
+      .search-form input,
+      .search-form select {
+        padding: 0.5rem;
+        margin-right: 0.5rem;
+        border: 1px solid #ddd;
+      }
+      .search-form button {
+        padding: 0.5rem 1rem;
+        background: #007bff;
+        color: #fff;
+        border: none;
+        cursor: pointer;
+      }
+      .jobs {
+        padding: 2rem 0;
+      }
+      .job-card {
+        background: #f9f9f9;
+        border: 1px solid #ddd;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .job-card img {
+        width: 50px;
+        height: 50px;
+        margin-right: 1rem;
+      }
+      .job-info {
+        flex: 1;
+      }
+      .job-type {
+        background: #28a745;
+        color: #fff;
+        padding: 0.2rem 0.5rem;
+        border-radius: 3px;
+        font-size: 0.8rem;
+      }
+      .btn__container {
+        display: inline-block;
+        text-align: center;
+        width: 100%;
+      }
+
+      .view__job {
+        width: 8.2rem;
+        height: 2.6rem;
+        margin-bottom: 2.6rem;
+        background-color: #4f75ff;
+        border: none;
+      }
     </style>
-</head>
-<body>
-    <header class="header">
-        <div class="logo">Delta IoT Solutions</div>
+  </head>
+  <body>
+    <header>
+      <div class="container">
+        <nav>
+          <h1>Delta IOT Solutions</h1>
+          <ul>
+            <!-- <li>Home</li> -->
+          </ul>
+        </nav>
+      </div>
     </header>
 
-    <div class="container" id="jobContainer">
-        <!-- Job listings will be dynamically added here -->
+    <section class="hero">
+      <h1>Find Your Next Job</h1>
+      <p>More than 1,524 jobs listed here.</p>
+      <form class="search-form">
+        <input type="text" placeholder="e.g. web design" />
+        <input type="text" placeholder="Location" />
+        <select>
+          <option value="">Any category</option>
+        </select>
+        <button type="submit">Search</button>
+      </form>
+    </section>
+
+    <section class="jobs container">
+      <h2>Latest Jobs</h2>
+      <p>Here's the most recent jobs listed on the website.</p>
+    </section>
+    <div class="btn__container">
+      <button class="view__job">View All Jobs</button>
     </div>
-
-    <script>
-        function createJobCard(job) {
-            return `
-                <div class="job-card">
-                    <div class="job-header">
-                        <div class="job-title-container">
-                            <h2 class="job-title">${job.positionTitle}</h2>
-                            <div class="job-id">Position ID: ${job.positionId}</div>
-                        </div>
-                        <button class="apply-btn" onclick="applyForJob('${job.positionId}', '${encodeURIComponent(job.positionTitle)}')">Apply Now</button>
+  </body>
+  <script>
+    fetch("/api/positions")
+      .then((response) => response.json())
+      .then((jobs) => {
+        const jobsContainer = document.querySelector(".jobs");
+        jobs.forEach((job) => {
+          const jobCard = document.createElement("div");
+          jobCard.className = "job-card";
+          jobCard.id = job.positionId;
+          jobCard.innerHTML = `
+                    <div class="job-info">
+                        <h3>${job.positionTitle}</h3>
                     </div>
-                </div>
-            `;
-        }
+                    <span class="job-type">Full Time</span>
+                `;
+          jobsContainer.appendChild(jobCard);
 
-        function loadJobs() {
-            fetch('/api/positions', {
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
-                }
-            })
-            .then(response => response.json())
-            .then(jobs => {
-                const jobContainer = document.getElementById('jobContainer');
-                jobContainer.innerHTML = jobs.map(createJobCard).join('');
-            })
-            .catch(error => {
-                console.error('Error fetching positions:', error);
-                document.getElementById('jobContainer').innerHTML = '<p>Error loading job positions. Please try again later.</p>';
-            });
-        }
-
-        function applyForJob(positionId, positionTitle) {
-            // Redirect to the application form page
-            window.location.href = `applyPosition.html?id=${positionId}&title=${positionTitle}`;
-        }
-
-        // Load jobs when the page loads
-        window.onload = loadJobs;
-    </script>
-</body>
+          jobCard.addEventListener("click", () => {
+            window.location.href = `http://127.0.0.1:3001/position.html/${job.positionId}`;
+          });
+        });
+      })
+      .catch((error) => console.error("Error fetching jobs:", error));
+  </script>
 </html>

@@ -269,6 +269,7 @@ app.get(
     op.manager,
     op.openPositions,
     op.experienceRequired,
+    op.status,
     GROUP_CONCAT(
       CASE 
         WHEN at.status = 'OPEN' THEN CONCAT(at.applicantName, '(', at.stage, ')')
