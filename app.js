@@ -532,9 +532,9 @@ app.post("/updatePosition", authenticateToken, (req, res) => {
     } else {
       // Position does not exist, insert new position
       const insertSql = `
-                  INSERT INTO OpenPositions (positionId, positionTitle, manager, openPositions, experienceRequired, jobdescription, status) 
-                  VALUES (?, ?, ?, ?, ?, ?, ?)
-              `;
+    INSERT INTO OpenPositions (positionId, positionTitle, manager, openPositions, experienceRequired, jobdescription, status, created_at) 
+    VALUES (?, ?, ?, ?, ?, ?, ?, NOW())
+`;
       db.query(
         insertSql,
         [
@@ -563,7 +563,7 @@ app.post("/updatePosition", authenticateToken, (req, res) => {
 
 app.get("/api/positions", (req, res) => {
   const sql =
-    "SELECT positionId, positionTitle, jobdescription FROM OpenPositions where status = 'active'";
+    "SELECT positionId, positionTitle, jobdescription, created_at FROM OpenPositions where status = 'active'";
   db.query(sql, (err, results) => {
     if (err) {
       console.error("Error fetching positions: " + err.message);
@@ -589,7 +589,8 @@ app.get("/positions/count", (req, res) => {
 app.get("/positions/:positionId", (req, res) => {
   const { positionId } = req.params;
   // console.log(positionId)
-  const sql = "SELECT jobdescription FROM OpenPositions WHERE positionId = ?";
+  const sql =
+    "SELECT jobdescription, created_at FROM OpenPositions WHERE positionId = ?";
   db.query(sql, [positionId], (err, results) => {
     if (err) {
       console.error("Error fetching count: " + err.message);
