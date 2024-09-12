@@ -344,6 +344,8 @@ document.addEventListener("DOMContentLoaded", () => {
     candidateList.innerHTML = "";
 
     filteredCandidates.forEach((candidate) => {
+      if (candidate.status === "CLOSED") return;
+
       const row = document.createElement("tr");
 
       let profileOwnerCell = `<td><input type="text" id="profileOwner-${
@@ -586,7 +588,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 <td><button class="action-button" onclick="viewResume(${
                   candidate.applicantId
                 })">View</button></td>
-             <td><button class="action-button" onclick="downloadResume(${candidate.applicantId}, '${candidate.applicantName}')">Download</button></td>
+             <td><button class="action-button" onclick="downloadResume(${
+               candidate.applicantId
+             }, '${candidate.applicantName}')">Download</button></td>
 
                 <td><button class="action-button" onclick="exportCandidate(${
                   candidate.applicantId

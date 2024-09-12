@@ -48,6 +48,7 @@ CREATE TABLE IF NOT EXISTS OpenPositions (
     experienceRequired VARCHAR(255),
     jobdescription  TEXT NOT NULL,
     status ENUM('active', 'closed', 'hold') NOT NULL
+    created_at DATETIME DEFAULT NOW();
 );
 
 CREATE TABLE IF NOT EXISTS AssignedApplicants (

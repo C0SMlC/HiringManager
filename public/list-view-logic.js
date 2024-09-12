@@ -53,20 +53,19 @@ document.addEventListener("DOMContentLoaded", () => {
     candidatesToRender.forEach((candidate) => {
       const row = document.createElement("tr");
       row.innerHTML = `
-                    <td>${candidate.applicantName}</td>
-                    <td>${candidate.applicantEmail}</td>
-                    <td>${candidate.applicantPhone}</td>
-                    <td>${candidate.dateApplied}</td>
-                    <td>${candidate.positionTitle}</td>
-                    <td>${candidate.stage}</td>
-                    ${
-                      showDateOfJoining
-                        ? `<td>${
-                            formatDate(candidate.dateOfOffer) || "N/A"
-                          }</td>`
-                        : ""
-                    }
-                `;
+        <td>${candidate.applicantName}</td>
+        <td>${candidate.applicantEmail}</td>
+        <td>${candidate.applicantPhone}</td>
+        <td>${candidate.dateApplied}</td>
+        <td>${candidate.positionTitle}</td>
+        <td>${candidate.stage}</td>
+        ${
+          showDateOfJoining
+            ? `<td>${formatDate(candidate.dateOfOffer) || "N/A"}</td>`
+            : ""
+        }
+        <td>${candidate.notes || "N/A"}</td> <!-- New Notes column -->
+      `;
       candidateList.appendChild(row);
     });
   }

@@ -561,6 +561,11 @@ app.post("/updatePosition", authenticateToken, (req, res) => {
   });
 });
 
+// Function to trim the position title
+function trimPositionTitle(title) {
+  return title.split("-")[0].trim();
+}
+
 app.get("/api/positions", (req, res) => {
   const sql =
     "SELECT positionId, positionTitle, jobdescription, created_at FROM OpenPositions where status = 'active'";
@@ -570,7 +575,33 @@ app.get("/api/positions", (req, res) => {
       return res.status(500).json({ message: "Error fetching positions" });
     }
 
-    res.status(200).json(results);
+    // Modify the positionTitle in the results
+    const modifiedResults = results.map((result) => ({
+      ...result,
+      positionTitle: trimPositionTitle(result.positionTitle),
+    }));
+
+    res.status(200).json(modifiedResults);
+  });
+});
+
+app.get("/positions/:positionId", (req, res) => {
+  const { positionId } = req.params;
+  const sql =
+    "SELECT positionTitle, jobdescription, created_at FROM OpenPositions WHERE positionId = ?";
+  db.query(sql, [positionId], (err, results) => {
+    if (err) {
+      console.error("Error fetching position: " + err.message);
+      return res.status(500).json({ message: "Error fetching position" });
+    }
+
+    // Modify the positionTitle in the results
+    const modifiedResults = results.map((result) => ({
+      ...result,
+      positionTitle: trimPositionTitle(result.positionTitle),
+    }));
+
+    res.status(200).json(modifiedResults);
   });
 });
 
@@ -582,20 +613,6 @@ app.get("/positions/count", (req, res) => {
       return res.status(500).json({ message: "Error fetching positions" });
     }
 
-    res.status(200).json(results);
-  });
-});
-
-app.get("/positions/:positionId", (req, res) => {
-  const { positionId } = req.params;
-  // console.log(positionId)
-  const sql =
-    "SELECT jobdescription, created_at FROM OpenPositions WHERE positionId = ?";
-  db.query(sql, [positionId], (err, results) => {
-    if (err) {
-      console.error("Error fetching count: " + err.message);
-      return res.status(500).json({ message: "Error fetching positions" });
-    }
     res.status(200).json(results);
   });
 });
