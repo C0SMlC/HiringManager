@@ -56,7 +56,7 @@ router.post("/login", (req, res) => {
     const token = jwt.sign(
       { username: user.username, role: user.role },
       config.secret,
-      { expiresIn: "30d" }
+      { expiresIn: "365d" }
     );
 
     // Update the loggedInTime in the database
