@@ -88,6 +88,8 @@
           <thead>
             <tr>
               <th>Position ID</th>
+              <th>Created At</th>
+              <th>Closed At</th>
               <th>Position Title</th>
               <th>Job Description</th>
               <th>Positions</th>
@@ -161,6 +163,8 @@
 
               row.innerHTML = `
       <td>${position.positionId}</td>
+      <td>${position.created_at}</td>
+      <td>${position.closed_at || "None"}</td>
       <td>${position.positionTitle}</td>
       <td>
         <div class="job-description-container">
@@ -211,16 +215,16 @@
 
                 // Make cells editable
                 cells[1].contentEditable = true;
-                cells[2].querySelector(
+                cells[4].querySelector(
                   ".job-description-content"
                 ).contentEditable = true;
 
                 // Change openPositions to an input field
-                const openPositionsValue = cells[3].innerText;
-                cells[3].innerHTML = `<input type="number" value="${openPositionsValue}" min="1">`;
+                const openPositionsValue = cells[5].innerText;
+                cells[5].innerHTML = `<input type="number" value="${openPositionsValue}" min="1">`;
 
-                cells[4].contentEditable = true;
-                cells[6].querySelector(".status-dropdown").disabled = false;
+                cells[6].contentEditable = true;
+                cells[8].querySelector(".status-dropdown").disabled = false;
 
                 // Show "Done" button and hide "Edit" button
                 this.style.display = "none";
@@ -233,22 +237,31 @@
               btn.addEventListener("click", function () {
                 const row = this.closest("tr");
                 const positionId = this.getAttribute("data-position-id");
-                const positionTitle = row.children[1].innerText.trim();
-                const description = row.children[2]
+                const positionTitle = row.children[3].innerText.trim();
+                const description = row.children[4]
                   .querySelector(".job-description-content")
                   .innerText.trim();
                 const openPositions =
-                  row.children[3].querySelector("input").value;
-                const experienceRequired = row.children[4].innerText.trim();
+                  row.children[5].querySelector("input").value;
+                const experienceRequired = row.children[6].innerText.trim();
                 const status = row.querySelector(".status-dropdown").value;
 
+                console.log(status);
+
+                let closed_at = null;
+
+                if (status === "closed" || status === "hold") {
+                  const date = new Date();
+                  closed_at = date.toISOString().slice(0, 19).replace("T", " "); // Format to 'YYYY-MM-DD HH:MM:SS'
+                }
+
                 // Disable editing
-                row.children[1].contentEditable = false;
-                row.children[2].querySelector(
+                row.children[3].contentEditable = false;
+                row.children[4].querySelector(
                   ".job-description-content"
                 ).contentEditable = false;
-                row.children[3].innerHTML = openPositions; // Change back to text
-                row.children[4].contentEditable = false;
+                row.children[5].innerHTML = openPositions; // Change back to text
+                row.children[6].contentEditable = false;
                 row.querySelector(".status-dropdown").disabled = true;
 
                 // Show "Edit" button and hide "Done" button
@@ -268,7 +281,8 @@
                     description,
                     openPositions,
                     experienceRequired,
-                    status: status,
+                    status,
+                    closed_at,
                   }),
                 })
                   .then((response) => {

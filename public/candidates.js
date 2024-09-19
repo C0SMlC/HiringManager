@@ -36,7 +36,7 @@ function compareDates(date1, date2) {
 
 // Fetch positions
 function fetchPositions() {
-  return fetch("/api/positions", {
+  return fetch("/api/positions/all", {
     method: "GET",
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -525,6 +525,17 @@ document.addEventListener("DOMContentLoaded", () => {
                               ? "selected"
                               : ""
                           }>Final Discussion</option>
+
+                          <option value="Shortlisted" ${
+                            candidate.stage === "Shortlisted" ? "selected" : ""
+                          }>Shortlisted</option>
+
+                          <option value="Not Intrested" ${
+                            candidate.stage === "Not Intrested"
+                              ? "selected"
+                              : ""
+                          }>Not Intrested</option>
+
                           <option value="About To Join" ${
                             candidate.stage === "About To Join"
                               ? "selected"

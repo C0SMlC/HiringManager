@@ -149,6 +149,7 @@ function processData(data) {
     declined: 0,
     aboutToJoin: 0,
     exceedingLimit: 0,
+    shortlisted: 0,
   };
 
   data.forEach((candidate) => {
@@ -167,6 +168,9 @@ function processData(data) {
       } else if (candidate.stage === "Buffer List") {
         lists.buffer++;
       }
+    }
+    if (candidate.stage === "Shortlisted") {
+      lists.shortlisted++;
     }
 
     if (candidate.stage === "Exceeding Limit") {
@@ -191,6 +195,7 @@ function processData(data) {
     activeApplicants: lists.active,
     rejectedApplicants: lists.rejected,
     joinedApplicants: lists.joined,
+    shortlistedApplicants: lists.shortlisted,
   };
 
   return {
@@ -203,11 +208,14 @@ function processData(data) {
 
 function updateLists(lists) {
   // document.getElementById('activeCount').textContent = lists.active;
-  document.getElementById("exceedingLimitCount").textContent = lists.exceedingLimit;
+  document.getElementById("exceedingLimitCount").textContent =
+    lists.exceedingLimit;
   document.getElementById("bufferCount").textContent = lists.buffer;
   document.getElementById("closedCount").textContent = lists.closed;
   document.getElementById("declinedCount").textContent = lists.declined;
   document.getElementById("aboutToJoinCount").textContent = lists.aboutToJoin;
+  document.getElementById("shortListedCount").textContent = lists.shortlisted;
+
 }
 
 let activeStagesChart, inactiveStagesChart;

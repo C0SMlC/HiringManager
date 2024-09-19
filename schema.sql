@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS ApplicantTracking (
     positionTitle VARCHAR(255) NOT NULL,
     positionId VARCHAR(50) NOT NULL,
     status ENUM('OPEN', 'CLOSED') NOT NULL,
-    stage ENUM('App. Recd.', 'Not Answering', 'Joined', 'About To Join', 'Phone Screen', 'L1', 'L2_Internal','Yet to share','Shared with client', 'L1_Client','L2_Client','Exceeding Limit','Final Discussion', 'HOLD', 'Buffer List', 'Rejected','Declined'),
+    stage ENUM('App. Recd.', 'Not Answering','Shortlisted', 'Not Intrested', 'Joined', 'About To Join', 'Phone Screen', 'L1', 'L2_Internal','Yet to share','Shared with client', 'L1_Client','L2_Client','Exceeding Limit','Final Discussion', 'HOLD', 'Buffer List', 'Rejected','Declined'),
     interviewer VARCHAR(255),
     dateOfPhoneScreen DATE,
     interviewDate DATE,
@@ -49,6 +49,7 @@ CREATE TABLE IF NOT EXISTS OpenPositions (
     jobdescription  TEXT NOT NULL,
     status ENUM('active', 'closed', 'hold') NOT NULL
     created_at DATETIME DEFAULT NOW();
+    closed_at DATE;
 );
 
 CREATE TABLE IF NOT EXISTS AssignedApplicants (

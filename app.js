@@ -69,13 +69,13 @@ async function sendEmailToAdmin(to, subject, text) {
   const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
-      user: "tp291101@gmail.com",
-      pass: "hnmq vbwm rysa fdre",
+      user: "deltaiotsolution@gmail.com",
+      pass: "pydj hznu faot difj",
     },
   });
 
   const mailOptions = {
-    from: "tp291101@gmail.com",
+    from: "deltaiotsolution@gmail.com",
     to,
     subject,
     text,
@@ -270,6 +270,8 @@ app.get(
     op.openPositions,
     op.experienceRequired,
     op.status,
+    op.created_at,
+    op.closed_at,
     GROUP_CONCAT(
       CASE 
         WHEN at.status = 'OPEN' THEN CONCAT(at.applicantName, '(', at.stage, ')')
@@ -480,6 +482,7 @@ app.post("/updatePosition", authenticateToken, (req, res) => {
     status,
     openPositions,
     experienceRequired,
+    closed_at,
   } = req.body;
 
   // console.log(
@@ -507,7 +510,8 @@ app.post("/updatePosition", authenticateToken, (req, res) => {
                       jobdescription = ?,
                       status = ?,
                       openPositions = ?,
-                      experienceRequired = ?
+                      experienceRequired = ?,
+                      closed_at = ?
                   WHERE positionId = ?
               `;
       db.query(
@@ -518,6 +522,7 @@ app.post("/updatePosition", authenticateToken, (req, res) => {
           status,
           openPositions,
           experienceRequired,
+          closed_at,
           positionId,
         ],
         (err, result) => {
@@ -565,6 +570,25 @@ app.post("/updatePosition", authenticateToken, (req, res) => {
 function trimPositionTitle(title) {
   return title.split("-")[0].trim();
 }
+
+app.get("/api/positions/all", (req, res) => {
+  const sql =
+    "SELECT positionId, positionTitle, jobdescription, created_at FROM OpenPositions where status = 'active'";
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error("Error fetching positions: " + err.message);
+      return res.status(500).json({ message: "Error fetching positions" });
+    }
+
+    // Modify the positionTitle in the results
+    const modifiedResults = results.map((result) => ({
+      ...result,
+      positionTitle: trimPositionTitle(result.positionTitle),
+    }));
+
+    res.status(200).json(modifiedResults);
+  });
+});
 
 app.get("/api/positions", (req, res) => {
   const sql =
