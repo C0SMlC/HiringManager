@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 document.addEventListener("DOMContentLoaded", function () {
   let count = 0;
-  fetch("/positions/count", {
+  fetch("/api/positions/count", {
     headers: {
       Authorization: "Bearer " + localStorage.getItem("token"),
     },
@@ -24,7 +24,6 @@ document.addEventListener("DOMContentLoaded", function () {
     })
     .then((data) => {
       data.map((item) => (count += item.openPositions));
-      console.log("Fetched data hiiii:", count);
       // updatePositions(data);
       document.querySelector(".activePostionscount").textContent = count;
     });
@@ -215,7 +214,6 @@ function updateLists(lists) {
   document.getElementById("declinedCount").textContent = lists.declined;
   document.getElementById("aboutToJoinCount").textContent = lists.aboutToJoin;
   document.getElementById("shortListedCount").textContent = lists.shortlisted;
-
 }
 
 let activeStagesChart, inactiveStagesChart;

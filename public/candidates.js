@@ -318,7 +318,11 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     })
     .then(() => {
-      return fetch("/candidates", {
+      let apiRoute = "/candidates";
+      if (isAdmin) apiRoute = apiRoute + "?isgetAll=true";
+
+      console.log(apiRoute);
+      return fetch(apiRoute, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -344,7 +348,7 @@ document.addEventListener("DOMContentLoaded", () => {
     candidateList.innerHTML = "";
 
     filteredCandidates.forEach((candidate) => {
-      if (candidate.status === "CLOSED") return;
+      if (!isAdmin && candidate.status === "CLOSED") return;
 
       const row = document.createElement("tr");
 

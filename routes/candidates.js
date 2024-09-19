@@ -231,9 +231,39 @@ router.put("/:applicantId", authenticateToken, (req, res) => {
     notes,
   } = req.body;
 
+  // Validate stage
+  const validStages = [
+    "App. Recd.",
+    "Not Answering",
+    "Shortlisted",
+    "Not Intrested",
+    "Joined",
+    "About To Join",
+    "Phone Screen",
+    "L1",
+    "L2_Internal",
+    "Yet to share",
+    "Shared with client",
+    "L1_Client",
+    "L2_Client",
+    "Exceeding Limit",
+    "Final Discussion",
+    "HOLD",
+    "Buffer List",
+    "Rejected",
+    "Declined",
+  ];
+
+  if (!validStages.includes(stage)) {
+    return res.status(400).json({
+      message: "Invalid stage value",
+      validStages: validStages,
+    });
+  }
+
   let updateQuery = `
     UPDATE ApplicantTracking
-    SET profileOwner = ?, 
+    SET profileOwner = ?,
         applicantName = ?,
         applicantPhone = ?,
         applicantEmail = ?,
@@ -250,12 +280,12 @@ router.put("/:applicantId", authenticateToken, (req, res) => {
         dateApplied = ?,
         positionTitle = ?,
         positionId = ?,
-        status = ?, 
+        status = ?,
         stage = ?,
         interviewer = ?,
-        interviewDate = ?, 
-        dateOfOffer = ?, 
-        reasonNotExtending = ?, 
+        interviewDate = ?,
+        dateOfOffer = ?,
+        reasonNotExtending = ?,
         notes = ?
     WHERE applicantId = ?
   `;
@@ -288,8 +318,6 @@ router.put("/:applicantId", authenticateToken, (req, res) => {
     applicantId,
   ];
 
-  // console.log(profileOwner);
-
   // If the user is not an admin, add a condition to only update their own candidates
   if (req.user.role !== "admin") {
     updateQuery += " AND profileOwner = ?";
@@ -298,8 +326,11 @@ router.put("/:applicantId", authenticateToken, (req, res) => {
 
   db.query(updateQuery, queryParams, (err, result) => {
     if (err) {
-      console.error("Error: " + err.message);
-      return res.status(500).json({ message: "Error updating candidate" });
+      console.error("Error updating candidate:", err);
+      return res.status(500).json({
+        message: "Error updating candidate",
+        error: err.message,
+      });
     }
     if (result.affectedRows === 0) {
       return res.status(404).json({
@@ -307,7 +338,10 @@ router.put("/:applicantId", authenticateToken, (req, res) => {
           "Candidate not found or you don't have permission to update this candidate",
       });
     }
-    res.json({ message: "Candidate updated successfully" });
+    res.json({
+      message: "Candidate updated successfully",
+      updatedFields: req.body,
+    });
   });
 });
 

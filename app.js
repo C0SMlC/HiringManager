@@ -629,14 +629,13 @@ app.get("/positions/:positionId", (req, res) => {
   });
 });
 
-app.get("/positions/count", (req, res) => {
+app.get("/api/positions/count", (req, res) => {
   const sql = "SELECT openPositions FROM OpenPositions WHERE status = 'active'";
   db.query(sql, (err, results) => {
     if (err) {
       console.error("Error fetching count: " + err.message);
       return res.status(500).json({ message: "Error fetching positions" });
     }
-
     res.status(200).json(results);
   });
 });
