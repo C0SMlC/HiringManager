@@ -37,7 +37,17 @@ function fetchDashboardData() {
   })
     .then((response) => {
       if (!response.ok) {
-        throw new Error("Network response was not ok");
+        // If response is not ok, parse it to check for redirect
+        return response.json().then((err) => {
+          if (err.redirect) {
+            // Perform redirect
+            window.location.href = err.redirect;
+            // Throw an error to stop further processing
+            throw new Error("Redirecting to login");
+          } else {
+            alert("Failed to load dashboard data. Please try again later.");
+          }
+        });
       }
       return response.json();
     })
@@ -50,19 +60,6 @@ function fetchDashboardData() {
     })
     .catch((error) => {
       console.error("Error fetching dashboard data:", error);
-
-       // If response is not ok, parse it to check for redirect
-      return response.json().then(err => {
-        if (err.redirect) {
-              // Perform redirect
-              window.location.href = err.redirect;
-              // Throw an error to stop further processing
-              throw new Error('Redirecting to login');
-          }
-         else{
-           alert("Failed to load dashboard data. Please try again later.");
-         }
-      
     });
 }
 
