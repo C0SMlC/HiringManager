@@ -4,7 +4,6 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Applicant Form</title>
-    <!-- <link rel="stylesheet" href="style.css"> -->
     <style>
       body {
         font-family: "Arial", sans-serif;
@@ -64,6 +63,10 @@
         color: #34495e;
         text-align: left;
       }
+      .form-field label span {
+        color: red; /* Change color to red for the star symbol */
+        margin-left: 5px;
+      }
       .form-field input[type="text"],
       .form-field input[type="email"],
       .form-field input[type="tel"],
@@ -82,12 +85,12 @@
       }
       .form-field input:focus,
       .form-field select:focus {
-        border-color: #3498db;
+        border-color:#007bff;;
         outline: none;
         box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
       }
       .form-field button {
-        background-color: #3498db;
+        background-color: #007bff;;
         color: #fff;
         border: none;
         padding: 14px 20px;
@@ -99,11 +102,10 @@
         font-weight: 600;
       }
       .form-field button:hover {
-        background-color: #2980b9;
+        background-color:#007bff;;
         transform: translateY(-2px);
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
       }
-
       .form-field select,
       .form-field input[readonly] {
         width: 100%;
@@ -114,7 +116,6 @@
         transition: all 0.3s ease;
         box-sizing: border-box;
       }
-
       .form-field input[readonly] {
         background-color: #f8f9fa;
         color: #6c757d;
@@ -126,71 +127,47 @@
       <a href="stats.html" id="statsLink">Home</a>
       <a href="form.html" id="formLink">Candidate Form</a>
       <a href="candidates.html" id="detailsLink">Candidate Details</a>
-      <!-- <a href="stats.html" id="statsLink">Statistics</a> -->
-      <a href="updatePositions.html" id="updatePositionsLink"
-        >Update Positions</a
-      >
+      <a href="updatePositions.html" id="updatePositionsLink">Update Positions</a>
       <a href="positions.html" id="positionsLink">Open Positions</a>
-      <a href="masterCandidates.html" id="masterCandidatesLink"
-        >Master Candidate Details</a
-      >
+      <a href="masterCandidates.html" id="masterCandidatesLink">Master Candidate Details</a>
       <a href="userActivity.html" id="userActivity">User Activity</a>
-      <a href="assignapplicants.html" id="assignApplicantLink"
-        >Assign Applicant</a
-      >
+      <a href="assignapplicants.html" id="assignApplicantLink">Assign Applicant</a>
       <a href="#" id="logoutLink">Logout</a>
     </div>
     <div class="form-container">
       <h2>Applicant Form</h2>
       <form id="applicantForm" enctype="multipart/form-data">
         <div class="form-field">
-          <label for="name">Name:</label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            required
-            placeholder="Enter your full name"
-          />
+          <label for="name">Name:<span>*</span></label>
+          <input type="text" id="name" name="name" required placeholder="Enter your full name" />
         </div>
         <div class="form-field">
-          <label for="email">Email:</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            required
-            placeholder="Enter your email"
-          />
+          <label for="email">Email:<span>*</span></label>
+          <input type="email" id="email" name="email" required placeholder="Enter your email" />
         </div>
         <div class="form-field">
-          <label for="phone">Phone:</label>
-          <input
-            type="tel"
-            id="phone"
-            name="phone"
-            required
-            placeholder="Enter your phone number"
-          />
+          <label for="phone">Phone:<span>*</span></label>
+          <input type="tel" id="phone" name="phone" required placeholder="Enter your phone number" />
         </div>
         <div class="form-field">
-          <label for="assignTo">Assign To:</label>
+          <label for="assignTo">Assign To:<span>*</span></label>
           <select id="assignTo" name="assignTo" required>
             <option value="">Select User</option>
           </select>
         </div>
         <div class="form-field">
-          <label for="position">Position:</label>
+          <label for="position">Position:<span>*</span></label>
           <select id="position" name="position" required>
             <option value="">Select Position</option>
           </select>
         </div>
         <div class="form-field">
-          <label for="positionId">Position ID:</label>
+          <label for="positionId">Position ID:<span style="color: red;">*</span></label>
           <input type="text" id="positionId" name="positionId" readonly />
         </div>
+        
         <div class="form-field">
-          <label for="resume">Resume (PDF only):</label>
+          <label for="resume">Resume (PDF only):<span>*</span></label>
           <input type="file" id="resume" name="resume" accept=".pdf" required />
         </div>
         <div class="form-field">
