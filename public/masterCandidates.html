@@ -9,132 +9,136 @@
     <link rel="stylesheet" href="style.css" />
     <style>
       /* Ensure the forms-container takes up the full height of its parent */
-.forms-container {
-  height: calc(100vh - 60px); /* Adjust based on your navbar height */
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  padding: 20px;
-}
+      .forms-container {
+        height: calc(100vh - 60px); /* Adjust based on your navbar height */
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        padding: 20px;
+      }
 
-/* Style for the header and filter section */
-.header-filter-section {
-  flex-shrink: 0;
-}
+      /* Style for the header and filter section */
+      .header-filter-section {
+        flex-shrink: 0;
+      }
 
-/* Make the table container take up all available space */
-.view {
-  margin: auto;
-  width: 100%; /* Changed to 100% to take full width */
-}
+      /* Make the table container take up all available space */
+      .view {
+        margin: auto;
+        width: 100%; /* Changed to 100% to take full width */
+      }
 
-.wrapper {
-  position: relative;
-  overflow: auto;
-  border: 1px solid black;
-  white-space: nowrap;
-}
+      .wrapper {
+        position: relative;
+        overflow: scroll;
+        border: 1px solid black;
+        white-space: nowrap;
+      }
 
-/* Adjust sticky column widths */
-.sticky-col {
-  position: -webkit-sticky;
-  position: sticky;
-  background-color: white;
-}
+      /* Adjust sticky column widths */
+      .sticky-col {
+        position: -webkit-sticky;
+        position: sticky;
+        background-color: white;
+      }
 
-.first-col {
-  width: 150px; /* Increased width */
-  min-width: 150px; /* Increased min-width */
-  max-width: 150px; /* Increased max-width */
-  left: 0px;
-}
+      .first-col {
+        width: 150px; /* Increased width */
+        min-width: 150px; /* Increased min-width */
+        max-width: 150px; /* Increased max-width */
+        left: 0px;
+      }
 
-.second-col {
-  width: 150px; /* Increased width */
-  min-width: 150px; /* Increased min-width */
-  max-width: 150px; /* Increased max-width */
-  left: 120px; /* Updated left value */
-}
+      .second-col {
+        width: 150px; /* Increased width */
+        min-width: 150px; /* Increased min-width */
+        max-width: 150px; /* Increased max-width */
+        left: 120px; /* Updated left value */
+      }
 
-th.first-col {
-  background-color: #f2f2f2; /* Change this to the desired background color */
-}
+      th.first-col {
+        background-color: #f2f2f2; /* Change this to the desired background color */
+      }
 
-th.second-col {
-  background-color: #f2f2f2; /* Change this to the desired background color */
-}
+      th.second-col {
+        background-color: #f2f2f2; /* Change this to the desired background color */
+      }
 
-/* Center text in all headers and table data cells */
-th, td {
-  padding: 10px; /* Add padding for better spacing */
-  text-align: center; /* Center text */
-}
+      /* Center text in all headers and table data cells */
+      th,
+      td {
+        padding: 10px; /* Add padding for better spacing */
+        text-align: center; /* Center text */
+      }
 
-/* Floating scrollbar styles */
-.floating-scrollbar {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 20px; /* Height of the scrollbar */
-  background-color: rgba(242, 242, 242, 0.9); /* Semi-transparent background */
-  overflow-x: auto;
-  overflow-y: hidden;
-  z-index: 1000;
-}
+      /* Create a floating container for the horizontal scrollbar */
+      .floating-scrollbar {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 20px; /* Height of the scrollbar */
+        background-color: rgba(
+          242,
+          242,
+          242,
+          0.9
+        ); /* Semi-transparent background */
+        overflow-x: auto;
+        overflow-y: hidden;
+        z-index: 1000;
+      }
 
-/* Create a spacer element to match the width of the table */
-.scrollbar-spacer {
-  height: 1px; /* Minimal height */
-  width: 100%; /* Will be set dynamically to match table width */
-}
+      /* Create a spacer element to match the width of the table */
+      .scrollbar-spacer {
+        height: 1px; /* Minimal height */
+        width: 100%; /* Will be set dynamically to match table width */
+      }
 
-/* Hide the default scrollbar for WebKit browsers */
-.table-wrapper::-webkit-scrollbar {
-  display: none;
-}
+      /* Hide the default scrollbar for WebKit browsers */
+      .table-wrapper::-webkit-scrollbar {
+        display: none;
+      }
 
-/* Hide the default scrollbar for Firefox */
-.table-wrapper {
-  scrollbar-width: none;
-}
+      /* Hide the default scrollbar for Firefox */
+      .table-wrapper {
+        scrollbar-width: none;
+      }
 
-/* Adjust the filter and search container for better spacing */
-.filter-search-container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-  gap: 10px;
-}
+      /* Adjust the filter and search container for better spacing */
+      .filter-search-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        gap: 10px;
+      }
 
-.filter-container {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
+      .filter-container {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
 
-.export-button {
-  margin-top: 10px;
-  align-self: flex-end;
-  width: 80px;
-  height: 40px;
-  padding: 5px;
-  background-color:#007bff;; 
-  color: white;
-  border: none; 
-  border-radius: 5px;
-  cursor: pointer; 
-  font-size: 12px; 
-}
+      .export-button {
+        margin-top: 10px;
+        align-self: flex-end;
+        width: 80px;
+        height: 40px;
+        padding: 5px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 12px;
+      }
 
-.export-button:hover {
-  background-color:#007bff;;
-}
+      .export-button:hover {
+        background-color: #007bff;
+      }
     </style>
- 
-
   </head>
   <body>
     <div class="navbar">
@@ -142,11 +146,17 @@ th, td {
       <a href="stats.html" id="statsLink">Home</a>
       <a href="form.html" id="formLink">Candidate Form</a>
       <a href="candidates.html" id="detailsLink">Candidate Details</a>
-      <a href="updatePositions.html" id="updatePositionsLink">Update Positions</a>
+      <a href="updatePositions.html" id="updatePositionsLink"
+        >Update Positions</a
+      >
       <a href="positions.html" id="positionsLink">Open Positions</a>
-      <a href="masterCandidates.html" id="masterCandidatesLink">Master Candidate Details</a>
+      <a href="masterCandidates.html" id="masterCandidatesLink"
+        >Master Candidate Details</a
+      >
       <a href="userActivity.html" id="userActivity">User Activity</a>
-      <a href="assignapplicants.html" id="assignApplicantLink">Assign Applicant</a>
+      <a href="assignapplicants.html" id="assignApplicantLink"
+        >Assign Applicant</a
+      >
       <a href="#" id="logoutLink" style="display: none">Logout</a>
     </div>
     <div class="forms-container">
@@ -183,8 +193,8 @@ th, td {
           />
         </div>
       </div>
-<!-- Export Button -->
-<button class="export-button" id="exportButton">Export</button>
+      <!-- Export Button -->
+      <button class="export-button" id="exportButton">Export</button>
       <div class="view">
         <div class="wrapper">
           <table id="table">
@@ -222,8 +232,6 @@ th, td {
           </table>
         </div>
       </div>
-
-      
     </div>
 
     <div class="floating-scrollbar">
