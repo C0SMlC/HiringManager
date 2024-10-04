@@ -1,290 +1,358 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Applicant Tracking Form</title>
-    <link rel="stylesheet" href="style.css" />
-  </head>
-  <body>
-    <div class="navbar">
-      <!-- <a href="index.html" id="homeLink">Home</a> -->
-      <a href="login.html" id="loginLink">Login</a>
-      <a href="stats.html" id="statsLink">Home</a>
-      <a href="form.html" id="formLink">Candidate Form</a>
-      <a href="candidates.html" id="detailsLink">Candidate Details</a>
-      <a href="updatePositions.html" id="updatePositionsLink"
-        >Update Positions</a
-      >
-      <a href="positions.html" id="positionsLink">Open Positions</a>
-      <a href="masterCandidates.html" id="masterCandidatesLink"
-        >Master Candidate Details</a
-      >
-      <a href="userActivity.html" id="userActivity">User Activity</a>
+    <style>
+      body {
+    font-family: "Arial", sans-serif;
+    background-color: #f0f2f5;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
 
-      <a
-        href="assignapplicants.html"
-        id="assignApplicantLink"
-        style="display: none"
-        >Assign Applicant</a
-      >
-      <a href="#" id="logoutLink" style="display: none">Logout</a>
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: #2c3e50;
+    padding: 15px 0;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.navbar a {
+    color: white;
+    text-decoration: none;
+    padding: 10px 15px;
+    margin: 0 5px;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.navbar a:hover {
+    background-color: #34495e;
+    transform: translateY(-2px);
+}
+
+.form-container {
+    background-color: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    padding: 40px;
+    width: 100%;
+    max-width: 450px;
+    margin-top: 100px;
+    text-align: center;
+}
+
+.form-container h2 {
+    color: #2c3e50;
+    margin-bottom: 30px;
+    font-size: 28px;
+}
+
+.form-field {
+    margin-bottom: 25px;
+}
+
+.form-field label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #34495e;
+    text-align: left;
+}
+
+.form-field label span {
+    color: red; /* Change color to red for the star symbol */
+    margin-left: 5px;
+}
+
+.form-field input[type="text"],
+.form-field input[type="email"],
+.form-field input[type="tel"],
+.form-field input[type="date"],
+.form-field input[type="number"],
+.form-field select {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #ecf0f1;
+    border-radius: 10px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+.form-field input[type="file"] {
+    width: 100%;
+    padding: 10px 0;
+}
+
+.form-field input:focus,
+.form-field select:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+}
+.button-container {
+    display: flex;
+    justify-content: center; /* Center buttons horizontally */
+    width: 100%; /* Full width */
+    margin-top: 20px; /* Space above buttons */
+}
+
+.form-field button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 14px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 18px;
+    width: 90%;
+    transition: all 0.3s ease;
+    font-weight: 600;
+    margin: 0 10px; /* Add horizontal margin to space buttons */
+}
+
+/* Optionally, you can specify margins for specific buttons if needed */
+#nextButton {
+    margin-right: 5px; /* Space between Next and Back buttons */
+}
+
+#backButton {
+    margin-right: 5px; /* Space between Back and Clear buttons */
+}
+
+#clearButton {
+    margin-right: 5px; /* Space between Clear and Submit buttons */
+}
+
+
+.form-field button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.form-field select,
+.form-field input[readonly] {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #ecf0f1;
+    border-radius: 10px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+.form-field input[readonly] {
+    background-color: #f8f9fa;
+    color: #6c757d;
+}
+.required::after {
+            content: "*";
+            color: red;
+            margin-left: 5px;
+        }
+
+    </style>
+    
+</head>
+<body>
+    <div class="navbar">
+        <a href="login.html" id="loginLink">Login</a>
+        <a href="stats.html" id="statsLink">Home</a>
+        <a href="form.html" id="formLink">Candidate Form</a>
+        <a href="candidates.html" id="detailsLink">Candidate Details</a>
+        <a href="updatePositions.html" id="updatePositionsLink">Update Positions</a>
+        <a href="positions.html" id="positionsLink">Open Positions</a>
+        <a href="masterCandidates.html" id="masterCandidatesLink">Master Candidate Details</a>
+        <a href="userActivity.html" id="userActivity">User Activity</a>
+        <a href="assignapplicants.html" id="assignApplicantLink" style="display: none">Assign Applicant</a>
+        <a href="#" id="logoutLink" style="display: none">Logout</a>
     </div>
     <div class="form-container">
-      <div id="usernameDisplay"></div>
-      <h2>Applicant Tracking Form</h2>
-      <form id="applicantForm" enctype="multipart/form-data">
-        <div class="form-row">
-          <div class="form-field">
-            <label for="profileOwner">Profile Owner:</label>
-            <input type="text" id="profileOwner" name="profileOwner" readonly />
-          </div>
-          <div class="form-field">
-            <label for="applicantName" class="required">Candidate Name:</label>
-            <input
-              type="text"
-              id="applicantName"
-              name="applicantName"
-              required
-            />
-          </div>
-        </div>
+        <div id="usernameDisplay"></div>
+        <h2>Applicant Tracking Form</h2>
+        <form id="applicantForm" enctype="multipart/form-data">
+            <!-- Section 1 -->
+            <div class="form-row" id="section1">
+                <div class="form-field">
+                    <label for="profileOwner">Profile Owner:</label>
+                    <input type="text" id="profileOwner" name="profileOwner" readonly />
+                </div>
+                <div class="form-field">
+                    <label for="applicantName" class="required">Candidate Name:</label>
+                    <input type="text" id="applicantName" name="applicantName" required />
+                </div>
+                <div class="form-field">
+                    <label for="applicantPhone" class="required">Candidate Phone:</label>
+                    <input type="text" id="applicantPhone" name="applicantPhone" required />
+                </div>
+                <div class="form-field">
+                    <label for="applicantEmail" class="required">Candidate Email:</label>
+                    <input type="email" id="applicantEmail" name="applicantEmail" required />
+                </div>
+                <div class="form-field">
+                    <label for="currentCompany" class="required">Current Company:</label>
+                    <input type="text" id="currentCompany" name="currentCompany" required />
+                </div>
+            </div>
 
-        <div class="form-row">
-          <div class="form-field">
-            <label for="applicantPhone" class="required"
-              >Candidate Phone:</label
-            >
-            <input
-              type="text"
-              id="applicantPhone"
-              name="applicantPhone"
-              required
-            />
-          </div>
-          <div class="form-field">
-            <label for="applicantEmail" class="required"
-              >Candidate Email:</label
-            >
-            <input
-              type="email"
-              id="applicantEmail"
-              name="applicantEmail"
-              required
-            />
-          </div>
-        </div>
+            <!-- Section 2 -->
+            <div class="form-row" id="section2">
+                <div class="form-field">
+                    <label for="candidateWorkLocation" class="required">Candidate Work Location:</label>
+                    <input type="text" id="candidateWorkLocation" name="candidateWorkLocation" required />
+                </div>
+                <div class="form-field">
+                    <label for="nativeLocation" class="required">Native Location:</label>
+                    <input type="text" id="nativeLocation" name="nativeLocation" required />
+                </div>
+                <div class="form-field">
+                    <label for="qualification" class="required">Qualification:</label>
+                    <input type="text" id="qualification" name="qualification" required />
+                </div>
+                <div class="form-field">
+                    <label for="experience" class="required">Experience:</label>
+                    <input type="text" id="experience" name="experience" required />
+                </div>
+                <div class="form-field">
+                    <label for="skills" class="required">Skills:</label>
+                    <input type="text" id="skills" name="skills" required />
+                </div>
+            </div>
 
-        <div class="form-row">
-          <div class="form-field">
-            <label for="currentCompany" class="required"
-              >Current Company:</label
-            >
-            <input
-              type="text"
-              id="currentCompany"
-              name="currentCompany"
-              required
-            />
-          </div>
-          <div class="form-field">
-            <label for="candidateWorkLocation" class="required"
-              >Candidate Work Location:</label
-            >
-            <input
-              type="text"
-              id="candidateWorkLocation"
-              name="candidateWorkLocation"
-              required
-            />
-          </div>
-        </div>
+            <!-- Section 3 -->
+            <div class="form-row" id="section3">
+                <div class="form-field">
+                    <label for="noticePeriod" class="required">Notice Period:</label>
+                    <input type="text" id="noticePeriod" name="noticePeriod" required />
+                </div>
+                <div class="form-field">
+                    <label for="currentctc" class="required">Current CTC:</label>
+                    <input type="number" id="currentctc" name="currentctc" required />
+                </div>
+                <div class="form-field">
+                    <label for="expectedctc" class="required">Expected CTC:</label>
+                    <input type="number" id="expectedctc" name="expectedctc" required />
+                </div>
+                <div class="form-field">
+                    <label for="band">Band:</label>
+                    <select id="band" name="band" required>
+                        <option value="L0">L0</option>
+                        <option value="L1">L1</option>
+                        <option value="L2">L2</option>
+                        <option value="L3">L3</option>
+                        <option value="L4">L4</option>
+                        <option value="CostPlus">CostPlus</option>
+                        <option value="Non-Billable">Non-Billable</option>
+                        <option value="Bench">Bench</option>
+                    </select>
+                </div>
+                <div class="form-field">
+                    <label for="applicantResume" class="required">Applicant Resume:</label>
+                    <input type="file" id="applicantResume" name="applicantResume" required />
+                </div>
+            </div>
 
-        <div class="form-row">
-          <div class="form-field">
-            <label for="nativeLocation" class="required"
-              >Native Location:</label
-            >
-            <input
-              type="text"
-              id="nativeLocation"
-              name="nativeLocation"
-              required
-            />
-          </div>
-          <div class="form-field">
-            <label for="qualification" class="required">Qualification:</label>
-            <input
-              type="text"
-              id="qualification"
-              name="qualification"
-              required
-            />
-          </div>
-        </div>
+            <!-- Section 4 -->
+            <div class="form-row" id="section4">
+                <div class="form-field">
+                    <label for="dateApplied">Date Applied:</label>
+                    <input type="date" id="dateApplied" name="dateApplied" />
+                </div>
+                <div class="form-field">
+                    <label for="positionTitle" class="required">Position Title:</label>
+                    <select id="positionTitle" name="positionTitle" required>
+                        <option value="">Select Position Title</option>
+                    </select>
+                </div>
+                <div class="form-field">
+                    <label for="positionId" class="required">Position ID:</label>
+                    <select id="positionId" name="positionId" required>
+                        <option value="">Select Position ID</option>
+                    </select>
+                </div>
+                <div class="form-field">
+                    <label for="status">Status:</label>
+                    <select id="status" name="status" required>
+                        <option value="OPEN">OPEN</option>
+                        <option value="CLOSED">CLOSED</option>
+                    </select>
+                </div>
+                <div class="form-field">
+                    <label for="stage">Stage:</label>
+                    <select id="stage" name="stage">
+                        <option value="App. Recd.">App. Recd.</option>
+                        <option value="Not Answering">Not Answering</option>
+                        <option value="Phone Screen">Phone Screen</option>
+                        <option value="L1">L1</option>
+                        <option value="L2_Internal">L2_Internal</option>
+                        <option value="Yet to share">Yet to share</option>
+                        <option value="Shared with client">Shared with client</option>
+                        <option value="L1_Client">L1_Client</option>
+                        <option value="L2_Client">L2_Client</option>
+                        <option value="Final Discussion">Final Discussion</option>
+                        <option value="HOLD">HOLD</option>
+                        <option value="Buffer List">Buffer List</option>
+                        <option value="Rejected">Rejected</option>
+                        <option value="Declined">Declined</option>
+                    </select>
+                </div>
+            </div>
 
-        <div class="form-row">
-          <div class="form-field">
-            <label for="experience" class="required">Experience:</label>
-            <input type="text" id="experience" name="experience" required />
-          </div>
-          <div class="form-field">
-            <label for="skills" class="required">Skills:</label>
-            <input type="text" id="skills" name="skills" required />
-          </div>
-        </div>
+            <!-- Section 5 -->
+            <div class="form-row" id="section5">
+                <div class="form-field">
+                    <label for="dateOfPhoneScreen">Date of Phone Screen:</label>
+                    <input type="date" id="dateOfPhoneScreen" name="dateOfPhoneScreen" />
+                </div>
+                <div class="form-field">
+                    <label for="interviewDate">Interview Date:</label>
+                    <input type="date" id="interviewDate" name="interviewDate" />
+                </div>
+                <div class="form-field">
+                    <label for="dateOfOffer">Date of Joining:</label>
+                    <input type="date" id="dateOfOffer" name="dateOfOffer" />
+                </div>
+                <div class="form-field">
+                    <label for="reasonNotExtending">Reason for Not Extending Offer:</label>
+                    <select id="reasonNotExtending" name="reasonNotExtending">
+                        <option value="">Select Value</option>
+                        <option value="Salary Negotiation">Salary Negotiation</option>
+                        <option value="Relocation Issues">Relocation Issues</option>
+                    </select>
+                </div>
+                <div class="form-field">
+                    <label for="notes">Notes:</label>
+                    <input type="text" id="notes" name="notes" />
+                </div>
+            </div>
 
-        <div class="form-row">
-          <div class="form-field">
-            <label for="noticePeriod" class="required">Notice Period:</label>
-            <input type="text" id="noticePeriod" name="noticePeriod" required />
+            <div class="form-field button-container">
+              <button type="button" id="backButton" style="display: none;">Back</button>
+              <button type="button" id="nextButton">Next</button>
+              <button type="button" id="clearButton">Clear</button>
+              <button type="submit" id="submitButton" style="display: none;">Submit</button> <!-- Submit button for the last section -->
           </div>
-          <div class="form-field">
-            <label for="currentctc" class="required">Current CTC:</label>
-            <input type="decimal" id="currentctc" name="currentctc" required />
-          </div>
-        </div>
-
-        <div class="form-row">
-          <div class="form-field">
-            <label for="expectedctc" class="required">Expected CTC:</label>
-            <input
-              type="decimal"
-              id="expectedctc"
-              name="expectedctc"
-              required
-            />
-          </div>
-          <div class="form-field">
-            <label for="band">Band:</label>
-            <select id="band" name="band" required>
-              <option value="L0">L0</option>
-              <option value="L1">L1</option>
-              <option value="L2">L2</option>
-              <option value="L3">L3</option>
-              <option value="L4">L4</option>
-              <option value="CostPlus">CostPlus</option>
-              <option value="Non-Billable">Non-Billable</option>
-              <option value="Bench">Bench</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="form-row">
-          <div class="form-field">
-            <label for="applicantResume" class="required"
-              >Applicant Resume:</label
-            >
-            <input
-              type="file"
-              id="applicantResume"
-              name="applicantResume"
-              required
-            />
-          </div>
-          <div class="form-field">
-            <label for="dateApplied" class="required">Date Applied:</label>
-            <input type="date" id="dateApplied" name="dateApplied" required />
-          </div>
-        </div>
-
-        <div class="form-row">
-          <div class="form-field">
-            <label for="positionTitle" class="required">Position Title:</label>
-            <select id="positionTitle" name="positionTitle" required>
-              <option value="">Select Position Title</option>
-            </select>
-          </div>
-          <div class="form-field">
-            <label for="positionId" class="required">Position ID:</label>
-            <select id="positionId" name="positionId" required>
-              <option value="">Select Position ID</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="form-row">
-          <div class="form-field">
-            <label for="status">Status:</label>
-            <select id="status" name="status" required>
-              <option value="OPEN">OPEN</option>
-              <option value="CLOSED">CLOSED</option>
-            </select>
-          </div>
-          <div class="form-field">
-            <label for="stage">Stage:</label>
-            <select id="stage" name="stage">
-              <option value="App. Recd.">App. Recd.</option>
-              <option value="Not Answering">Not Answering</option>
-              <option value="Phone Screen">Phone Screen</option>
-              <option value="L1">L1</option>
-              <option value="L2_Internal">L2_Internal</option>
-              <option value="Yet to share">Yet to share</option>
-              <option value="Shared with client">Shared with client</option>
-              <option value="L1_Client">L1_Client</option>
-              <option value="L2_Client">L2_Client</option>
-              <option value="Shortlisted">Shortlisted</option>
-              <option value="Not Intrested">Not Intrested</option>
-              <option value="Final Discussion">Final Discussion</option>
-              <option value="HOLD">HOLD</option>
-              <option value="Buffer List">Buffer List</option>
-              <option value="Rejected">Rejected</option>
-              <option value="Declined">Declined</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="form-row">
-          <div class="form-field">
-            <label for="dateOfPhoneScreen">Date of Phone Screen:</label>
-            <input
-              type="date"
-              id="dateOfPhoneScreen"
-              name="dateOfPhoneScreen"
-            />
-          </div>
-          <div class="form-field">
-            <label for="interviewDate">Interview Date:</label>
-            <input type="date" id="interviewDate" name="interviewDate" />
-          </div>
-        </div>
-
-        <div class="form-row">
-          <div class="form-field">
-            <label for="dateOfOffer">Date of Joining:</label>
-            <input type="date" id="dateOfOffer" name="dateOfOffer" />
-          </div>
-          <div class="form-field">
-            <label for="reasonNotExtending"
-              >Reason for Not Extending Offer:</label
-            >
-            <select id="reasonNotExtending" name="reasonNotExtending">
-              <option value="">Select Value</option>
-              <option value="Salary Negotiation">Salary Negotiation</option>
-              <option value="Relocation Issues">Relocation Issues</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="form-row">
-          <div class="form-field full-width">
-            <label for="notes">Notes:</label>
-            <input type="text" id="notes" name="notes" style="height: 200px" />
-          </div>
-        </div>
-
-        <div class="form-row">
-          <div class="form-field full-width">
-            <button type="submit">Submit</button>
-          </div>
-        </div>
-      </form>
+          
+          
+        </form>
     </div>
     <script src="userInfo.js"></script>
     <script src="dashboard.js"></script>
-
     <script>
-      document.addEventListener("DOMContentLoaded", () => {
+  document.addEventListener("DOMContentLoaded", () => {
         const form = document.getElementById("applicantForm");
         if (!(form instanceof HTMLFormElement)) {
           console.error("Applicant form not found");
@@ -644,7 +712,7 @@
             /* if (!response.ok) {
               alert(`An error occurred during submission: ${response.message}`);
             } */
-
+console.log (formData)
             const result = await response.json();
             alert(result.message);
             // Do not reset the form here, as per the original code
@@ -655,10 +723,90 @@
           }
         });
       });
+      
+document.addEventListener('DOMContentLoaded', () => {
+    const username = localStorage.getItem('username');
+    if (username) {
+        const usernameDisplay = document.getElementById('usernameDisplay');
+
+        const profileOwnerField = document.getElementById('profileOwner');
+        if (profileOwnerField) {
+            profileOwnerField.value = username;
+        }
+    }
+});
+
+        let currentSection = 1;
+        const totalSections = 5;
+        
+        function showSection(section) {
+            // Hide all sections
+            for (let i = 1; i <= totalSections; i++) {
+                document.getElementById(`section${i}`).style.display = 'none';
+            }
+            // Show the current section
+            document.getElementById(`section${section}`).style.display = 'block';
+
+            // Manage button visibility
+            document.getElementById('backButton').style.display = section === 1 ? 'none' : 'block';
+            document.getElementById('nextButton').style.display = section === totalSections ? 'none' : 'block';
+            document.getElementById('submitButton').style.display = section === totalSections ? 'block' : 'none';
+        }
+
+        // document.getElementById('nextButton').addEventListener('click', () => {
+        //     if (currentSection < totalSections) {
+        //         currentSection++;
+        //         showSection(currentSection);
+        //     }
+        // });
+        document.getElementById('nextButton').addEventListener('click', () => {
+    const requiredFields = document.querySelectorAll('#section' + currentSection + ' [required]');
+    let allFieldsFilled = true;
+    
+    requiredFields.forEach(field => {
+        if (!field.value.trim()) {
+            allFieldsFilled = false;
+            field.style.borderColor = 'red';  // Highlight missing fields in red
+        } else {
+            field.style.borderColor = '';  // Reset field border if it's filled
+        }
+    });
+
+    if (allFieldsFilled) {
+        currentSection++;
+        showSection(currentSection);
+    } else {
+        alert('Please fill all the required fields.');
+    }
+});
+
+        document.getElementById('backButton').addEventListener('click', () => {
+            if (currentSection > 1) {
+                currentSection--;
+                showSection(currentSection);
+            }
+        });
+        document.getElementById('clearButton').addEventListener('click', () => {
+    const currentSectionElement = document.getElementById(`section${currentSection}`);
+    const inputs = currentSectionElement.querySelectorAll('input[type="text"], input[type="email"], input[type="number"], input[type="date"], select');
+    inputs.forEach(input => {
+        input.value = '';
+    });
+});
+
+        // document.getElementById('clearButton').addEventListener('click', () => {
+        //     const inputs = document.querySelectorAll('input[type="text"], input[type="email"], input[type="number"], input[type="date"], select');
+        //     inputs.forEach(input => {
+        //         input.value = '';
+        //     });
+        // });
+
+        // Show the first section initially
+        showSection(currentSection);
     </script>
-    <script src="hideNav.js"></script>
-    <script src="dashboard.js"></script>
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="socket.js"></script>
-  </body>
+<script src="hideNav.js"></script>
+<script src="dashboard.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="socket.js"></script>
+</body>
 </html>

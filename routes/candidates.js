@@ -201,7 +201,7 @@ router.get("/stats/filter", authenticateToken, (req, res) => {
   });
 });
 
-// Update a candidate's details
+
 router.put("/:applicantId", authenticateToken, (req, res) => {
   const applicantId = req.params.applicantId;
   const {
@@ -230,67 +230,45 @@ router.put("/:applicantId", authenticateToken, (req, res) => {
     reasonNotExtending,
     notes,
   } = req.body;
-
-  // Validate stage
-  const validStages = [
-    "App. Recd.",
-    "Not Answering",
-    "Shortlisted",
-    "Not Intrested",
-    "Joined",
-    "About To Join",
-    "Phone Screen",
-    "L1",
-    "L2_Internal",
-    "Yet to share",
-    "Shared with client",
-    "L1_Client",
-    "L2_Client",
-    "Exceeding Limit",
-    "Final Discussion",
-    "HOLD",
-    "Buffer List",
-    "Rejected",
-    "Declined",
-  ];
-
-  if (!validStages.includes(stage)) {
-    return res.status(400).json({
-      message: "Invalid stage value",
-      validStages: validStages,
-    });
+console.log(req.body)
+  // Validate required fields
+  if (!profileOwner || !applicantName) {
+    return res.status(400).json({ message: "Profile Owner and Applicant Name are required." });
   }
 
-  let updateQuery = `
-    UPDATE ApplicantTracking
-    SET profileOwner = ?,
-        applicantName = ?,
-        applicantPhone = ?,
-        applicantEmail = ?,
-        currentCompany = ?,
-        candidateWorkLocation = ?,
-        nativeLocation = ?,
-        qualification = ?,
-        experience = ?,
-        skills = ?,
-        noticePeriod = ?,
-        currentctc = ?,
-        expectedctc = ?,
-        band = ?,
-        dateApplied = ?,
-        positionTitle = ?,
-        positionId = ?,
-        status = ?,
-        stage = ?,
-        interviewer = ?,
-        interviewDate = ?,
-        dateOfOffer = ?,
-        reasonNotExtending = ?,
-        notes = ?
+  // Define the update query and parameters
+  const updateQuery = `
+    UPDATE ApplicantTracking 
+    SET 
+      profileOwner = ?, 
+      applicantName = ?, 
+      applicantPhone = ?, 
+      applicantEmail = ?, 
+      currentCompany = ?, 
+      candidateWorkLocation = ?, 
+      nativeLocation = ?, 
+      qualification = ?, 
+      experience = ?, 
+      skills = ?, 
+      noticePeriod = ?, 
+      currentctc = ?, 
+      expectedctc = ?, 
+      band = ?, 
+      dateApplied = ?, 
+      positionTitle = ?, 
+      positionId = ?, 
+      status = ?, 
+      stage = ?, 
+      interviewer = ?, 
+      interviewDate = ?, 
+      dateOfOffer = ?, 
+      reasonNotExtending = ?, 
+      notes = ?
     WHERE applicantId = ?
   `;
 
-  let queryParams = [
+  // Query parameters in the correct order
+  const queryParams = [
     profileOwner,
     applicantName,
     applicantPhone,
@@ -310,40 +288,78 @@ router.put("/:applicantId", authenticateToken, (req, res) => {
     positionId,
     status,
     stage,
-    interviewer || null,
-    interviewDate || null,
-    dateOfOffer || null,
-    reasonNotExtending || null,
-    notes || null,
+    interviewer,
+    interviewDate,
+    dateOfOffer,
+    reasonNotExtending,
+    notes,
     applicantId,
   ];
 
-  // If the user is not an admin, add a condition to only update their own candidates
-  if (req.user.role !== "admin") {
-    updateQuery += " AND profileOwner = ?";
-    queryParams.push(req.user.username);
-  }
-
+  // Execute the SQL query
   db.query(updateQuery, queryParams, (err, result) => {
     if (err) {
-      console.error("Error updating candidate:", err);
-      return res.status(500).json({
-        message: "Error updating candidate",
-        error: err.message,
-      });
+      console.error("Database Error: ", err);
+      return res.status(500).json({ message: "Error updating candidate" });
     }
     if (result.affectedRows === 0) {
-      return res.status(404).json({
-        message:
-          "Candidate not found or you don't have permission to update this candidate",
-      });
+      return res.status(404).json({ message: "Candidate not found or no permission." });
     }
-    res.json({
-      message: "Candidate updated successfully",
-      updatedFields: req.body,
-    });
+    res.json({ message: "Candidate updated successfully." });
   });
 });
+
+
+// router.put("/:applicantId", authenticateToken, (req, res) => {
+//   const applicantId = req.params.applicantId;
+//   const {
+//     profileOwner,
+//     applicantName,
+//     applicantPhone,
+//     applicantEmail,
+//     currentCompany,
+//     candidateWorkLocation,
+//     nativeLocation,
+//     qualification,
+//     experience,
+//     skills,
+//     noticePeriod,
+//     currentctc,
+//     expectedctc,
+//     band,
+//     dateApplied,
+//     positionTitle,
+//     positionId,
+//     status,
+//     stage,
+//     interviewer,
+//     interviewDate,
+//     dateOfOffer,
+//     reasonNotExtending,
+//     notes,
+//   } = req.body;
+
+//   let updateQuery = `...`; // Your SQL query
+
+//   // Check for proper assignment and values
+//   if (!profileOwner || !applicantName) {
+//     return res.status(400).json({ message: "Profile Owner and Applicant Name are required." });
+//   }
+
+//   // Make sure to handle the case where there are no affected rows
+//   db.query(updateQuery, queryParams, (err, result) => {
+//     if (err) {
+//       console.error("Database Error: ", err);
+//       return res.status(500).json({ message: "Error updating candidate" });
+//     }
+//     if (result.affectedRows === 0) {
+//       return res.status(404).json({ message: "Candidate not found or no permission." });
+//     }
+//     res.json({ message: ".-" });
+//   });
+// });
+
+
 
 // Fetch all positions with job descriptions
 router.get("/positions", authenticateToken, (req, res) => {

@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 document.addEventListener("DOMContentLoaded", function () {
   let count = 0;
-  fetch("/api/positions/count", {
+  fetch("/positions/count", {
     headers: {
       Authorization: "Bearer " + localStorage.getItem("token"),
     },
@@ -24,6 +24,7 @@ document.addEventListener("DOMContentLoaded", function () {
     })
     .then((data) => {
       data.map((item) => (count += item.openPositions));
+      console.log("Fetched data hiiii:", count);
       // updatePositions(data);
       document.querySelector(".activePostionscount").textContent = count;
     });
@@ -37,17 +38,7 @@ function fetchDashboardData() {
   })
     .then((response) => {
       if (!response.ok) {
-        // If response is not ok, parse it to check for redirect
-        return response.json().then((err) => {
-          if (err.redirect) {
-            // Perform redirect
-            window.location.href = err.redirect;
-            // Throw an error to stop further processing
-            throw new Error("Redirecting to login");
-          } else {
-            alert("Failed to load dashboard data. Please try again later.");
-          }
-        });
+        throw new Error("Network response was not ok");
       }
       return response.json();
     })
@@ -60,6 +51,7 @@ function fetchDashboardData() {
     })
     .catch((error) => {
       console.error("Error fetching dashboard data:", error);
+      alert("Failed to load dashboard data. Please try again later.");
     });
 }
 
@@ -157,7 +149,6 @@ function processData(data) {
     declined: 0,
     aboutToJoin: 0,
     exceedingLimit: 0,
-    shortlisted: 0,
   };
 
   data.forEach((candidate) => {
@@ -176,9 +167,6 @@ function processData(data) {
       } else if (candidate.stage === "Buffer List") {
         lists.buffer++;
       }
-    }
-    if (candidate.stage === "Shortlisted") {
-      lists.shortlisted++;
     }
 
     if (candidate.stage === "Exceeding Limit") {
@@ -203,7 +191,6 @@ function processData(data) {
     activeApplicants: lists.active,
     rejectedApplicants: lists.rejected,
     joinedApplicants: lists.joined,
-    shortlistedApplicants: lists.shortlisted,
   };
 
   return {
@@ -216,13 +203,11 @@ function processData(data) {
 
 function updateLists(lists) {
   // document.getElementById('activeCount').textContent = lists.active;
-  document.getElementById("exceedingLimitCount").textContent =
-    lists.exceedingLimit;
+  document.getElementById("exceedingLimitCount").textContent = lists.exceedingLimit;
   document.getElementById("bufferCount").textContent = lists.buffer;
   document.getElementById("closedCount").textContent = lists.closed;
   document.getElementById("declinedCount").textContent = lists.declined;
   document.getElementById("aboutToJoinCount").textContent = lists.aboutToJoin;
-  document.getElementById("shortListedCount").textContent = lists.shortlisted;
 }
 
 let activeStagesChart, inactiveStagesChart;

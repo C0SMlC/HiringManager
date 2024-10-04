@@ -333,7 +333,7 @@ body {
 #candidateTable td {
   border: 1px solid #ddd;
   padding: 0.5rem;
-  text-align: left;
+  text-align: center;
   word-wrap: break-word;
 }
 
@@ -356,7 +356,7 @@ table {
   .navbar a {
     float: none;
     display: block;
-    text-align: left;
+    text-align: center;
   }
 
   #candidateTable th,
@@ -504,7 +504,7 @@ textarea {
   border: 1px solid #ccc;
   border-radius: 4px;
   background-color: #fff;
-  font-size: 14px;
+  font-size: 12px;
 }
 
 .status-dropdown:disabled {

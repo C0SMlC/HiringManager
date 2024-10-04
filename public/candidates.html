@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Candidate Details</title>
     <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+    
     <style>
       /* Ensure the table container takes up the full height of its parent */
       .forms-container {
@@ -97,9 +99,13 @@
       #candidateTable th,
       #candidateTable td {
         padding: 10px;
-        text-align: left;
+        text-align: center;
         border: 1px solid #ddd;
         white-space: nowrap;
+        min-width: 250px; /* Increased minimum width for cells */
+  max-width: 600px; /* Increased maximum width for cells */
+  overflow: hidden; /* Hide overflowed content */
+  text-overflow: ellipsis; /* Add ellipsis for overflowing text */
       }
 
       #candidateTable thead {
@@ -145,55 +151,160 @@
         margin-right: 0;
       }
       .modal {
-        display: none;
-        position: fixed;
-        z-index: 1000;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        overflow: auto;
-        background-color: rgba(0, 0, 0, 0.4);
-      }
+  display: none; 
+  position: fixed; 
+  z-index: 1; 
+  left: 0;
+  top: 0;
+  width: 100%; 
+  height: 100%; 
+  overflow: auto; 
+  background-color: rgb(0,0,0); 
+  background-color: rgba(0,0,0,0.4); 
+}
 
-      .modal-content {
-        background-color: #fefefe;
-        margin: 15% auto;
-        padding: 20px;
-        border: 1px solid #888;
-        width: 80%;
-        max-width: 600px;
-      }
+.modal-content {
+  background-color: #fefefe;
+  margin: 15% auto; 
+  padding: 20px;
+  border: 1px solid #888;
+  width: 60%; /* Decreased width */
+  max-width: 500px; /* Added max width */
+}
 
-      .close {
-        color: #aaa;
-        float: right;
-        font-size: 28px;
-        font-weight: bold;
-        cursor: pointer;
-      }
+.close-button {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
 
-      .close:hover,
-      .close:focus {
-        color: black;
-        text-decoration: none;
-        cursor: pointer;
-      }
+.close-button:hover,
+.close-button:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
 
-      .form-group {
-        margin-bottom: 15px;
-      }
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 15px; /* Space between rows */
+}
 
-      .form-group label {
-        display: block;
-        margin-bottom: 5px;
-      }
+.form-group {
+  flex: 1 1 25%; /* Grow and shrink, with a base width of 25% */
+  padding: 0 10px; /* Space between columns */
+  box-sizing: border-box; /* Include padding in width calculations */
+}
 
-      .form-group input,
-      .form-group select {
-        width: 100%;
-        padding: 5px;
-      }
+.form-group label {
+  display: block; /* Ensure labels are block elements */
+  margin-bottom: 5px; /* Space between label and input */
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%; /* Make inputs and selects take full width */
+  padding: 8px; /* Padding inside inputs */
+  border: 1px solid #ccc; /* Border for inputs */
+  border-radius: 4px; /* Rounded corners */
+}
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1000; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgba(0, 0, 0, 0.5); /* Black w/ opacity */
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: auto; /* Center the modal */
+  padding: 20px;
+  border: 1px solid #888;
+  border-radius: 8px;
+  width: 80%; /* Set the width of the modal (increase this value) */
+  max-width: 1000px; /* Optional: Limit max width for larger screens */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Optional: Add shadow for depth */
+}
+.form-group label {
+  display: block; 
+  margin-bottom: 5px;
+  font-size: 12px; /* Adjust the label font size here */
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%; 
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 12px; /* Decrease the font size of input/select/textarea fields */
+}
+#candidateTable {
+    width: 100%; /* Ensure the table takes full width */
+    border-collapse: collapse; /* Collapse borders */
+}
+
+#candidateTable thead {
+    position: sticky; /* Make the header sticky */
+    top: 0; /* Position it at the top of the table */
+    background-color: #f2f2f2; /* Header background color */
+    z-index: 10; /* Make sure it is above other elements */
+}
+/* Sticky column styles */
+.sticky-col {
+  position: -webkit-sticky; /* For Safari support */
+  position: sticky;
+  background-color: white;
+  z-index:2; /* Background color for sticky columns */
+}
+
+/* Profile Owner Column */
+.sticky-col-1 {
+  width: 150px; /* Increased width */
+  min-width: 150px; /* Increased min-width */
+  max-width: 150px; /* Increased max-width */
+  left: 0; /* Fixed left position */
+}
+
+th.sticky-col-1 {
+  background-color: #f2f2f2; /* Change this to the desired background color */
+}
+
+/* Actions Column */
+.sticky-col-2 {
+  width: 150px; /* Increased width */
+  min-width: 150px; /* Increased min-width */
+  max-width: 150px; /* Increased max-width */
+  left: 150px; /* Updated left value based on first column */
+}
+
+th.sticky-col-2 {
+  background-color: #f2f2f2; /* Change this to the desired background color */
+}
+
+/* Name Column */
+.sticky-col-3 {
+  position: sticky;
+  background-color: white; /* Background color */
+  left: 150px; /* Adjust based on the widths of previous columns */
+  min-width: 150px; /* Set min-width */
+  max-width: 150px; /* Set max-width */
+}
+
+
+th.sticky-col-3 {
+  background-color: #f2f2f2; /* Change this to the desired background color */
+}
+
     </style>
   </head>
   <body>
@@ -268,8 +379,9 @@
           <table id="candidateTable">
             <thead>
               <tr>
-                <th>Profile Owner</th>
-                <th class="sticky-col">Name</th>
+                <th class="sticky-col sticky-col-1">Profile Owner</th> <!-- Added sticky classes -->
+                <th class="sticky-col sticky-col-2">Actions</th> <!-- Added sticky classes -->
+                <th class="sticky-col sticky-col-3">Name</th> <!-- Changed class to sticky -->
                 <th>Phone</th>
                 <th>Email</th>
                 <th>Current Company</th>
@@ -292,7 +404,7 @@
                 <th>Date of Joining</th>
                 <th>Reason for Not Extending Offer</th>
                 <th>Notes</th>
-                <th>Actions</th>
+                
                 <th>View Resume</th>
                 <th>Download Resume</th>
                 <th>Export</th>
@@ -309,6 +421,195 @@
       </div>
     </div>
 
+    <div id="updateCandidateModal" class="modal">
+      <div class="modal-content">
+        <span class="close-button">&times;</span>
+        <h2>Update Candidate Details</h2>
+        <h3 id="applicantNameDisplay"></h3> <!-- Applicant Name Display -->
+        <form id="candidateForm">
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label for="profileOwner">Profile Owner:</label>
+              <input type="text" id="profileOwner" name="profileOwner" readonly />
+            </div>
+            
+            <div class="form-group">
+              <label for="applicantName">Name:</label>
+              <input type="text" id="applicantName" name="applicantName">
+            </div>
+            
+            <div class="form-group">
+              <label for="applicantPhone">Phone:</label>
+              <input type="text" id="applicantPhone" name="applicantPhone">
+            </div>
+            
+            <div class="form-group">
+              <label for="applicantEmail">Email:</label>
+              <input type="email" id="applicantEmail" name="applicantEmail">
+            </div>
+          </div>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label for="currentCompany">Current Company:</label>
+              <input type="text" id="currentCompany" name="currentCompany">
+            </div>
+    
+            <div class="form-group">
+              <label for="candidateWorkLocation">Work Location:</label>
+              <input type="text" id="candidateWorkLocation" name="candidateWorkLocation">
+            </div>
+    
+            <div class="form-group">
+              <label for="nativeLocation">Native Location:</label>
+              <input type="text" id="nativeLocation" name="nativeLocation">
+            </div>
+    
+            <div class="form-group">
+              <label for="qualification">Qualification:</label>
+              <input type="text" id="qualification" name="qualification">
+            </div>
+          </div>
+    
+          <div class="form-row">
+            <div class="form-group">
+              <label for="experience">Experience:</label>
+              <input type="text" id="experience" name="experience">
+            </div>
+    
+            <div class="form-group">
+              <label for="skills">Skills:</label>
+              <input type="text" id="skills" name="skills">
+            </div>
+    
+            <div class="form-group">
+              <label for="noticePeriod">Notice Period:</label>
+              <input type="text" id="noticePeriod" name="noticePeriod">
+            </div>
+    
+            <div class="form-group">
+              <label for="currentctc">Current CTC:</label>
+              <input type="text" id="currentctc" name="currentctc">
+            </div>
+          </div>
+    
+          <div class="form-row">
+            <div class="form-group">
+              <label for="expectedctc">Expected CTC:</label>
+              <input type="text" id="expectedctc" name="expectedctc">
+            </div>
+    
+            <div class="form-group">
+              <label for="band">Band:</label>
+              <select id="band" name="band" required>
+                <option value="L0">L0</option>
+                <option value="L1">L1</option>
+                <option value="L2">L2</option>
+                <option value="L3">L3</option>
+                <option value="L4">L4</option>
+                <option value="CostPlus">CostPlus</option>
+                <option value="Non-Billable">Non-Billable</option>
+                <option value="Bench">Bench</option>
+              </select>
+            </div>
+    
+            <div class="form-group">
+              <label for="dateApplied">Date Applied:</label>
+              <input type="date" id="dateApplied" name="dateApplied">
+            </div>
+    
+            <div class="form-group">
+              <label for="positionTitle" class="required">Position Title:</label>
+              <select id="positionTitle" name="positionTitle" required>
+                <option value="">Select Position Title</option>
+              </select>
+            </div>
+          </div>
+    
+          <div class="form-row">
+            <div class="form-group">
+              <label for="positionId">Position ID:</label>
+              <select id="positionId" name="positionId" required>
+                <option value="">Select Position ID</option>
+              </select>
+            </div>
+    
+            <div class="form-group">
+              <label for="status">Status:</label>
+              <select id="status" name="status" required>
+                <option value="OPEN">OPEN</option>
+                <option value="CLOSED">CLOSED</option>
+              </select>
+            </div>
+    
+            <div class="form-group">
+              <label for="stage">Stage:</label>
+              <select id="stage" name="stage">
+                <option value="App. Recd.">App. Recd.</option>
+                <option value="Not Answering">Not Answering</option>
+                <option value="Phone Screen">Phone Screen</option>
+                <option value="L1">L1</option>
+                <option value="L2_Internal">L2_Internal</option>
+                <option value="Yet to share">Yet to share</option>
+                <option value="Shared with client">Shared with client</option>
+                <option value="L1_Client">L1_Client</option>
+                <option value="L2_Client">L2_Client</option>
+                <option value="Final Discussion">Final Discussion</option>
+                <option value="HOLD">HOLD</option>
+                <option value="Buffer List">Buffer List</option>
+                <option value="Rejected">Rejected</option>
+                <option value="Declined">Declined</option>
+              </select>
+            </div>
+    
+            <div class="form-group">
+              <label for="interviewer">Interviewer:</label>
+              <select id="interviewer" name="interviewer">
+                <option value="None">None</option>
+                <option value="Interviewer 1">Interviewer 1</option>
+                <option value="Interviewer 2">Interviewer 2</option>
+              </select>
+            </div>
+          </div>
+    
+          <div class="form-row">
+            <div class="form-group">
+              <label for="interviewDate">Interview Date:</label>
+              <input type="date" id="interviewDate" name="interviewDate">
+            </div>
+    
+            <div class="form-group">
+              <label for="dateOfOffer">Date of Offer:</label>
+              <input type="date" id="dateOfOffer" name="dateOfOffer">
+            </div>
+    
+            <div class="form-group">
+              <label for="reasonNotExtending">Reason for Not Extending Offer:</label>
+              <select id="reasonNotExtending" name="reasonNotExtending">
+                <option value="">Select Value</option>
+                <option value="Salary Negotiation">Salary Negotiation</option>
+                <option value="Relocation Issues">Relocation Issues</option>
+              </select>
+            </div>
+    
+            <div class="form-group">
+              <label for="notes">Notes:</label>
+              <textarea id="notes" name="notes"></textarea>
+            </div>
+          </div>
+    
+          <div>
+            <button type="button" id="saveButton">Save</button>
+            <!-- <button type="button" id="cancelButton">Cancel</button> -->
+            <!-- <button class="close-button">Cancel</button> -->
+          </div>
+    
+        </form>
+      </div>
+    </div>
+    
+  
     <script>
       document.addEventListener("DOMContentLoaded", function () {
         const tableWrapper = document.querySelector(".table-wrapper");
@@ -347,6 +648,65 @@
         const observer = new MutationObserver(updateSpacerWidth);
         observer.observe(table, { childList: true, subtree: true });
       });
+              // Fetch positions and populate the dropdowns
+              fetch("/api/positions", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        })
+          .then((response) => response.json())
+          .then((positions) => {
+            const positionTitleSelect =
+              document.getElementById("positionTitle");
+            const positionIdSelect = document.getElementById("positionId");
+
+            if (
+              !(positionTitleSelect instanceof HTMLSelectElement) ||
+              !(positionIdSelect instanceof HTMLSelectElement)
+            ) {
+              throw new Error("Position select elements not found");
+            }
+
+            positions.forEach((position) => {
+              if (
+                typeof position.positionTitle !== "string" ||
+                typeof position.positionId !== "string"
+              ) {
+                console.error("Invalid position data:", position);
+                return;
+              }
+
+              if (!positionMap[position.positionTitle]) {
+                positionMap[position.positionTitle] = [];
+              }
+              positionMap[position.positionTitle].push(position.positionId);
+
+              const optionTitle = document.createElement("option");
+              optionTitle.value = position.positionTitle;
+              optionTitle.textContent = position.positionTitle;
+              positionTitleSelect.appendChild(optionTitle);
+
+              const optionId = document.createElement("option");
+              optionId.value = position.positionId;
+              optionId.textContent = position.positionId;
+              positionIdSelect.appendChild(optionId);
+            });
+
+            positionTitleSelect.addEventListener("change", () => {
+              const selectedTitle = positionTitleSelect.value;
+              positionIdSelect.innerHTML = "";
+              if (positionMap[selectedTitle]) {
+                positionMap[selectedTitle].forEach((positionId) => {
+                  const option = document.createElement("option");
+                  option.value = positionId;
+                  option.textContent = positionId;
+                  positionIdSelect.appendChild(option);
+                });
+              }
+            });
+          })
+          .catch((error) => console.error("Error fetching positions:", error));
     </script>
     <script src="candidates.js"></script>
     <script src="userInfo.js"></script>
