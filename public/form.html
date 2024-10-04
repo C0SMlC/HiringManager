@@ -343,7 +343,7 @@
               <button type="button" id="backButton" style="display: none;">Back</button>
               <button type="button" id="nextButton">Next</button>
               <button type="button" id="clearButton">Clear</button>
-              <button type="button" id="submitButton" style="display: none;">Submit</button> <!-- Submit button for the last section -->
+              <button type="submit" id="submitButton" style="display: none;">Submit</button> <!-- Submit button for the last section -->
           </div>
           
           
@@ -712,7 +712,7 @@
             /* if (!response.ok) {
               alert(`An error occurred during submission: ${response.message}`);
             } */
-
+console.log (formData)
             const result = await response.json();
             alert(result.message);
             // Do not reset the form here, as per the original code
@@ -786,13 +786,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 showSection(currentSection);
             }
         });
-
         document.getElementById('clearButton').addEventListener('click', () => {
-            const inputs = document.querySelectorAll('input[type="text"], input[type="email"], input[type="number"], input[type="date"], select');
-            inputs.forEach(input => {
-                input.value = '';
-            });
-        });
+    const currentSectionElement = document.getElementById(`section${currentSection}`);
+    const inputs = currentSectionElement.querySelectorAll('input[type="text"], input[type="email"], input[type="number"], input[type="date"], select');
+    inputs.forEach(input => {
+        input.value = '';
+    });
+});
+
+        // document.getElementById('clearButton').addEventListener('click', () => {
+        //     const inputs = document.querySelectorAll('input[type="text"], input[type="email"], input[type="number"], input[type="date"], select');
+        //     inputs.forEach(input => {
+        //         input.value = '';
+        //     });
+        // });
 
         // Show the first section initially
         showSection(currentSection);

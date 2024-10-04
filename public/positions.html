@@ -135,8 +135,10 @@
     <div class="form-container openpositions-form">
       <div id="usernameDisplay"></div>
       <h2>Open Positions</h2>
-      <button id="exportBtn" class="export-btn">Export to Excel</button>
- 
+      <div style="display: flex; justify-content: flex-end;">
+        <button id="export-btn" style="width: 120px;">Export</button>
+    </div>
+      
       <div>
         <!-- Adds horizontal scrolling -->
         <table id="positionsTable">
@@ -407,7 +409,7 @@ document.querySelector(".popup-close").addEventListener("click", function () {
             alert("Failed to fetch positions");
           });
       });
-      document.getElementById("exportBtn").addEventListener("click", function () {
+document.getElementById("export-btn").addEventListener("click", function () {
   const table = document.getElementById("positionsTable");
   const ws = XLSX.utils.table_to_sheet(table, { raw: true });
  

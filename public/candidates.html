@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="style.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+    
     <style>
       /* Ensure the table container takes up the full height of its parent */
       .forms-container {
@@ -101,6 +102,10 @@
         text-align: center;
         border: 1px solid #ddd;
         white-space: nowrap;
+        min-width: 250px; /* Increased minimum width for cells */
+  max-width: 600px; /* Increased maximum width for cells */
+  overflow: hidden; /* Hide overflowed content */
+  text-overflow: ellipsis; /* Add ellipsis for overflowing text */
       }
 
       #candidateTable thead {
@@ -243,9 +248,62 @@
   border-radius: 4px;
   font-size: 12px; /* Decrease the font size of input/select/textarea fields */
 }
+#candidateTable {
+    width: 100%; /* Ensure the table takes full width */
+    border-collapse: collapse; /* Collapse borders */
+}
+
+#candidateTable thead {
+    position: sticky; /* Make the header sticky */
+    top: 0; /* Position it at the top of the table */
+    background-color: #f2f2f2; /* Header background color */
+    z-index: 10; /* Make sure it is above other elements */
+}
+/* Sticky column styles */
+.sticky-col {
+  position: -webkit-sticky; /* For Safari support */
+  position: sticky;
+  background-color: white;
+  z-index:2; /* Background color for sticky columns */
+}
+
+/* Profile Owner Column */
+.sticky-col-1 {
+  width: 150px; /* Increased width */
+  min-width: 150px; /* Increased min-width */
+  max-width: 150px; /* Increased max-width */
+  left: 0; /* Fixed left position */
+}
+
+th.sticky-col-1 {
+  background-color: #f2f2f2; /* Change this to the desired background color */
+}
+
+/* Actions Column */
+.sticky-col-2 {
+  width: 150px; /* Increased width */
+  min-width: 150px; /* Increased min-width */
+  max-width: 150px; /* Increased max-width */
+  left: 150px; /* Updated left value based on first column */
+}
+
+th.sticky-col-2 {
+  background-color: #f2f2f2; /* Change this to the desired background color */
+}
+
+/* Name Column */
+.sticky-col-3 {
+  position: sticky;
+  background-color: white; /* Background color */
+  left: 150px; /* Adjust based on the widths of previous columns */
+  min-width: 150px; /* Set min-width */
+  max-width: 150px; /* Set max-width */
+}
 
 
-
+th.sticky-col-3 {
+  background-color: #f2f2f2; /* Change this to the desired background color */
+}
 
     </style>
   </head>
@@ -321,9 +379,9 @@
           <table id="candidateTable">
             <thead>
               <tr>
-                <th>Profile Owner</th>
-                <th>Actions</th>
-                <th class="sticky-col">Name</th>
+                <th class="sticky-col sticky-col-1">Profile Owner</th> <!-- Added sticky classes -->
+                <th class="sticky-col sticky-col-2">Actions</th> <!-- Added sticky classes -->
+                <th class="sticky-col sticky-col-3">Name</th> <!-- Changed class to sticky -->
                 <th>Phone</th>
                 <th>Email</th>
                 <th>Current Company</th>

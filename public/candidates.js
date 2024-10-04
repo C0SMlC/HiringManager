@@ -374,135 +374,137 @@ document.addEventListener("DOMContentLoaded", () => {
 
  
 
-  function renderCandidates(filteredCandidates) {
-    const candidateList = document.getElementById("candidateList");
-    candidateList.innerHTML = "";
-
-    filteredCandidates.forEach((candidate) => {
-      if (candidate.status === "CLOSED") return;
-
-      const row = document.createElement("tr");
-
-      let profileOwnerCell = `<td><input type="text" id="profileOwner-${candidate.applicantId}" value="${candidate.profileOwner}" ${!isAdmin ? "disabled" : ""}></td>`;
-
-      if (isAdmin) {
-        profileOwnerCell = 
-                    `<td>
-                        <select id="profileOwner-${candidate.applicantId}">
-                            ${users
+    function renderCandidates(filteredCandidates) {
+      const candidateList = document.getElementById("candidateList");
+      candidateList.innerHTML = ""; // Clear existing rows
+  
+      filteredCandidates.forEach((candidate) => {
+          if (candidate.status === "CLOSED") return;
+  
+          const row = document.createElement("tr");
+  
+          // Profile Owner Cell (Sticky)
+          let profileOwnerCell = `<td class="sticky-col first-col"><input type="text" id="profileOwner-${candidate.applicantId}" value="${candidate.profileOwner}" ${!isAdmin ? "disabled" : ""}></td>`;
+  
+          if (isAdmin) {
+              profileOwnerCell = 
+                  `<td class="sticky-col first-col">
+                      <select id="profileOwner-${candidate.applicantId}">
+                          ${users
                               .map(
-                                (user) => 
-                                `<option value="${user.username}" ${user.username === candidate.profileOwner ? "selected" : ""}>${user.username}</option>`
+                                  (user) => 
+                                  `<option value="${user.username}" ${user.username === candidate.profileOwner ? "selected" : ""}>${user.username}</option>`
                               )
                               .join("")}
-                        </select>
-                    </td>`;
-      }
-
-      row.innerHTML = 
-                `${profileOwnerCell}
-                <td><i class="far fa-edit action-icon" onclick="updateCandidate(${candidate.applicantId})"></i></td>
-                <td><input class="sticky-col" type="text" id="applicantName-${candidate.applicantId}" value="${candidate.applicantName}"></td>
-                <td><input type="tel" id="applicantPhone-${candidate.applicantId}" value="${candidate.applicantPhone}"></td>
-                <td><input type="email" id="applicantEmail-${candidate.applicantId}" value="${candidate.applicantEmail}"></td>
-                <td><input type="text" id="currentCompany-${candidate.applicantId}" value="${candidate.currentCompany}"></td>
-                <td><input type="text" id="candidateWorkLocation-${candidate.applicantId}" value="${candidate.candidateWorkLocation}"></td>
-                <td><input type="text" id="nativeLocation-${candidate.applicantId}" value="${candidate.nativeLocation}"></td>
-                <td><input type="text" id="qualification-${candidate.applicantId}" value="${candidate.qualification}"></td>
-                <td><input type="text" id="experience-${candidate.applicantId}" value="${candidate.experience}"></td>
-                <td><input type="text" id="skills-${candidate.applicantId}" value="${candidate.skills}"></td>
-                <td><input type="text" id="noticePeriod-${candidate.applicantId}" value="${candidate.noticePeriod}"></td>
-                <td><input type="text" id="currentctc-${candidate.applicantId}" value="${candidate.currentctc}"></td>
-                <td><input type="text" id="expectedctc-${candidate.applicantId}" value="${candidate.expectedctc}"></td>
-                <td>
-                    <select id="band-${candidate.applicantId}" name="band">
-                        <option value="L0" ${candidate.band === "L0" ? "selected" : ""}>L0</option>
-                        <option value="L1" ${candidate.band === "L1" ? "selected" : ""}>L1</option>
-                        <option value="L2" ${candidate.band === "L2" ? "selected" : ""}>L2</option>
-                        <option value="L3" ${candidate.band === "L3" ? "selected" : ""}>L3</option>
-                        <option value="L4" ${candidate.band === "L4" ? "selected" : ""}>L4</option>
-                        <option value="CostPlus" ${candidate.band === "CostPlus" ? "selected" : ""}>CostPlus</option>
-                        <option value="Non-Billable" ${candidate.band === "Non-Billable" ? "selected" : ""}>Non-Billable</option>
-                        <option value="Bench" ${candidate.band === "Bench" ? "selected" : ""}>Bench</option>
-                    </select>
-                </td>
-                <td><input type="date" id="dateApplied-${candidate.applicantId}" value="${formatDate(candidate.dateApplied)}"></td>
-                <td>
+                      </select>
+                  </td>`;
+          }
+  
+          // Create table row with sticky columns
+          row.innerHTML = 
+              `${profileOwnerCell}
+              <td class="sticky-col second-col"><i class="far fa-edit action-icon" style="color: blue;" onclick="updateCandidate(${candidate.applicantId})"></i></td>
+              <td class="sticky-col sticky-col-3"><input type="text" id="applicantName-${candidate.applicantId}" value="${candidate.applicantName}"></td>
+              <td><input type="tel" id="applicantPhone-${candidate.applicantId}" value="${candidate.applicantPhone}"></td>
+              <td><input type="email" id="applicantEmail-${candidate.applicantId}" value="${candidate.applicantEmail}"></td>
+              <td><input type="text" id="currentCompany-${candidate.applicantId}" value="${candidate.currentCompany}"></td>
+              <td><input type="text" id="candidateWorkLocation-${candidate.applicantId}" value="${candidate.candidateWorkLocation}"></td>
+              <td><input type="text" id="nativeLocation-${candidate.applicantId}" value="${candidate.nativeLocation}"></td>
+              <td><input type="text" id="qualification-${candidate.applicantId}" value="${candidate.qualification}"></td>
+              <td><input type="text" id="experience-${candidate.applicantId}" value="${candidate.experience}"></td>
+              <td><input type="text" id="skills-${candidate.applicantId}" value="${candidate.skills}"></td>
+              <td><input type="text" id="noticePeriod-${candidate.applicantId}" value="${candidate.noticePeriod}"></td>
+              <td><input type="text" id="currentctc-${candidate.applicantId}" value="${candidate.currentctc}"></td>
+              <td><input type="text" id="expectedctc-${candidate.applicantId}" value="${candidate.expectedctc}"></td>
+              <td>
+                  <select id="band-${candidate.applicantId}" name="band">
+                      <option value="L0" ${candidate.band === "L0" ? "selected" : ""}>L0</option>
+                      <option value="L1" ${candidate.band === "L1" ? "selected" : ""}>L1</option>
+                      <option value="L2" ${candidate.band === "L2" ? "selected" : ""}>L2</option>
+                      <option value="L3" ${candidate.band === "L3" ? "selected" : ""}>L3</option>
+                      <option value="L4" ${candidate.band === "L4" ? "selected" : ""}>L4</option>
+                      <option value="CostPlus" ${candidate.band === "CostPlus" ? "selected" : ""}>CostPlus</option>
+                      <option value="Non-Billable" ${candidate.band === "Non-Billable" ? "selected" : ""}>Non-Billable</option>
+                      <option value="Bench" ${candidate.band === "Bench" ? "selected" : ""}>Bench</option>
+                  </select>
+              </td>
+              <td><input type="date" id="dateApplied-${candidate.applicantId}" value="${formatDate(candidate.dateApplied)}"></td>
+              <td>
                   <select id="positionTitle-${candidate.applicantId}" onchange="updatePositionIds(${candidate.applicantId})">
-                    ${Object.keys(positionMap)
-                      .map(
-                        (title) =>
-                          `<option value="${title}" ${title === candidate.positionTitle ? "selected" : ""}>${title}</option>`
-                      )
-                      .join("")}
+                      ${Object.keys(positionMap)
+                          .map(
+                              (title) =>
+                              `<option value="${title}" ${title === candidate.positionTitle ? "selected" : ""}>${title}</option>`
+                          )
+                          .join("")}
                   </select>
-                </td>
-                <td>
+              </td>
+              <td>
                   <select id="positionId-${candidate.applicantId}">
-                    ${
-                      positionMap[candidate.positionTitle]
-                        ? positionMap[candidate.positionTitle]
-                            .map(
-                              (id) =>
-                                `<option value="${id}" ${id === candidate.positionId ? "selected" : ""}>${id}</option>`
-                            )
-                            .join("")
-                        : `<option value="${candidate.positionId}">${candidate.positionId}</option>`
-                    }
+                      ${
+                          positionMap[candidate.positionTitle]
+                              ? positionMap[candidate.positionTitle]
+                                  .map(
+                                      (id) =>
+                                      `<option value="${id}" ${id === candidate.positionId ? "selected" : ""}>${id}</option>`
+                                  )
+                                  .join("")
+                              : `<option value="${candidate.positionId}">${candidate.positionId}</option>`
+                      }
                   </select>
-                </td>
-                <td>
-                    <select id="status-${candidate.applicantId}" name="status">
-                        <option value="OPEN" ${candidate.status === "OPEN" ? "selected" : ""}>OPEN</option>
-                        <option value="CLOSED" ${candidate.status === "CLOSED" ? "selected" : ""}>CLOSED</option>
-                    </select>
-                </td>
-                <td>
-                    <select id="stage-${candidate.applicantId}" name="stage" onchange="toggleInterviewer(${candidate.applicantId})">
-                        <option value="App. Recd." ${candidate.stage === "App. Recd." ? "selected" : ""}>App. Recd.</option>
-                        <option value="Not Answering" ${candidate.stage === "Not Answering" ? "selected" : ""}>Not Answering</option>
-                        <option value="Phone Screen" ${candidate.stage === "Phone Screen" ? "selected" : ""}>Phone Screen</option>
-                        <option value="L1" ${candidate.stage === "L1" ? "selected" : ""}>L1</option>
-                        <option value="L2_Internal" ${candidate.stage === "L2_Internal" ? "selected" : ""}>L2_Internal</option>
-                        <option value="Yet to share" ${candidate.stage === "Yet to share" ? "selected" : ""}>Yet to share</option>
-                        <option value="Shared with client" ${candidate.stage === "Shared with client" ? "selected" : ""}>Shared with client</option>
-                        <option value="L1_Client" ${candidate.stage === "L1_Client" ? "selected" : ""}>L1_Client</option>
-                        <option value="L2_Client" ${candidate.stage === "L2_Client" ? "selected" : ""}>L2_Client</option>
-                        <option value="Final Discussion" ${candidate.stage === "Final Discussion" ? "selected" : ""}>Final Discussion</option>
-                        <option value="About To Join" ${candidate.stage === "About To Join" ? "selected" : ""}>About To Join</option>
-                        <option value="Joined" ${candidate.stage === "Joined" ? "selected" : ""}>Joined</option>
-                        <option value="HOLD" ${candidate.stage === "HOLD" ? "selected" : ""}>Hold</option>
-                        <option value="Buffer List" ${candidate.stage === "Buffer List" ? "selected" : ""}>Buffer List</option>
-                        <option value="Exceeding Limit" ${candidate.stage === "Exceeding Limit" ? "selected" : ""}>Exceeding Limit</option>
-                        <option value="Rejected" ${candidate.stage === "Rejected" ? "selected" : ""}>Rejected</option>
-                        <option value="Declined" ${candidate.stage === "Declined" ? "selected" : ""}>Declined</option>
-                    </select>
-                </td>
-                <td><input type="text" id="interviewer-${candidate.applicantId}" value="${candidate?.interviewer || "None"}" disabled></td>
-                <td><input type="date" id="interviewDate-${candidate.applicantId}" value="${formatDate(candidate.interviewDate)}"></td>
-                <td><input type="date" id="dateOfOffer-${candidate.applicantId}" value="${formatDate(candidate.dateOfOffer)}"></td>
-                <td>
-                    <select id="reasonNotExtending-${candidate.applicantId}" name="reasonNotExtending">
-                        <option value="">Select Value</option>
-                        <option value="Salary Negotiation" ${candidate.reasonNotExtending === "Salary Negotiation" ? "selected" : ""}>Salary Negotiation</option>
-                        <option value="Relocation Issues" ${candidate.reasonNotExtending === "Relocation Issues" ? "selected" : ""}>Relocation Issues</option>
-                    </select>
-                </td>
-                <td><input type="text" id="notes-${candidate.applicantId}" value="${candidate.notes || ""}"></td>
-                
-                <td><button class="action-button" onclick="viewResume(${candidate.applicantId})">View</button></td>
-                <td><button class="action-button" onclick="downloadResume(${candidate.applicantId}, '${candidate.applicantName}')">Download</button></td>
-                <td><button class="action-button" onclick="exportCandidate(${candidate.applicantId})">Export</button></td>`;
-
-      candidateList.appendChild(row);
-
-      const stageSelect = document.getElementById(`stage-${candidate.applicantId}`);
-      if (stageSelect) {
-        stageSelect.addEventListener("change", () =>
-          toggleInterviewer(candidate.applicantId)
-        );
-        toggleInterviewer(candidate.applicantId);
-      }
+              </td>
+              <td>
+                  <select id="status-${candidate.applicantId}" name="status">
+                      <option value="OPEN" ${candidate.status === "OPEN" ? "selected" : ""}>OPEN</option>
+                      <option value="CLOSED" ${candidate.status === "CLOSED" ? "selected" : ""}>CLOSED</option>
+                  </select>
+              </td>
+              <td>
+                  <select id="stage-${candidate.applicantId}" name="stage" onchange="toggleInterviewer(${candidate.applicantId})">
+                      <option value="App. Recd." ${candidate.stage === "App. Recd." ? "selected" : ""}>App. Recd.</option>
+                      <option value="Not Answering" ${candidate.stage === "Not Answering" ? "selected" : ""}>Not Answering</option>
+                      <option value="Phone Screen" ${candidate.stage === "Phone Screen" ? "selected" : ""}>Phone Screen</option>
+                      <option value="L1" ${candidate.stage === "L1" ? "selected" : ""}>L1</option>
+                      <option value="L2_Internal" ${candidate.stage === "L2_Internal" ? "selected" : ""}>L2_Internal</option>
+                      <option value="Yet to share" ${candidate.stage === "Yet to share" ? "selected" : ""}>Yet to share</option>
+                      <option value="Shared with client" ${candidate.stage === "Shared with client" ? "selected" : ""}>Shared with client</option>
+                      <option value="L1_Client" ${candidate.stage === "L1_Client" ? "selected" : ""}>L1_Client</option>
+                      <option value="L2_Client" ${candidate.stage === "L2_Client" ? "selected" : ""}>L2_Client</option>
+                      <option value="Final Discussion" ${candidate.stage === "Final Discussion" ? "selected" : ""}>Final Discussion</option>
+                      <option value="About To Join" ${candidate.stage === "About To Join" ? "selected" : ""}>About To Join</option>
+                      <option value="Joined" ${candidate.stage === "Joined" ? "selected" : ""}>Joined</option>
+                      <option value="HOLD" ${candidate.stage === "HOLD" ? "selected" : ""}>Hold</option>
+                      <option value="Buffer List" ${candidate.stage === "Buffer List" ? "selected" : ""}>Buffer List</option>
+                      <option value="Exceeding Limit" ${candidate.stage === "Exceeding Limit" ? "selected" : ""}>Exceeding Limit</option>
+                      <option value="Rejected" ${candidate.stage === "Rejected" ? "selected" : ""}>Rejected</option>
+                      <option value="Declined" ${candidate.stage === "Declined" ? "selected" : ""}>Declined</option>
+                  </select>
+              </td>
+              <td><input type="text" id="interviewer-${candidate.applicantId}" value="${candidate?.interviewer || "None"}" disabled></td>
+              <td><input type="date" id="interviewDate-${candidate.applicantId}" value="${formatDate(candidate.interviewDate)}"></td>
+              <td><input type="date" id="dateOfOffer-${candidate.applicantId}" value="${formatDate(candidate.dateOfOffer)}"></td>
+              <td>
+                  <select id="reasonNotExtending-${candidate.applicantId}" name="reasonNotExtending">
+                      <option value="">Select Value</option>
+                      <option value="Salary Negotiation" ${candidate.reasonNotExtending === "Salary Negotiation" ? "selected" : ""}>Salary Negotiation</option>
+                      <option value="Relocation Issues" ${candidate.reasonNotExtending === "Relocation Issues" ? "selected" : ""}>Relocation Issues</option>
+                  </select>
+              </td>
+              <td><input type="text" id="notes-${candidate.applicantId}" value="${candidate.notes || ""}"></td>
+              <td><button class="action-button" onclick="viewResume(${candidate.applicantId})">View</button></td>
+              <td><button class="action-button" onclick="downloadResume(${candidate.applicantId}, '${candidate.applicantName}')">Download</button></td>
+              <td><button class="action-button" onclick="exportCandidate(${candidate.applicantId})">Export</button></td>`;
+  
+          candidateList.appendChild(row);
+     
+  
+      // const stageSelect = document.getElementById(`stage-${candidate.applicantId}`);
+      // if (stageSelect) {
+      //   stageSelect.addEventListener("change", () =>
+      //     toggleInterviewer(candidate.applicantId)
+      //   );
+      //   toggleInterviewer(candidate.applicantId);
+      // }
     });
 }
 
