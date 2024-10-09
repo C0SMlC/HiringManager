@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+
+    <title>Master Candidate Details</title>
+    <link rel="stylesheet" href="style.css" />
+
+  <style>
+    .forms-container {
+      height: calc(100vh - 60px);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      padding: 20px;
+    }
+    
+    .header-filter-section {
+      flex-shrink: 0;
+    }
+    .view {
+      margin: auto;
+      width: 100%; 
+      overflow-y: auto; 
+      max-height: calc(100vh - 100px); 
+    }
+    
+    .wrapper {
+      position: relative;
+      overflow: auto;
+      border: 1px solid black;
+      white-space: nowrap;
+    }
+    
+    table {
+      width: 100%; 
+      border-collapse: collapse; 
+    }
+    
+    th, 
+    td {
+      padding: 10px;
+      text-align: center;
+      border: 1px solid #ddd; 
+    }
+    
+    thead {
+      position: sticky; 
+      top: 0; 
+      background-color: #2c3e50; 
+      color:white;
+      z-index: 10; 
+    }
+    
+    th {
+      box-shadow: 0 2px 2px -2px #ccc; 
+      background-color: #2c3e50;
+      color: white;
+    }
+    
+    .sticky-col {
+    position: sticky;
+    background-color: white;
+}
+
+.first-col {
+    width: 150px;
+    min-width: 150px; 
+    max-width: 150px;
+    left: 0; 
+}
+
+.second-col {
+    width: 150px;
+    min-width: 150px;
+    max-width: 150px; 
+    left: 150px;
+}
+
+th.first-col, th.second-col {
+    background-color: #2c3e50; 
+    color: white; 
+    text-align: center; 
+}
+
+th, td {
+    text-align: center;
+}
+ */
+    .floating-scrollbar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 20px;
+      background-color: rgba(242, 242, 242, 0.9); 
+      overflow-x: auto;
+      overflow-y: hidden;
+      z-index: 1000;
+    }
+    
+    .scrollbar-spacer {
+      height: 1px; 
+      width: 100%; 
+    }
+    .table-wrapper::-webkit-scrollbar {
+      display: none;
+    }
+    
+    .table-wrapper {
+      scrollbar-width: none;
+    }
+    .filter-search-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      gap: 10px;
+    }
+    
+    .filter-container {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    
+    .export-button {
+      margin-top: 10px;
+      align-self: flex-end;
+      width: 80px;
+      height: 40px;
+      padding: 5px;
+      background-color: #007bff; 
+      color: white;
+      border: none; 
+      border-radius: 5px;
+      cursor: pointer; 
+      font-size: 12px; 
+    }
+    
+    .export-button:hover {
+      background-color: #0056b3;
+    }
+    </style>
+    
+  </head>
+  <body>
+    <div class="navbar">
+      <a href="login.html" id="loginLink">Login</a>
+      <a href="stats.html" id="statsLink">Home</a>
+      <a href="form.html" id="formLink">Candidate Form</a>
+      <a href="candidates.html" id="detailsLink">Candidate Details</a>
+      <a href="updatePositions.html" id="updatePositionsLink">Update Positions</a>
+      <a href="positions.html" id="positionsLink">Open Positions</a>
+      <a href="masterCandidates.html" id="masterCandidatesLink">Master Candidate Details</a>
+      <a href="userActivity.html" id="userActivity">User Activity</a>
+      <a href="assignapplicants.html" id="assignApplicantLink">Assign Applicant</a>
+      <a href="#" id="logoutLink" style="display: none">Logout</a>
+    </div>
+    <div class="forms-container">
+      <div id="usernameDisplay"></div>
+      <h2>Master Candidate Details</h2>
+      <div class="filter-search-container">
+        <div class="filter-container">
+          <label for="statusFilter">Filter by Status:</label>
+          <select id="statusFilter">
+            <option value="all">All</option>
+            <option value="OPEN">Open</option>
+            <option value="CLOSED">Closed</option>
+          </select>
+        </div>
+        <div class="filter-container">
+          <label for="ownerFilter">Filter by Profile Owner:</label>
+          <select id="ownerFilter">
+            <option value="all">All</option>
+            <!-- Options will be populated dynamically -->
+          </select>
+        </div>
+        <div class="filter-container">
+          <label for="positionFilter">Filter by Position Title:</label>
+          <select id="positionFilter">
+            <option value="all">All</option>
+            <!-- Options will be populated dynamically -->
+          </select>
+        </div>
+        <div class="filter-container">
+          <label for="stageFilter">Filter by Stage:</label>
+          <select id="stageFilter">
+            <option value="all">All</option>
+            <!-- Options will be populated dynamically -->
+          </select>
+        </div>
+        <div class="search-container">
+          <input
+            type="text"
+            id="searchInput"
+            placeholder="Search by name, email, or phone"
+          />
+        </div>
+      </div>
+<!-- Export Button -->
+<button class="export-button" id="exportButton">Export</button>
+      <div class="view">
+        <div class="wrapper">
+          <table id="table">
+            <thead>
+              <tr>
+                <th class="sticky-col first-col">Profile Owner</th>
+                <th class="sticky-col second-col">Name</th>
+                <th>Phone</th>
+                <th>Email</th>
+                <th>Current Company</th>
+                <th>Work Location</th>
+                <th>Native Location</th>
+                <th>Qualification</th>
+                <th>Experience</th>
+                <th>Skills</th>
+                <th>Notice Period</th>
+                <th>Current CTC</th>
+                <th>Expected CTC</th>
+                <th>Band</th>
+                <th>Date Applied</th>
+                <th>Position Title</th>
+                <th>Position ID</th>
+                <th>Status</th>
+                <th>Stage</th>
+                <th>interviewer</th>
+                <th>Date of Phone Screen</th>
+                <th>Interview Date</th>
+                <th>Date of Joining</th>
+                <th>Reason for Not Extending Offer</th>
+                <th>Notes</th>
+              </tr>
+            </thead>
+            <tbody id="candidateList">
+              <!-- Candidates will be populated here -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      
+    </div>
+
+    <div class="floating-scrollbar">
+      <div class="scrollbar-spacer"></div>
+    </div>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const tableWrapper = document.querySelector(".table-wrapper");
+        const floatingScrollbar = document.querySelector(".floating-scrollbar");
+        const scrollbarSpacer = document.querySelector(".scrollbar-spacer");
+        const table = document.getElementById("candidateTable");
+
+        // Function to update the spacer width and scrollbar
+        function updateScrollbarAndSpacer() {
+          // Calculate the total width of all columns
+          const totalWidth = Array.from(table.rows[0].cells).reduce(
+            (sum, cell) => sum + cell.offsetWidth,
+            0
+          );
+
+          // Set the width of the spacer to match the total table width
+          scrollbarSpacer.style.width = `${totalWidth}px`;
+
+          // Set the width of the floating scrollbar container to match the table wrapper width
+          floatingScrollbar.style.width = `${tableWrapper.clientWidth}px`;
+        }
+
+        // Synchronize the table scroll with the floating scrollbar
+        floatingScrollbar.addEventListener("scroll", function () {
+          tableWrapper.scrollLeft = floatingScrollbar.scrollLeft;
+        });
+
+        // Synchronize the floating scrollbar with the table scroll
+        tableWrapper.addEventListener("scroll", function () {
+          floatingScrollbar.scrollLeft = tableWrapper.scrollLeft;
+        });
+
+        // Update the scrollbar and spacer when the window resizes
+        window.addEventListener("resize", updateScrollbarAndSpacer);
+
+        // Initial setup
+        updateScrollbarAndSpacer();
+
+        // Adjust table header on vertical scroll
+        tableWrapper.addEventListener("scroll", function () {
+          const headers = table.querySelectorAll("th");
+          headers.forEach((header) => {
+            header.style.transform = `translateY(${tableWrapper.scrollTop}px)`;
+          });
+        });
+
+        // Observe the table for changes (e.g., data loading)
+        const observer = new MutationObserver(updateScrollbarAndSpacer);
+        observer.observe(table, { childList: true, subtree: true });
+      });
+    </script>
+    <script src="userInfo.js"></script>
+    <script src="dashboard.js"></script>
+    <script src="masterCandidates.js"></script>
+    <script src="hideNav.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="socket.js"></script>
+  </body>
+</html>

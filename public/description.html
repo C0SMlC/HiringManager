@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Job Description</title>
+    <!-- Placeholder title -->
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        line-height: 1.6;
+        margin: 0;
+        padding: 20px;
+      }
+
+      header {
+        background-image: url("OPC.jpeg"); /* Path to the background image */
+        background-size: cover; /* Ensure the image covers the entire header */
+        background-position: center; /* Center the image */
+        background-repeat: no-repeat; /* Prevent image from repeating */
+        padding: 20px;
+        margin-bottom: 20px;
+        color: white; /* Text color to stand out against the image */
+      }
+
+      header h1 {
+        margin: 0;
+      }
+
+      header nav {
+        color: white; /* Link color to stand out against the background */
+      }
+
+      header nav a {
+        color: white; /* Link color to stand out against the background */
+        text-decoration: none;
+      }
+
+      header nav a:hover {
+        text-decoration: underline; /* Underline links on hover */
+      }
+
+      .job-details {
+        max-width: 800px;
+        margin: 0 auto;
+      }
+
+      .error-message {
+        color: red;
+        font-weight: bold;
+      }
+
+      #apply-now {
+        width: 8.2rem;
+        height: 2.6rem;
+        margin-bottom: 2.6rem;
+        background-color: #4f75ff;
+        border: none;
+        color: white;
+        font-size: 14px; /* Font size for button text */
+      }
+
+      .job-title__nav {
+        display: inline-block;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Delta IoT Solutions</h1>
+      <nav>
+        <a href="http://127.0.0.1:3001/openPositionPublic.html">Home</a> /
+        <a href="http://127.0.0.1:3001/openPositionPublic.html">Jobs</a> /
+        <p class="job-title__nav">Full Stack Backend Developer</p>
+      </nav>
+    </header>
+
+    <div class="job-details">
+      <h2 class="job-title">C++ Developer</h2>
+      <!-- <p>Salary: <span id="salary">$5000 - $8000</span></p> -->
+      <p>Location: <span id="location">Magarpatta, Pune</span></p>
+      <p>Type: <span id="job-type">Full Time</span></p>
+      <p>Posted on: <span id="created-at"></span></p>
+
+      <h3>Job Description</h3>
+      <div id="job-description"></div>
+
+      <h3>Responsibilities</h3>
+      <ul id="responsibilities"></ul>
+
+      <h3>Education + Experience</h3>
+      <ul id="education-experience"></ul>
+
+      <h3>Benefits</h3>
+      <ul id="benefits"></ul>
+
+      <button id="apply-now">Apply Now</button>
+    </div>
+
+    <p id="error-message" class="error-message"></p>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const positionId = urlParams.get("id");
+
+        if (positionId) {
+          fetch(`/positions/${positionId}`)
+            .then((response) => {
+              if (!response.ok) throw new Error("Network response was not ok");
+              return response.json();
+            })
+            .then((data) => {
+              if (data && data.length > 0) {
+                const position = data[0];
+                const fullText = position.jobdescription;
+
+                document
+                  .querySelector("#apply-now")
+                  .addEventListener("click", () => {
+                    window.location.href = `http://127.0.0.1:3001/applyPosition.html?id=${positionId}&title=${position.positionTitle}`;
+                  });
+
+                // Update the page title with the job title
+                document.title = `${position.positionTitle} - Job Description`;
+
+                document.querySelector(".job-title").textContent =
+                  position.positionTitle;
+
+                document.querySelector(".job-title__nav").textContent =
+                  position.positionTitle;
+
+                // Process the text and split it into sections
+                const jobSections = splitJobDescription(fullText);
+
+                // Insert the job description
+                document.getElementById("job-description").innerHTML =
+                  jobSections.jobDescription;
+
+                // Populate Responsibilities
+                populateList("responsibilities", jobSections.responsibilities);
+
+                // Populate Education + Experience
+                populateList(
+                  "education-experience",
+                  jobSections.educationExperience
+                );
+
+                // Populate Benefits
+                populateList("benefits", jobSections.benefits);
+
+                document.getElementById("created-at").textContent = new Date(
+                  position.created_at
+                ).toLocaleDateString();
+              } else {
+                throw new Error("No data received for the position");
+              }
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+              document.getElementById("error-message").textContent =
+                "Failed to load job details. Please try again later.";
+            });
+        } else {
+          document.getElementById("error-message").textContent =
+            "No position ID found. Please check the URL.";
+        }
+
+        function splitJobDescription(fullText) {
+          // Split the sections by headers: Responsibilities, Education + Experience, Benefits
+          const jobDescriptionEnd = fullText.indexOf("Responsibilities");
+          const responsibilitiesEnd = fullText.indexOf(
+            "Education + Experience"
+          );
+          const educationExperienceEnd = fullText.indexOf("Benefits");
+
+          const jobDescription = fullText.slice(0, jobDescriptionEnd).trim();
+          const responsibilities = fullText
+            .slice(
+              jobDescriptionEnd + "Responsibilities".length,
+              responsibilitiesEnd
+            )
+            .split("\n")
+            .map((item) => item.trim())
+            .filter((item) => item); // Filter out empty strings
+
+          const educationExperience = fullText
+            .slice(
+              responsibilitiesEnd + "Education + Experience".length,
+              educationExperienceEnd
+            )
+            .split("\n")
+            .map((item) => item.trim())
+            .filter((item) => item);
+
+          const benefits = fullText
+            .slice(educationExperienceEnd + "Benefits".length)
+            .split("\n")
+            .map((item) => item.trim())
+            .filter((item) => item);
+
+          return {
+            jobDescription,
+            responsibilities,
+            educationExperience,
+            benefits,
+          };
+        }
+
+        function populateList(elementId, items) {
+          const list = document.getElementById(elementId);
+          list.innerHTML = ""; // Clear any previous content
+          items.forEach((item) => {
+            const li = document.createElement("li");
+            li.textContent = item;
+            list.appendChild(li);
+          });
+        }
+      });
+    </script>
+  </body>
+</html>

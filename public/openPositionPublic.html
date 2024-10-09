@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Careers- Delta IoT Solutions</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        line-height: 1.6;
+      }
+      .container {
+        width: 80%;
+        margin: 0 auto;
+        overflow: hidden;
+      }
+      header {
+        background: #f4f4f4;
+        padding: 1rem 0;
+      }
+      nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      nav ul {
+        display: flex;
+        list-style: none;
+      }
+      nav ul li {
+        padding: 0 10px;
+      }
+      .hero {
+        background: url("./OPC.jpeg") no-repeat center center/cover;
+        height: 400px;
+        color: #fff;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        backdrop-filter: blur(2px);
+      }
+
+      .hero::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5); /* Black with 50% opacity */
+        z-index: 1;
+      }
+      .hero h1 {
+        font-size:12px;
+        margin-bottom: 1rem;
+      }
+      .search-form {
+        display: flex;
+        justify-content: center;
+        margin-top: 2rem;
+        z-index: 2;
+      }
+      .search-form input {
+        padding: 0.5rem;
+        margin-right: 0.5rem;
+        border: none;
+        border-radius: 4px;
+        width: 300px;
+      }
+      .search-form button {
+        padding: 0.5rem 1rem;
+        background: #007bff;
+        color: #fff;
+        border: none;
+        cursor: pointer;
+        border-radius: 4px;
+        transition: background-color 0.3s ease;
+      }
+      .search-form button:hover {
+        background-color: #0056b3;
+      }
+      .jobs {
+        padding: 2rem 0;
+      }
+      .job-card {
+        background: #f9f9f9;
+        border: 1px solid #ddd;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .job-card img {
+        width: 50px;
+        height: 50px;
+        margin-right: 1rem;
+      }
+      .job-info {
+        flex: 1;
+      }
+      .job-type {
+        background: #28a745;
+        color: #fff;
+        padding: 0.2rem 0.5rem;
+        border-radius: 3px;
+        font-size: 12px;
+      }
+      .btn__container {
+        display: inline-block;
+        text-align: center;
+        width: 100%;
+      }
+
+      .view__job {
+        width: 8.2rem;
+        height: 2.6rem;
+        margin-bottom: 2.6rem;
+        background-color: #4f75ff;
+        border: none;
+        color: #fff;
+        cursor: pointer;
+        border-radius: 4px;
+        transition: background-color 0.3s ease;
+      }
+
+      .view__job:hover {
+        background-color: #3a5bbf;
+      }
+
+      .hero__headers {
+        z-index: 100;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="container">
+        <nav>
+          <h1>Delta IOT Solutions</h1>
+          <ul>
+            <!-- <li>Home</li> -->
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <section class="hero">
+      <div class="hero__headers">
+        <h1>Find Your Next Job</h1>
+        <p>More than 1,524 jobs listed here.</p>
+        <form class="search-form" onsubmit="return false;">
+          <input type="text" id="searchInput" placeholder="e.g. web design" />
+          <button type="submit" onclick="searchJobs()">Search</button>
+        </form>
+      </div>
+    </section>
+
+    <section class="jobs container">
+      <h2>Latest Jobs</h2>
+      <p>Here's the most recent jobs listed on the website.</p>
+    </section>
+    <div class="btn__container">
+      <button class="view__job" onclick="viewAllJobs()">View All Jobs</button>
+    </div>
+
+    <script>
+      let allJobs = [];
+      let isViewingAll = false;
+
+      // Fetch jobs from API
+      fetch("/api/positions")
+        .then((response) => response.json())
+        .then((jobs) => {
+          allJobs = jobs;
+          console.log("Fetched jobs:", allJobs); // Debug to check if jobs are fetched
+          displayJobs(jobs.slice(0, 5)); // Display first 5 jobs
+        })
+        .catch((error) => console.error("Error fetching jobs:", error));
+
+      // Function to display jobs
+      function displayJobs(jobs) {
+        const jobsContainer = document.querySelector(".jobs");
+        jobsContainer.innerHTML =
+          "<h2>Latest Jobs</h2><p>Here's the most recent jobs listed on the website.</p>";
+
+        jobs.forEach((job) => {
+          const jobCard = document.createElement("div");
+          jobCard.className = "job-card";
+          jobCard.id = job.positionId;
+          jobCard.innerHTML = `
+            <div class="job-info">
+              <h3>${job.positionTitle}</h3>
+            </div>
+            <span class="job-type">Full Time</span>
+          `;
+          jobsContainer.appendChild(jobCard);
+
+          // Add click event to job card
+          jobCard.addEventListener("click", () => {
+            window.location.href = `http://127.0.0.1:3001/description.html?id=${job.positionId}`;
+          });
+        });
+      }
+
+      // Function to search jobs
+      function searchJobs() {
+        const searchTerm = document
+          .getElementById("searchInput")
+          .value.toLowerCase();
+        const filteredJobs = allJobs.filter((job) =>
+          job.positionTitle.toLowerCase().includes(searchTerm)
+        );
+        displayJobs(isViewingAll ? filteredJobs : filteredJobs.slice(0, 5));
+        updateViewAllButton();
+      }
+
+      // Function to toggle view all jobs
+      function viewAllJobs() {
+        if (allJobs.length === 0) {
+          console.error("No jobs to display.");
+          return;
+        }
+
+        isViewingAll = !isViewingAll;
+        updateViewAllButton(); // Update button text immediately
+        if (isViewingAll) {
+          displayJobs(allJobs); // Show all jobs
+        } else {
+          displayJobs(allJobs.slice(0, 5)); // Show only 5 jobs
+        }
+      }
+
+      // Function to update the View All button text
+      function updateViewAllButton() {
+        const viewAllButton = document.querySelector(".view__job");
+        viewAllButton.textContent = isViewingAll
+          ? "View Less"
+          : "View All Jobs";
+      }
+    </script>
+  </body>
+</html>

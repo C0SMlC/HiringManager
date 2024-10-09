@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Set the page title to include the job title -->
+    <title>Apply for Position - <span id="positionTitle"></span></title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f0f0f0;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+      .header {
+        background-color: white;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        padding: 15px 5%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .logo {
+        color: #007bff;;
+        font-size: 24px;
+        font-weight: bold;
+      }
+      .container {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+      }
+      .form-container {
+        background-color: white;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 600px;
+      }
+      .form-container h2 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 20px;
+      }
+      .form-row {
+        display: flex;
+        margin-bottom: 15px;
+      }
+      .form-field {
+        flex: 1;
+        margin-right: 15px;
+      }
+      .form-field:last-child {
+        margin-right: 0;
+      }
+      label {
+        display: block;
+        margin-bottom: 5px;
+      }
+      input,
+      select {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+      }
+      button {
+        background-color: #4caf50;
+        color: white;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        width: 100%;
+      }
+      button:hover {
+        background-color: #45a049;
+      }
+      .required::after {
+        content: " *";
+        color: red;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="header">
+      <div class="logo">Delta IoT Solutions</div>
+    </header>
+    <div class="container">
+      <div class="form-container">
+        <!-- Set job title in the heading -->
+        <h2>Apply for <span id="positionTitle"></span></h2>
+        <form id="applicantForm" enctype="multipart/form-data">
+          <!-- Form fields as before -->
+          <div class="form-row">
+            <div class="form-field">
+              <label for="applicantName" class="required">Name:</label>
+              <input
+                type="text"
+                id="applicantName"
+                name="applicantName"
+                required
+              />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-field">
+              <label for="applicantPhone" class="required">Phone:</label>
+              <input
+                type="text"
+                id="applicantPhone"
+                name="applicantPhone"
+                required
+              />
+            </div>
+            <div class="form-field">
+              <label for="applicantEmail" class="required">Email:</label>
+              <input
+                type="email"
+                id="applicantEmail"
+                name="applicantEmail"
+                required
+              />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-field">
+              <label for="currentCompany" class="required"
+                >Current Company:</label
+              >
+              <input
+                type="text"
+                id="currentCompany"
+                name="currentCompany"
+                required
+              />
+            </div>
+            <div class="form-field">
+              <label for="candidateWorkLocation" class="required"
+                >Work Location:</label
+              >
+              <input
+                type="text"
+                id="candidateWorkLocation"
+                name="candidateWorkLocation"
+                required
+              />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-field">
+              <label for="nativeLocation">Native Location:</label>
+              <input type="text" id="nativeLocation" name="nativeLocation" />
+            </div>
+            <div class="form-field">
+              <label for="qualification" class="required">Qualification:</label>
+              <input
+                type="text"
+                id="qualification"
+                name="qualification"
+                required
+              />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-field">
+              <label for="experience" class="required">Experience:</label>
+              <input type="text" id="experience" name="experience" required />
+            </div>
+            <div class="form-field">
+              <label for="skills">Skills:</label>
+              <input type="text" id="skills" name="skills" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-field">
+              <label for="noticePeriod" class="required">Notice Period:</label>
+              <input
+                type="text"
+                id="noticePeriod"
+                name="noticePeriod"
+                required
+              />
+            </div>
+            <div class="form-field">
+              <label for="currentctc" class="required">Current CTC:</label>
+              <input type="number" id="currentctc" name="currentctc" required />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-field">
+              <label for="expectedctc" class="required">Expected CTC:</label>
+              <input
+                type="number"
+                id="expectedctc"
+                name="expectedctc"
+                required
+              />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-field">
+              <label for="applicantResume" class="required">Resume:</label>
+              <input
+                type="file"
+                id="applicantResume"
+                name="applicantResume"
+                required
+              />
+            </div>
+          </div>
+          <input type="hidden" id="positionTitle" name="positionTitle" />
+          <input type="hidden" id="positionId" name="positionId" />
+          <input type="hidden" id="status" name="status" value="OPEN" />
+          <input type="hidden" id="stage" name="stage" value="App. Recd." />
+          <div class="form-row">
+            <div class="form-field full-width">
+              <button type="submit">Submit</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        console.log(urlParams);
+        const positionId = urlParams.get("id");
+        const positionTitle = urlParams.get("title");
+
+        // Set job title in the heading and title
+        document.getElementById("positionTitle").textContent = positionTitle;
+        document.title = `Apply for Position - ${positionTitle}`;
+
+        // Set job title in the hidden input field
+        document
+          .getElementById("positionTitle")
+          .setAttribute("value", positionTitle);
+
+        // Set position ID in the hidden input field
+        document.getElementById("positionId").value = positionId;
+
+        fetch(`/positions/${positionId}`)
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.length > 0 && data[0].jobdescription) {
+              const jobDescription = data[0].jobdescription;
+              // No longer needed
+            } else {
+              // No longer needed
+            }
+          })
+          .catch((error) => {
+            console.error("Error fetching job description:", error);
+          });
+
+        const form = document.getElementById("applicantForm");
+
+        form.addEventListener("submit", async (event) => {
+          event.preventDefault();
+          // Validate form data
+          const inputs = form.elements;
+          for (const [key, element] of Object.entries(inputs)) {
+            if (
+              element instanceof HTMLInputElement ||
+              element instanceof HTMLSelectElement
+            ) {
+              if (element.required && !element.value) {
+                alert(`Please fill out the ${key} field.`);
+                return;
+              }
+
+              const nameRegex = /^[a-zA-Z\s]+$/;
+              const phoneRegex = /^\d{10}$/;
+              const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+              const experienceRegex = /^\d+(\.\d+)?$/;
+              const integerRegex = /^\d+$/;
+
+              if (key === "applicantName" && !nameRegex.test(element.value)) {
+                alert("Applicant name must contain only alphabets and spaces.");
+                return;
+              }
+              if (key === "applicantPhone" && !phoneRegex.test(element.value)) {
+                alert("Phone number must be 10 digits.");
+                return;
+              }
+              if (key === "applicantEmail" && !emailRegex.test(element.value)) {
+                alert("Please enter a valid email address.");
+                return;
+              }
+              if (
+                key === "experience" &&
+                !experienceRegex.test(element.value)
+              ) {
+                alert("Experience must be a number (integer or float).");
+                return;
+              }
+              if (
+                (key === "noticePeriod" ||
+                  key === "currentctc" ||
+                  key === "expectedctc") &&
+                !integerRegex.test(element.value)
+              ) {
+                alert(`${key} must be an integer.`);
+                return;
+              }
+            }
+          }
+
+          try {
+            const formData = new FormData(form);
+            const response = await fetch("/submit/public", {
+              method: "POST",
+              body: formData,
+            });
+
+            if (!response.ok) {
+              const error = await response.json();
+              throw new Error(error.message);
+            }
+
+            const result = await response.json();
+            alert(result.message);
+            window.location.href = "openPositionPublic.html";
+          } catch (error) {
+            alert(`Error: ${error.message}`);
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

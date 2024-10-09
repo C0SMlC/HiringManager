@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Update Open Positions</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+        body {
+            font-family: "Arial", sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background-color: #2c3e50;
+            padding: 15px 0;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 15px;
+            margin: 0 5px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        .navbar a:hover {
+            background-color: #34495e;
+            transform: translateY(-2px);
+        }
+        .form-container {
+            background-color: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            width: 100%;
+            max-width: 500px;
+            margin-top: 100px;
+            text-align: center;
+        }
+        .form-container h2 {
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+        .form-field {
+            margin-bottom: 25px;
+            width:100%;
+        }
+        .form-field label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #34495e;
+            text-align: left;
+        }
+        .form-field input[type="text"],
+        .form-field textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ecf0f1;
+            border-radius: 10px;
+            font-size: 12px;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+        .form-field input:focus,
+        .form-field textarea:focus {
+            border-color:#007bff;;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+        .form-field button {
+            background-color:#007bff;;
+            color: #fff;
+            border: none;
+            padding: 14px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            width: 200px;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+        .form-field button:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        .required {
+    color: red;
+}
+
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <a href="stats.html" id="statsLink">Home</a>
+        <a href="login.html" id="loginLink">Login</a>
+        <a href="form.html" id="formLink">Candidate Form</a>
+        <a href="candidates.html" id="detailsLink">Candidate Details</a>
+        <a href="updatePositions.html" id="updatePositionsLink">Update Positions</a>
+        <a href="positions.html" id="positionsLink">Open Positions</a>
+        <a href="masterCandidates.html" id="masterCandidatesLink">Master Candidate Details</a>
+        <a href="userActivity.html" id="userActivity">User Activity</a>
+        <a href="assignapplicants.html" id="assignApplicantLink">Assign Applicant</a>
+        <a href="#" id="logoutLink" style="display: none">Logout</a>
+    </div>
+    <div class="form-container">
+        <div id="usernameDisplay"></div>
+        <h2>Update Open Positions</h2>
+        <form id="updatePositionsForm">
+          <div class="form-field">
+            <label for="positionTitle">Position Title:<span class="required"></span></label>
+            <input type="text" id="positionTitle" name="positionTitle" required />
+        </div>
+        <div class="form-field">
+            <label for="positionId">Position ID:<span class="required"></span></label>
+            <input type="text" id="positionId" name="positionId" required />
+        </div>
+        <div class="form-field">
+            <label for="openPositions">Open Positions:<span class="required"></span></label>
+            <input type="text" id="openPositions" name="openPositions" required />
+        </div>
+        <div class="form-field">
+            <label for="experienceRequired">Experience:<span class="required"></span></label>
+            <input type="text" id="experienceRequired" name="experienceRequired" required />
+        </div>
+        <div class="form-field">
+            <label for="manager">Manager:<span class="required"></span></label>
+            <input type="text" id="manager" name="manager" required />
+        </div>
+        <div class="form-field">
+            <label for="description">Job description:<span class="required"></span></label>
+            <textarea id="description" name="description" required></textarea>
+        </div>
+            <div class="form-field">
+                <button type="submit">Update Position</button>
+            </div>
+        </form>
+    </div>
+    <script src="userInfo.js"></script>
+    <script src="dashboard.js"></script>
+    <script>
+        document
+            .getElementById("updatePositionsForm")
+            .addEventListener("submit", async (event) => {
+                event.preventDefault();
+                const logoutLink = document.getElementById("logoutLink");
+                logoutLink.style.display = "inline-block";
+                const positionTitle = document.getElementById("positionTitle").value;
+                const positionId = document.getElementById("positionId").value;
+                const description = document.getElementById("description").value;
+                const manager = document.getElementById("manager").value;
+                const openPositions = document.getElementById("openPositions").value;
+                const experienceRequired = document.getElementById("experienceRequired").value;
+                const status = "active";
+
+                try {
+                    const response = await fetch("/updatePosition", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${localStorage.getItem("token")}`,
+                        },
+                        body: JSON.stringify({
+                            positionTitle,
+                            positionId,
+                            manager,
+                            description,
+                            status,
+                            openPositions,
+                            experienceRequired,
+                        }),
+                    });
+
+                    if (!response.ok) {
+                        throw new Error("Failed to update position");
+                    }
+
+                    const result = await response.json();
+                    alert(result.message);
+                    document.getElementById("updatePositionsForm").reset();
+                } catch (error) {
+                    alert(error.message);
+                }
+            });
+    </script>
+    <script src="hideNav.js"></script>
+    <script src="dashboard.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="socket.js"></script>
+</body>
+</html>

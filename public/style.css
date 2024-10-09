@@ -1,0 +1,560 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  margin: 0;
+  padding: 0;
+}
+
+.forms-container {
+  margin: 50px auto;
+  padding: 20px;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+h2 {
+  text-align: center;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+input,
+select {
+  width: calc(100% - 20px);
+  padding: 8px 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+button {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f4;
+}
+
+.table-container {
+  width: 90%;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+table,
+th,
+td {
+  border: 1px solid #ddd;
+}
+
+th,
+td {
+  padding: 12px;
+  text-align: left;
+}
+
+th {
+  background-color: #f4f4f4;
+  color: #333;
+}
+
+tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+tr:hover {
+  background-color: #f1f1f1;
+}
+
+a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+}
+
+.form-container {
+  max-width: 400px;
+  margin: 50px auto;
+  padding: 20px;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+}
+
+h2 {
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+input,
+select,
+button {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0 !important;
+  background-color: #f4f4f4;
+}
+
+.content {
+  padding: 2em;
+  text-align: center;
+}
+/* Add this to your style.css file */
+.filter-container {
+  margin-bottom: 20px; /* Adjust as needed */
+}
+
+#statusFilter {
+  width: 150px; /* Adjust width as needed */
+}
+/* Existing CSS code remains unchanged */
+
+/* New styles for two-column form layout */
+.form-container {
+  max-width: 800px;
+  margin: 50px auto;
+  padding: 20px;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+}
+
+.form-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.form-field {
+  width: 48%;
+}
+
+.form-field.full-width {
+  width: 100%;
+}
+
+.form-container label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.form-container input,
+.form-container select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.form-container button {
+  width: 100%;
+  padding: 10px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.form-container button:hover {
+  background-color: #0056b3;
+}
+
+@media (max-width: 600px) {
+  .form-row {
+    flex-direction: column;
+  }
+
+  .form-field {
+    width: 100%;
+    margin-bottom: 15px;
+  }
+}
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  margin: 0;
+  padding: 0;
+}
+
+.form-container {
+  max-width: 580px;
+  margin: 50px auto;
+  padding: 20px;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.form-field {
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+textarea {
+  height: 100px;
+}
+
+button {
+  width: 100%;
+  padding: 10px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+/* Basic resets and layout */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+}
+
+/* Container styles */
+.forms-container {
+  margin: 1rem auto;
+  padding: 1rem;
+  max-width: 1450px;
+}
+
+/* Filter container styles */
+.filter-container {
+  margin-bottom: 1rem;
+}
+
+#statusFilter {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* Table styles */
+#candidateTable {
+  width: 100%;
+  border-collapse: collapse;
+  overflow-x: auto;
+  display: block;
+}
+
+#candidateTable th,
+#candidateTable td {
+  border: 1px solid #ddd;
+  padding: 0.5rem;
+  text-align: center;
+  word-wrap: break-word;
+}
+
+#candidateTable th {
+  background-color: #f4f4f4;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+/* Scrollable container */
+table {
+  display: block;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .navbar a {
+    float: none;
+    display: block;
+    text-align: center;
+  }
+
+  #candidateTable th,
+  #candidateTable td {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+  }
+}
+
+/* .openpositions-form{
+    max
+} */
+
+.form-container.openpositions-form {
+  max-width: 100%;
+  width: 1500px;
+  margin: 50px auto;
+}
+
+#positionsTable {
+  width: 100%;
+  table-layout: fixed;
+}
+
+#positionsTable th,
+#positionsTable td {
+  vertical-align: top;
+  padding: 10px;
+}
+
+.job-description-container {
+  max-height: 150px;
+  overflow-y: auto;
+}
+
+.job-description-content {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+/* Adjust column widths */
+#positionsTable th:nth-child(1),
+#positionsTable td:nth-child(1) {
+  width: 10%;
+}
+
+#positionsTable th:nth-child(2),
+#positionsTable td:nth-child(2) {
+  width: 20%;
+}
+
+#positionsTable th:nth-child(3),
+#positionsTable td:nth-child(3) {
+  width: 35%;
+}
+
+#positionsTable th:nth-child(4),
+#positionsTable td:nth-child(4) {
+  width: 20%;
+}
+
+#positionsTable th:nth-child(5),
+#positionsTable td:nth-child(5) {
+  width: 10%;
+}
+
+#positionsTable th:nth-child(7),
+#positionsTable td:nth-child(7) {
+  width: 25%;
+}
+
+.navbar {
+  position: inline-block;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: #2c3e50;
+  padding: 15px 0;
+  text-align: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1.2rem;
+}
+.navbar a {
+  color: white;
+  text-decoration: none;
+  padding: 10px 15px;
+  margin: 0 5px;
+  border-radius: 25px;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+.navbar a:hover {
+  background-color: #34495e;
+  transform: translateY(-2px);
+}
+
+.required::after {
+  content: "*";
+  color: red;
+  margin-left: 4px;
+}
+
+.job-description-container {
+  max-width: 300px; /* Adjust this value as needed */
+  overflow-x: auto;
+}
+
+.job-description-content {
+  min-height: 50px; /* Minimum height */
+  max-height: 200px; /* Maximum height before scrolling */
+  overflow-y: auto;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.activeApplicants {
+  width: 200px; /* Fixed width, adjust as needed */
+  max-height: none; /* Remove max-height restriction */
+  overflow-x: hidden; /* Hide horizontal scrollbar */
+  overflow-y: auto; /* Allow vertical scrolling */
+  word-wrap: break-word; /* Allow long words to break and wrap */
+  white-space: normal; /* Allow text to wrap */
+}
+
+textarea {
+  width: 100%; /* You can adjust this percentage or use a fixed width like 400px */
+  max-width: 600px; /* This sets a maximum width */
+  min-height: 80px; /* Sets a minimum height */
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical; /* Allows the user to manually resize the height if needed */
+  overflow-y: hidden; /* Hides the scrollbar */
+  font-family: Arial, sans-serif;
+}
+
+.status-cell {
+  min-width: 150px;
+}
+
+.status-dropdown {
+  width: 100%;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  font-size: 12px;
+}
+
+.status-dropdown:disabled {
+  background-color: #f0f0f0;
+  color: #666;
+}
+
+.status-dropdown:enabled {
+  background-color: #fff;
+  color: #000;
+}
+.filter-container {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: nowrap;
+}
+
+.filter-item {
+  display: flex;
+  align-items: center;
+  margin-right: 20px;
+}
+
+.filter-container label {
+  margin-right: 10px;
+  white-space: nowrap;
+}
+
+.filter-container select {
+  width: auto;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+#statusFilter,
+#profileOwnerFilter,
+#dateAppliedSort {
+  min-width: 120px;
+}
+
+@media (max-width: 768px) {
+  .filter-container {
+    flex-wrap: wrap;
+  }
+
+  .filter-item {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+}

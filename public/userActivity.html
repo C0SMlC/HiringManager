@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Login/Logout Times</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="navbar">
+      <!-- <a href="index.html" id="homeLink">Home</a> -->
+      <a href="stats.html" id="statsLink">Home</a>
+      <a href="form.html" id="formLink">Candidate Form</a>
+      <a href="candidates.html" id="detailsLink">Candidate Details</a>
+      <!-- <a href="stats.html" id="statsLink">Statistics</a> -->
+      <a href="updatePositions.html" id="updatePositionsLink"
+        >Update Positions</a
+      >
+      <a href="positions.html" id="positionsLink">Open Positions</a>
+      <a href="masterCandidates.html" id="masterCandidatesLink"
+        >Master Candidate Details</a
+      >
+      <a href="userActivity.html" id="userActivity">User Activity</a>
+
+      <a href="assignapplicants.html" id="assignApplicantLink"
+        >Assign Applicant</a
+      >
+      <a href="#" id="logoutLink" style="display: none">Logout</a>
+    </div>
+    <div class="form-container admin-form">
+      <div id="usernameDisplay"></div>
+      <h2>User Login/Logout Times</h3>
+      <table id="userTable">
+        <thead>
+          <tr>
+            <th>Username</th>
+            <th>Logged In Time</th>
+            <th>Logged Out Time</th>
+          </tr>
+        </thead>
+        <tbody id="userList">
+          <!-- User data will be populated here -->
+        </tbody>
+      </table>
+    </div>
+    <script src="userInfo.js"></script>
+    <script src="hideNav.js"></script>
+    <script src="dashboard.js"></script>
+    <!-- <script src="admin.js"></script> -->
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const token = localStorage.getItem("token");
+        const role = localStorage.getItem("role");
+
+        if (!token || role !== "admin") {
+          window.location.href = "/login.html";
+        }
+
+        fetch("/users/activity", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+          .then((response) => response.json())
+          .then((userData) => {
+            const userList = document.getElementById("userList");
+            userList.innerHTML = "";
+
+            userData.forEach((user) => {
+              const row = document.createElement("tr");
+
+              row.innerHTML = `
+          <td>${user.username}</td>
+          <td>${
+            user.loggedInTime
+              ? new Date(user.loggedInTime).toLocaleString()
+              : "N/A"
+          }</td>
+          <td>${
+            user.loggedOutTime
+              ? new Date(user.loggedOutTime).toLocaleString()
+              : "N/A"
+          }</td>
+        `;
+
+              userList.appendChild(row);
+            });
+          })
+          .catch((err) => {
+            console.error(err);
+            alert("Failed to fetch user data");
+          });
+      });
+    </script>
+  </body>
+</html>

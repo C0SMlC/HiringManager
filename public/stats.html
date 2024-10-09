@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Applicant Tracking Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+        background-color: #f4f4f4;
+      }
+      .dashboard-container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+      .analytics-container {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+      }
+      .analytic-item {
+        background-color: #fff;
+        border-radius: 8px;
+        padding: 15px;
+        flex: 1;
+        margin: 0 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .analytic-item h3 {
+        margin: 0;
+        font-size: 14px;
+        color: #666;
+      }
+      .analytic-item p {
+        margin: 10px 0 0;
+        font-size: 24px;
+        font-weight: bold;
+        color: #333;
+      }
+      .charts-container {
+        display: flex;
+        justify-content: space-between;
+      }
+      .chart-container {
+        width: 48%;
+        background-color: #fff;
+        border-radius: 8px;
+        padding: 15px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        height: 400px;
+      }
+
+      .list-container {
+        background-color: #fff;
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      h1 {
+        margin-bottom: 2rem;
+      }
+
+      h1,
+      h2 {
+        color: #333;
+      }
+      h2 {
+        margin-top: 0;
+      }
+      ul {
+        padding-left: 20px;
+      }
+
+      .marginContianer {
+        margin-top: 3.6rem;
+      }
+
+      #masterDetails {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      #masterDetails th,
+      #masterDetails td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: center;
+      }
+      #masterDetails th {
+        background-color: #f2f2f2;
+      }
+      .activePostionscountContainer {
+        display: flex;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="navbar">
+      <a href="stats.html" id="statsLink">Home</a>
+      <a href="form.html" id="formLink">Candidate Form</a>
+      <a href="candidates.html" id="detailsLink">Candidate Details</a>
+      <a href="updatePositions.html" id="updatePositionsLink"
+        >Update Positions</a
+      >
+      <a href="positions.html" id="positionsLink">Open Positions</a>
+      <a href="masterCandidates.html" id="masterCandidatesLink"
+        >Master Candidate Details</a
+      >
+      <a href="userActivity.html" id="userActivity">User Activity</a>
+
+      <a href="assignapplicants.html" id="assignApplicantLink"
+        >Assign Applicant</a
+      >
+      <a href="#" id="logoutLink">Logout</a>
+    </div>
+    <div class="dashboard-container">
+      <h1>Applicant Tracking Dashboard</h1>
+
+      <div class="filter-container">
+        <label for="profileOwnerFilter">Filter by Profile Owner:</label>
+        <select id="profileOwnerFilter">
+          <option value="all">All Profile Owners</option>
+        </select>
+        <label for="startDate">From:</label>
+        <input type="date" id="startDate" />
+        <label for="endDate">To:</label>
+        <input type="date" id="endDate" />
+        <button id="applyFilters">Apply Filters</button>
+      </div>
+
+      <div class="analytics-container">
+        <div class="analytic-item disableClick">
+          <h3>Active Positions:</h3>
+          <p class="activePostionscount">0</p>
+        </div>
+        <div
+          class="analytic-item list-container-master"
+          data-stage="active"
+          id="masterDetailsContainer"
+        >
+          <h3>Total Applicants</h3>
+          <p id="totalApplicants">0</p>
+        </div>
+        <div class="analytic-item" data-stage="active">
+          <h3>Active Applicants</h3>
+          <p id="activeApplicants">0</p>
+        </div>
+        <div class="analytic-item" data-stage="About To Join">
+          <h3>About To Join</h3>
+          <p id="aboutToJoinCount">0</p>
+        </div>
+        <div class="analytic-item" data-stage="joined">
+          <h3>Joined Applicants</h3>
+          <p id="joinedApplicants">0</p>
+        </div>
+      </div>
+
+      <div class="charts-container">
+        <div class="chart-container">
+          <canvas id="activeStagesChart" width="400" height="400"></canvas>
+        </div>
+        <div class="chart-container">
+          <canvas id="inactiveStagesChart" width="400" height="400"></canvas>
+        </div>
+      </div>
+
+      <div class="analytics-container marginContianer">
+        <div class="analytic-item" data-stage="Exceeding Limit">
+          <h3>Exceeding Limit</h3>
+          <p id="exceedingLimitCount">0</p>
+        </div>
+        <div class="analytic-item" data-stage="rejected">
+          <h3>Rejected Applicants</h3>
+          <p id="rejectedApplicants">0</p>
+        </div>
+        <div class="analytic-item" data-stage="buffer list">
+          <h3>Buffer</h3>
+          <p id="bufferCount">0</p>
+        </div>
+        <div class="analytic-item" data-stage="closed">
+          <h3>Closed</h3>
+          <p id="closedCount">0</p>
+        </div>
+        <div class="analytic-item" data-stage="declined">
+          <h3>Declined</h3>
+          <p id="declinedCount">0</p>
+        </div>
+      </div>
+    </div>
+
+    <script src="stats.js"></script>
+    <script src="list-view.js"></script>
+    <script src="dashboard.js"></script>
+    <script src="hideNav.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="socket.js"></script>
+  </body>
+</html>

@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Applicant Tracking Form</title>
+    <style>
+      body {
+    font-family: "Arial", sans-serif;
+    background-color: #f0f2f5;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: #2c3e50;
+    padding: 15px 0;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.navbar a {
+    color: white;
+    text-decoration: none;
+    padding: 10px 15px;
+    margin: 0 5px;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.navbar a:hover {
+    background-color: #34495e;
+    transform: translateY(-2px);
+}
+
+.form-container {
+    background-color: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    padding: 40px;
+    width: 100%;
+    max-width: 450px;
+    margin-top: 100px;
+    text-align: center;
+}
+
+.form-container h2 {
+    color: #2c3e50;
+    margin-bottom: 30px;
+    font-size: 28px;
+}
+
+.form-field {
+    margin-bottom: 25px;
+}
+
+.form-field label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #34495e;
+    text-align: left;
+}
+
+.form-field label span {
+    color: red; /* Change color to red for the star symbol */
+    margin-left: 5px;
+}
+
+.form-field input[type="text"],
+.form-field input[type="email"],
+.form-field input[type="tel"],
+.form-field input[type="date"],
+.form-field input[type="number"],
+.form-field select {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #ecf0f1;
+    border-radius: 10px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+.form-field input[type="file"] {
+    width: 100%;
+    padding: 10px 0;
+}
+
+.form-field input:focus,
+.form-field select:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+}
+.button-container {
+    display: flex;
+    justify-content: center; /* Center buttons horizontally */
+    width: 100%; /* Full width */
+    margin-top: 20px; /* Space above buttons */
+}
+
+.form-field button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 14px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 18px;
+    width: 90%;
+    transition: all 0.3s ease;
+    font-weight: 600;
+    margin: 0 10px; /* Add horizontal margin to space buttons */
+}
+
+/* Optionally, you can specify margins for specific buttons if needed */
+#nextButton {
+    margin-right: 5px; /* Space between Next and Back buttons */
+}
+
+#backButton {
+    margin-right: 5px; /* Space between Back and Clear buttons */
+}
+
+#clearButton {
+    margin-right: 5px; /* Space between Clear and Submit buttons */
+}
+
+
+.form-field button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.form-field select,
+.form-field input[readonly] {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #ecf0f1;
+    border-radius: 10px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+.form-field input[readonly] {
+    background-color: #f8f9fa;
+    color: #6c757d;
+}
+.required::after {
+            content: "*";
+            color: red;
+            margin-left: 5px;
+        }
+
+    </style>
+    
+</head>
+<body>
+    <div class="navbar">
+        <a href="login.html" id="loginLink">Login</a>
+        <a href="stats.html" id="statsLink">Home</a>
+        <a href="form.html" id="formLink">Candidate Form</a>
+        <a href="candidates.html" id="detailsLink">Candidate Details</a>
+        <a href="updatePositions.html" id="updatePositionsLink">Update Positions</a>
+        <a href="positions.html" id="positionsLink">Open Positions</a>
+        <a href="masterCandidates.html" id="masterCandidatesLink">Master Candidate Details</a>
+        <a href="userActivity.html" id="userActivity">User Activity</a>
+        <a href="assignapplicants.html" id="assignApplicantLink" style="display: none">Assign Applicant</a>
+        <a href="#" id="logoutLink" style="display: none">Logout</a>
+    </div>
+    <div class="form-container">
+        <div id="usernameDisplay"></div>
+        <h2>Applicant Tracking Form</h2>
+        <form id="applicantForm" enctype="multipart/form-data">
+            <!-- Section 1 -->
+            <div class="form-row" id="section1">
+                <div class="form-field">
+                    <label for="profileOwner">Profile Owner:</label>
+                    <input type="text" id="profileOwner" name="profileOwner" readonly />
+                </div>
+                <div class="form-field">
+                    <label for="applicantName" class="required">Candidate Name:</label>
+                    <input type="text" id="applicantName" name="applicantName" required />
+                </div>
+                <div class="form-field">
+                    <label for="applicantPhone" class="required">Candidate Phone:</label>
+                    <input type="text" id="applicantPhone" name="applicantPhone" required />
+                </div>
+                <div class="form-field">
+                    <label for="applicantEmail" class="required">Candidate Email:</label>
+                    <input type="email" id="applicantEmail" name="applicantEmail" required />
+                </div>
+                <div class="form-field">
+                    <label for="currentCompany" class="required">Current Company:</label>
+                    <input type="text" id="currentCompany" name="currentCompany" required />
+                </div>
+            </div>
+
+            <!-- Section 2 -->
+            <div class="form-row" id="section2">
+                <div class="form-field">
+                    <label for="candidateWorkLocation" class="required">Candidate Work Location:</label>
+                    <input type="text" id="candidateWorkLocation" name="candidateWorkLocation" required />
+                </div>
+                <div class="form-field">
+                    <label for="nativeLocation" class="required">Native Location:</label>
+                    <input type="text" id="nativeLocation" name="nativeLocation" required />
+                </div>
+                <div class="form-field">
+                    <label for="qualification" class="required">Qualification:</label>
+                    <input type="text" id="qualification" name="qualification" required />
+                </div>
+                <div class="form-field">
+                    <label for="experience" class="required">Experience:</label>
+                    <input type="text" id="experience" name="experience" required />
+                </div>
+                <div class="form-field">
+                    <label for="skills" class="required">Skills:</label>
+                    <input type="text" id="skills" name="skills" required />
+                </div>
+            </div>
+
+            <!-- Section 3 -->
+            <div class="form-row" id="section3">
+                <div class="form-field">
+                    <label for="noticePeriod" class="required">Notice Period:</label>
+                    <input type="text" id="noticePeriod" name="noticePeriod" required />
+                </div>
+                <div class="form-field">
+                    <label for="currentctc" class="required">Current CTC:</label>
+                    <input type="number" id="currentctc" name="currentctc" required />
+                </div>
+                <div class="form-field">
+                    <label for="expectedctc" class="required">Expected CTC:</label>
+                    <input type="number" id="expectedctc" name="expectedctc" required />
+                </div>
+                <div class="form-field">
+                    <label for="band">Band:</label>
+                    <select id="band" name="band" required>
+                        <option value="L0">L0</option>
+                        <option value="L1">L1</option>
+                        <option value="L2">L2</option>
+                        <option value="L3">L3</option>
+                        <option value="L4">L4</option>
+                        <option value="CostPlus">CostPlus</option>
+                        <option value="Non-Billable">Non-Billable</option>
+                        <option value="Bench">Bench</option>
+                    </select>
+                </div>
+                <div class="form-field">
+                    <label for="applicantResume" class="required">Applicant Resume:</label>
+                    <input type="file" id="applicantResume" name="applicantResume" required />
+                </div>
+            </div>
+
+            <!-- Section 4 -->
+            <div class="form-row" id="section4">
+                <div class="form-field">
+                    <label for="dateApplied">Date Applied:</label>
+                    <input type="date" id="dateApplied" name="dateApplied" />
+                </div>
+                <div class="form-field">
+                    <label for="positionTitle" class="required">Position Title:</label>
+                    <select id="positionTitle" name="positionTitle" required>
+                        <option value="">Select Position Title</option>
+                    </select>
+                </div>
+                <div class="form-field">
+                    <label for="positionId" class="required">Position ID:</label>
+                    <select id="positionId" name="positionId" required>
+                        <option value="">Select Position ID</option>
+                    </select>
+                </div>
+                <div class="form-field">
+                    <label for="status">Status:</label>
+                    <select id="status" name="status" required>
+                        <option value="OPEN">OPEN</option>
+                        <option value="CLOSED">CLOSED</option>
+                    </select>
+                </div>
+                <div class="form-field">
+                    <label for="stage">Stage:</label>
+                    <select id="stage" name="stage">
+                        <option value="App. Recd.">App. Recd.</option>
+                        <option value="Not Answering">Not Answering</option>
+                        <option value="Phone Screen">Phone Screen</option>
+                        <option value="L1">L1</option>
+                        <option value="L2_Internal">L2_Internal</option>
+                        <option value="Yet to share">Yet to share</option>
+                        <option value="Shared with client">Shared with client</option>
+                        <option value="L1_Client">L1_Client</option>
+                        <option value="L2_Client">L2_Client</option>
+                        <option value="Final Discussion">Final Discussion</option>
+                        <option value="HOLD">HOLD</option>
+                        <option value="Buffer List">Buffer List</option>
+                        <option value="Rejected">Rejected</option>
+                        <option value="Declined">Declined</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Section 5 -->
+            <div class="form-row" id="section5">
+                <div class="form-field">
+                    <label for="dateOfPhoneScreen">Date of Phone Screen:</label>
+                    <input type="date" id="dateOfPhoneScreen" name="dateOfPhoneScreen" />
+                </div>
+                <div class="form-field">
+                    <label for="interviewDate">Interview Date:</label>
+                    <input type="date" id="interviewDate" name="interviewDate" />
+                </div>
+                <div class="form-field">
+                    <label for="dateOfOffer">Date of Joining:</label>
+                    <input type="date" id="dateOfOffer" name="dateOfOffer" />
+                </div>
+                <div class="form-field">
+                    <label for="reasonNotExtending">Reason for Not Extending Offer:</label>
+                    <select id="reasonNotExtending" name="reasonNotExtending">
+                        <option value="">Select Value</option>
+                        <option value="Salary Negotiation">Salary Negotiation</option>
+                        <option value="Relocation Issues">Relocation Issues</option>
+                    </select>
+                </div>
+                <div class="form-field">
+                    <label for="notes">Notes:</label>
+                    <input type="text" id="notes" name="notes" />
+                </div>
+            </div>
+
+            <div class="form-field button-container">
+             
+              <button type="button" id="clearButton">Clear</button>
+              <button type="button" id="nextButton">Next</button>
+              <button type="button" id="backButton" style="display: none;">Back</button>
+             
+              <button type="submit" id="submitButton" style="display: none;">Submit</button> <!-- Submit button for the last section -->
+          </div>
+          
+          
+        </form>
+    </div>
+    <script src="userInfo.js"></script>
+    <script src="dashboard.js"></script>
+    <script>
+  document.addEventListener("DOMContentLoaded", () => {
+        const form = document.getElementById("applicantForm");
+        if (!(form instanceof HTMLFormElement)) {
+          console.error("Applicant form not found");
+          return;
+        }
+
+        // Check user role and show/hide admin-only links
+        const role = localStorage.getItem("role");
+        const masterCandidatesLink = document.getElementById(
+          "masterCandidatesLink"
+        );
+        const assignApplicantLink = document.getElementById(
+          "assignApplicantLink"
+        );
+
+        if (role === "admin") {
+          if (masterCandidatesLink)
+            masterCandidatesLink.style.display = "inline";
+          if (assignApplicantLink) assignApplicantLink.style.display = "inline";
+        } else {
+          if (assignApplicantLink) assignApplicantLink.style.display = "none";
+        }
+
+        const inputs = {
+          profileOwner: form.querySelector("#profileOwner"),
+          applicantName: form.querySelector("#applicantName"),
+          applicantPhone: form.querySelector("#applicantPhone"),
+          applicantEmail: form.querySelector("#applicantEmail"),
+          currentCompany: form.querySelector("#currentCompany"),
+          candidateWorkLocation: form.querySelector("#candidateWorkLocation"),
+          nativeLocation: form.querySelector("#nativeLocation"),
+          qualification: form.querySelector("#qualification"),
+          experience: form.querySelector("#experience"),
+          skills: form.querySelector("#skills"),
+          noticePeriod: form.querySelector("#noticePeriod"),
+          currentctc: form.querySelector("#currentctc"),
+          expectedctc: form.querySelector("#expectedctc"),
+          band: form.querySelector("#band"),
+          applicantResume: form.querySelector("#applicantResume"),
+          dateApplied: form.querySelector("#dateApplied"),
+          positionTitle: form.querySelector("#positionTitle"),
+          positionId: form.querySelector("#positionId"),
+          status: form.querySelector("#status"),
+          stage: form.querySelector("#stage"),
+          dateOfPhoneScreen: form.querySelector("#dateOfPhoneScreen"),
+          interviewDate: form.querySelector("#interviewDate"),
+          dateOfOffer: form.querySelector("#dateOfOffer"),
+          reasonNotExtending: form.querySelector("#reasonNotExtending"),
+          notes: form.querySelector("#notes"),
+        };
+
+        // Set today's date for dateApplied
+        const today = new Date().toISOString().split("T")[0];
+        if (inputs.dateApplied instanceof HTMLInputElement) {
+          inputs.dateApplied.value = today;
+        }
+
+        // Add debounce function
+        function debounce(func, delay) {
+          let debounceTimer;
+          return function () {
+            const context = this;
+            const args = arguments;
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => func.apply(context, args), delay);
+          };
+        }
+
+        // Function to check for duplicates
+        async function checkDuplicate(field) {
+          const value = field.value.trim();
+          if (!value) return;
+
+          try {
+            const response = await fetch("/candidates/duplicate", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+              },
+              body: JSON.stringify({
+                applicantEmail: field.id === "applicantEmail" ? value : "",
+                applicantPhone: field.id === "applicantPhone" ? value : "",
+              }),
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+              // No duplicate found
+              field.style.borderColor = "green";
+              field.title = "Unique entry";
+            } else {
+              // Duplicate found
+              field.style.borderColor = "red";
+              field.title = data.message;
+              alert(data.message);
+            }
+          } catch (error) {
+            //console.error("Error checking for duplicates:", error);
+          }
+        }
+
+        // Add event listeners for email and phone fields
+        const debouncedCheck = debounce(checkDuplicate, 500);
+        inputs.applicantEmail.addEventListener("input", () =>
+          debouncedCheck(inputs.applicantEmail)
+        );
+        inputs.applicantPhone.addEventListener("input", () =>
+          debouncedCheck(inputs.applicantPhone)
+        );
+
+        let positionMap = {};
+
+        // Fetch positions and populate the dropdowns
+        fetch("/api/positions", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        })
+          .then((response) => response.json())
+          .then((positions) => {
+            const positionTitleSelect =
+              document.getElementById("positionTitle");
+            const positionIdSelect = document.getElementById("positionId");
+
+            if (
+              !(positionTitleSelect instanceof HTMLSelectElement) ||
+              !(positionIdSelect instanceof HTMLSelectElement)
+            ) {
+              throw new Error("Position select elements not found");
+            }
+
+            positions.forEach((position) => {
+              if (
+                typeof position.positionTitle !== "string" ||
+                typeof position.positionId !== "string"
+              ) {
+                console.error("Invalid position data:", position);
+                return;
+              }
+
+              if (!positionMap[position.positionTitle]) {
+                positionMap[position.positionTitle] = [];
+              }
+              positionMap[position.positionTitle].push(position.positionId);
+
+              const optionTitle = document.createElement("option");
+              optionTitle.value = position.positionTitle;
+              optionTitle.textContent = position.positionTitle;
+              positionTitleSelect.appendChild(optionTitle);
+
+              const optionId = document.createElement("option");
+              optionId.value = position.positionId;
+              optionId.textContent = position.positionId;
+              positionIdSelect.appendChild(optionId);
+            });
+
+            positionTitleSelect.addEventListener("change", () => {
+              const selectedTitle = positionTitleSelect.value;
+              positionIdSelect.innerHTML = "";
+              if (positionMap[selectedTitle]) {
+                positionMap[selectedTitle].forEach((positionId) => {
+                  const option = document.createElement("option");
+                  option.value = positionId;
+                  option.textContent = positionId;
+                  positionIdSelect.appendChild(option);
+                });
+              }
+            });
+          })
+          .catch((error) => console.error("Error fetching positions:", error));
+
+        const requiredFields = [
+          "currentCompany",
+          "candidateWorkLocation",
+          "nativeLocation",
+          "qualification",
+          "experience",
+          "skills",
+          "noticePeriod",
+          "currentctc",
+          "expectedctc",
+          "band",
+          //"dateOfPhoneScreen",
+          //"interviewDate",
+          //"dateOfOffer",
+          //"reasonNotExtending",
+        ];
+
+        const notAnsweringRequiredFields = [
+          "applicantName",
+          "applicantEmail",
+          "applicantPhone",
+          "applicantResume",
+          "positionTitle",
+          "positionId",
+        ];
+
+        function setFieldState(fieldId, required, disabled, value = "") {
+          const field = inputs[fieldId];
+          if (field) {
+            field.required = required;
+            field.disabled = disabled;
+            if (disabled) {
+              field.value =
+                field.type === "date"
+                  ? ""
+                  : field.type === "number"
+                  ? "0"
+                  : "NA";
+            } else if (value) {
+              field.value = value;
+            }
+          }
+        }
+
+        function handleStageChange() {
+          const isNotAnswering = inputs.stage.value === "Not Answering";
+
+          requiredFields.forEach((fieldId) => {
+            setFieldState(fieldId, !isNotAnswering, isNotAnswering);
+          });
+
+          notAnsweringRequiredFields.forEach((fieldId) => {
+            setFieldState(fieldId, true, false);
+          });
+
+          // Special handling for status field
+          inputs.status.value = isNotAnswering ? "OPEN" : inputs.status.value;
+          inputs.status.disabled = isNotAnswering;
+
+          // Update form appearance
+          form.querySelectorAll(".form-field").forEach((field) => {
+            field.style.opacity =
+              isNotAnswering &&
+              !notAnsweringRequiredFields.includes(
+                field.querySelector("input, select").id
+              )
+                ? "0.5"
+                : "1";
+          });
+        }
+
+        inputs.stage.addEventListener("change", handleStageChange);
+
+        // Initialize form state
+        handleStageChange();
+
+        form.addEventListener("submit", async (event) => {
+          event.preventDefault();
+
+          const isNotAnswering = inputs.stage.value === "Not Answering";
+          const fieldsToValidate = isNotAnswering
+            ? notAnsweringRequiredFields
+            : Object.keys(inputs);
+
+          // Validate form data
+          for (const key of fieldsToValidate) {
+            const element = inputs[key];
+            if (
+              element instanceof HTMLInputElement ||
+              element instanceof HTMLSelectElement
+            ) {
+              if (element.required && !element.value) {
+                alert(`Please fill out the ${key} field.`);
+                element.focus();
+                return;
+              }
+
+              // Specific validations
+              const validations = {
+                /*applicantName: {
+                  regex: /^(?!.*\d)[a-zA-Z\s]+$/,
+                  message:
+                    "Applicant name must contain only alphabets and spaces.",
+                },*/
+                applicantPhone: {
+                  regex: /^\d{10}$/,
+                  message: "Phone number must be 10 digits.",
+                },
+                applicantEmail: {
+                  regex: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                  message: "Please enter a valid email address.",
+                },
+                experience: {
+                  regex: /^\d+(\.\d+)?$/,
+                  message: "Experience must be a number (integer or float).",
+                },
+                currentctc: {
+                  regex: /^\d+(\.\d+)?$/,
+                  message: "Current CTC must be a number.",
+                },
+                expectedctc: {
+                  regex: /^\d+(\.\d+)?$/,
+                  message: "Expected CTC must be a number.",
+                },
+              };
+
+              const validation = validations[key];
+              if (validation && !validation.regex.test(element.value)) {
+                alert(validation.message);
+                element.focus();
+                return;
+              }
+            }
+          }
+
+          // Date validations (only if not "Not Answering")
+          if (!isNotAnswering) {
+            const dateValidations = [
+              {
+                field: "dateOfPhoneScreen",
+                compareTo: "dateApplied",
+                message:
+                  "Date of phone screen must be after the date of application.",
+              },
+              {
+                field: "interviewDate",
+                compareTo: "dateOfPhoneScreen",
+                message:
+                  "Interview date must be after the date of phone screen.",
+              },
+              {
+                field: "dateOfOffer",
+                compareTo: "interviewDate",
+                message: "Date of offer must be after the interview date.",
+              },
+            ];
+
+            for (const validation of dateValidations) {
+              const date1 = new Date(inputs[validation.field].value);
+              const date2 = new Date(inputs[validation.compareTo].value);
+              /* if (date1 >= date2) {
+                alert(validation.message);
+                inputs[validation.field].focus();
+                return;
+              }*/
+            }
+          }
+
+          // Form submission
+          const formData = new FormData(form);
+          try {
+            const response = await fetch(
+              isNotAnswering ? "/candidates/submit-not-answering" : "/submit",
+              {
+                method: "POST",
+                headers: {
+                  Authorization: `Bearer ${localStorage.getItem("token")}`,
+                },
+                body: formData,
+              }
+            );
+
+            /* if (!response.ok) {
+              alert(`An error occurred during submission: ${response.message}`);
+            } */
+console.log (formData)
+            const result = await response.json();
+            alert(result.message);
+            // Do not reset the form here, as per the original code
+            form.reset();
+          } catch (error) {
+            console.error("Submission error:", error);
+            // alert(`An error occurred during submission: ${error.message}`);
+          }
+        });
+      });
+      
+document.addEventListener('DOMContentLoaded', () => {
+    const username = localStorage.getItem('username');
+    if (username) {
+        const usernameDisplay = document.getElementById('usernameDisplay');
+
+        const profileOwnerField = document.getElementById('profileOwner');
+        if (profileOwnerField) {
+            profileOwnerField.value = username;
+        }
+    }
+});
+
+        let currentSection = 1;
+        const totalSections = 5;
+        
+        function showSection(section) {
+            // Hide all sections
+            for (let i = 1; i <= totalSections; i++) {
+                document.getElementById(`section${i}`).style.display = 'none';
+            }
+            // Show the current section
+            document.getElementById(`section${section}`).style.display = 'block';
+
+            // Manage button visibility
+            document.getElementById('backButton').style.display = section === 1 ? 'none' : 'block';
+            document.getElementById('nextButton').style.display = section === totalSections ? 'none' : 'block';
+            document.getElementById('submitButton').style.display = section === totalSections ? 'block' : 'none';
+        }
+
+        // document.getElementById('nextButton').addEventListener('click', () => {
+        //     if (currentSection < totalSections) {
+        //         currentSection++;
+        //         showSection(currentSection);
+        //     }
+        // });
+        document.getElementById('nextButton').addEventListener('click', () => {
+    const requiredFields = document.querySelectorAll('#section' + currentSection + ' [required]');
+    let allFieldsFilled = true;
+    
+    requiredFields.forEach(field => {
+        if (!field.value.trim()) {
+            allFieldsFilled = false;
+            field.style.borderColor = 'red';  // Highlight missing fields in red
+        } else {
+            field.style.borderColor = '';  // Reset field border if it's filled
+        }
+    });
+
+    if (allFieldsFilled) {
+        currentSection++;
+        showSection(currentSection);
+    } else {
+        alert('Please fill all the required fields.');
+    }
+});
+
+        document.getElementById('backButton').addEventListener('click', () => {
+            if (currentSection > 1) {
+                currentSection--;
+                showSection(currentSection);
+            }
+        });
+        document.getElementById('clearButton').addEventListener('click', () => {
+    const currentSectionElement = document.getElementById(`section${currentSection}`);
+    const inputs = currentSectionElement.querySelectorAll('input[type="text"], input[type="email"], input[type="number"], input[type="date"], select');
+    inputs.forEach(input => {
+        input.value = '';
+    });
+});
+
+        // document.getElementById('clearButton').addEventListener('click', () => {
+        //     const inputs = document.querySelectorAll('input[type="text"], input[type="email"], input[type="number"], input[type="date"], select');
+        //     inputs.forEach(input => {
+        //         input.value = '';
+        //     });
+        // });
+
+        // Show the first section initially
+        showSection(currentSection);
+    </script>
+<script src="hideNav.js"></script>
+<script src="dashboard.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="socket.js"></script>
+</body>
+</html>
